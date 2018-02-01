@@ -1,0 +1,25 @@
+<td>{{ item?.DetectTime['$date'] | date : 'H:mm:ss dd/MM/yy'}}</td>
+<td>{{ item?.Category }}</td>
+<td>
+	<div *ngIf="item.Source && item.Source[0].IP4; else showSourceNA">
+        <span *ngIf="item.Source[0].IP4.length > 1; else showSourceIP">Multiple IP addresses ({{item.Source[0].IP4.length}})</span>
+        <ng-template #showSourceIP>{{ item.Source[0].IP4 }}</ng-template>
+    </div>
+	<ng-template #showSourceNA>N/A</ng-template>
+</td>
+<td>
+	<div *ngIf="item.Target && item.Target[0].IP4; else showTargetNA">
+        <span *ngIf="item.Target[0].IP4.length > 1; else showTargetIP">Multiple IP addresses ({{item.Target[0].IP4.length}})</span>
+        <ng-template #showTargetIP>{{ item.Target[0].IP4 }}</ng-template>
+    </div>
+	<small *ngIf="!item.Target || !item.Target[0].IP4">N/A</small>
+</td>
+<td>{{ item?.Description }}</td>
+<td>{{ item?.FlowCount | number }}</td>
+
+<td>
+	<!-- button (click)="expandRow()" class="btn btn-primary btn-sm">Expand</button -->
+	<button [routerLink]="['.']" [queryParams]="{id : item._id.$oid }" class="btn btn-primary btn-sm">Expand</button>
+</td>
+
+<ng-template ngbModalContainer class="item-detail"></ng-template>

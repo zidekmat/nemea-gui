@@ -1,0 +1,41 @@
+<div class="container-fluid login-bg-container" layout="row" layout-fill layout-align="center center" id="login">
+	<md-whiteframe class="md-whiteframe-z2 login-container animated zoomIn" flex layout-align="center center">
+
+		<md-whiteframe class="md-whiteframe-z1 header-logo">
+			<!-- <img src="img/logo.png" class="md-whiteframe-z1"> -->
+		</md-whiteframe>
+
+		<h1>{{title}}</h1>
+
+		<form name="userForm" class="login-form" ng-submit="submit(user)" layout="column">
+	        <md-input-container flex style="padding-bottom: 0px;">
+	            <label>Username</label>
+	            <input ng-model="user.username" ng-required="true" type="text" name="username">
+	            <div ng-messages="userForm.username.$error" ng-show="userForm.username.$touched">
+	          		<div ng-message="required">Username is required.</div>
+                </div>
+	        </md-input-container>
+
+	        <md-input-container flex>
+		        <label>Password</label>
+		        <input ng-model="user.password" type="password" ng-required="true" name="pwd" required>
+				<div ng-messages="userForm.pwd.$error">
+	          		<!-- <div ng-message="required">You cannot log in without a password.</div> -->
+          		</div>
+	        </md-input-container>
+
+	        <div flex> {{error_mes}} </div>
+
+            <md-button 
+                class="md-raised md-primary" 
+                type="submit" 
+                ng-disabled="userForm.$invalid || loginBtnDisabled">
+                {{ loginBtn }}
+            </md-button>
+
+        </form>
+	</md-whiteframe>
+
+</div>
+</div>
+

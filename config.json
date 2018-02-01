@@ -1,0 +1,12 @@
+{
+    "dependencies": {
+        "npm" : "frontend/package.json"
+    },
+    "module": {
+        "class": "NemeaModule",
+        "file": "nemea.module.ts",
+        "frontend": "frontend",
+        "backend": "backend",
+        "name" : "nemea"
+    }
+}

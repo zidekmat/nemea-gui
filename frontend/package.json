@@ -1,0 +1,24 @@
+{
+  "name": "nemea-gui",
+  "version": "0.1.0",
+  "description": "Nemea GUI",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zidekmat/nemea-gui.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zidekmat/nemea-gui/issues"
+  },
+  "homepage": "https://github.com/CESNET/nemea-gui#readme",
+  "dependencies" : {
+    "angular2-grid": "^2.0.2",
+    "d3": "^4.9.1",
+    "@swimlane/ngx-charts": "^5.3.1"
+  }
+}
