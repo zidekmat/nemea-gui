@@ -88,7 +88,8 @@ const nemeaRoutes: Routes = [
                 data : {
                     role : 10,
                     label: 'Supervisor GUI'
-                }
+                },
+                children: SupervisorGuiComponent.childrenRoutes
             },
             {
                 path : 'status',

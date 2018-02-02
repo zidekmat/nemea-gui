@@ -7,7 +7,7 @@ export class SupervisorGuiService {
     constructor(private http: Http) {}
 
     stats() {
-        return this.http.get('/nemea/status/stats').map(
+        return this.http.get('/nemea/ns-status/stats').map(
             (response: Response) => {
                 const body: Object = response.json();
                 return body;
@@ -16,7 +16,7 @@ export class SupervisorGuiService {
     }
 
     topology() {
-        return this.http.get('/nemea/status').map(
+        return this.http.get('/nemea/ns-status').map(
             (response: Response) => {
                 const body = response.json();
                 return body;
