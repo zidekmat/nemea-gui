@@ -1,0 +1,70 @@
+<div>
+  <nsg-tabs>
+    <nsg-tab tabTitle="Info">
+      <div class="nsg-tab-info">
+      <div>
+        <table>
+          <tr>
+            <td width="35%">Module name:</td>
+            <td>{{nsgModule.name}}</td>
+          </tr>
+          <tr>
+            <td>Module path:</td>
+            <td>{{nsgModule.path}}</td>
+          </tr>
+          <tr>
+            <td>Nemea module?</td>
+            <td>{{nsgModule.is_nemea_mod}}</td>
+          </tr>
+          <tr>
+            <td>Sysrepo ready?</td>
+            <td>{{nsgModule.is_sr_ready}}</td>
+          </tr>
+          <tr>
+            <td>Sysrepo callbacks<br>ready?</td>
+            <td>{{nsgModule.sr_cb_ready}}</td>
+          </tr>
+          <tr>
+            <td>Description:</td>
+            <td>{{nsgModule.description}}</td>
+          </tr>
+        </table>
+      </div>
+      <div>
+        <div>
+          <button (click)="removeModule()"
+                  type="button" class="btn btn-danger btn-lg">
+            Remove module
+          </button>
+        </div>
+        <table>
+          <thead>
+          <tr>
+            <th width="40%">Instance name</th>
+            <th width="30%">Status</th>
+            <th width="30%">IN/OUT interfaces</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let inst of nsgModule.nsgInstances">
+            <td>
+              <a [routerLink]="['/nemea/supervisor-gui/instances/', inst.name]">
+                {{ inst.name }}
+              </a>
+            </td>
+            <td>{{ inst.tableStatus() }}</td>
+            <td>{{ inst.tableIfcesCnt() }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </nsg-tab>
+    <nsg-tab tabTitle="Edit">
+      <nsg-module-edit-form [nsgModule]="nsgModule"></nsg-module-edit-form>
+    </nsg-tab>
+    <nsg-tab tabTitle="Edit as XML">
+      Edit as XML
+    </nsg-tab>
+  </nsg-tabs>
+</div>

@@ -1,0 +1,44 @@
+
+<table>
+  <thead>
+  <tr>
+    <th width="30%">Instance name</th>
+    <th width="20%">Status</th>
+    <th width="10%">IN/OUT interfaces</th>
+    <th width="20%">Instance of</th>
+    <th width="20%">&nbsp;</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let instance of nsgInstances">
+      <td>
+        <a [routerLink]="['/nemea/supervisor-gui/instances/', instance.name]">
+          {{ instance.name }}
+        </a>
+      </td>
+      <td>{{ instance.tableStatus() }}</td>
+      <td>{{ instance.ifces_cnt.in }}/{{ instance.ifces_cnt.out }}</td>
+
+      <td>
+        <a [routerLink]="['/nemea/supervisor-gui/modules/', instance.module.name]">
+          {{ instance.module.name }}
+        </a>
+      </td>
+      <td>
+        <div>
+          <i *ngIf="instance.running === false" class="fa fa-play"></i>
+          <i *ngIf="instance.running === true" class="fa fa-stop"></i>
+          <i *ngIf="instance.running === true" class="fa fa-redo"></i>
+        </div>
+        <div>
+          <i class="fa fa-arrow-circle-down"></i>
+          <a [routerLink]="['/nemea/supervisor-gui/instances/', instance.name]"
+             fragment="edit">
+            <i class="fa fa-edit"></i>
+          </a>
+          <i class="fa fa-times"></i>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

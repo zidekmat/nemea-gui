@@ -45,15 +45,21 @@
       <td></td>
       <td></td>
       <td>
-        <a routerLink='/nemea/supervisor-gui/modules/:module'>
+        <a routerLink='/nemea/supervisor-gui/module/3'>
           <i class="fa fa-chevron-left"></i> Module: xxxx
         </a>
       </td>
       <td>
-        <a routerLink='/nemea/supervisor-gui/instances/:instance'>
+        <a routerLink='/nemea/supervisor-gui/instance/4'>
           <i class="fa fa-chevron-left"></i> Instance: xxxx
         </a>
       </td>
     </tr>
   </table>
+</div>
+<div style="border-bottom: 1px solid">
+  {{ bigHeader() }}
+</div>
+<div class="nsg-content">
+  <router-outlet></router-outlet>
 </div>

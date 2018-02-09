@@ -1,0 +1,171 @@
+<div class="nsg-tab-edit">
+  <div *ngIf="backendErrors.length > 0"
+       class="nsg-err-msg">
+    <ul>
+      <li *ngFor="let err of backendErrors">
+        {{err.message}}
+      </li>
+    </ul>
+  </div>
+  <form id="editForm" (submit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-6">
+        <table>
+          <tr>
+            <td width="42%">Module name:</td>
+            <td>
+              <input [(ngModel)]="nsgModule.name"
+                     #name="ngModel"
+                     name="name"
+                     required
+                     type="text"
+                     class="form-control-plaintext">
+              <div *ngIf="name.dirty && name.errors && name.errors.required"
+                    class="nsg-err-msg">
+                This field is required
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Module path:</td>
+            <td>
+              <input [(ngModel)]="nsgModule.path"
+                     #path="ngModel"
+                     name="path"
+                     required type="text" class="form-control-plaintext">
+              <div *ngIf="path.dirty && path.errors && path.errors.required"
+                   class="nsg-err-msg">
+                This field is required
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Number of IN interfaces?</td>
+            <td>
+              <input [(ngModel)]="nsgModule.in_ifces_cnt"
+                     #in_ifces_cnt="ngModel"
+                     name="in_ifces_cnt"
+                     required type="text" class="form-control-plaintext">
+              <div *ngIf="in_ifces_cnt.dirty && in_ifces_cnt.errors && in_ifces_cnt.errors.required"
+                   class="nsg-err-msg">
+                This field is required
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Number of OUT interfaces?</td>
+            <td>
+              <input [(ngModel)]="nsgModule.out_ifces_cnt"
+                     #out_ifces_cnt="ngModel"
+                     name="out_ifces_cnt"
+                     required type="text" class="form-control-plaintext">
+              <div *ngIf="out_ifces_cnt.dirty && out_ifces_cnt.errors && out_ifces_cnt.errors.required"
+                   class="nsg-err-msg">
+                This field is required
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Nemea module?</td>
+            <td>
+              <input [(ngModel)]="nsgModule.is_nemea_mod"
+                     name="is_nemea_mod"
+                     (click)="toggleBool('is_nemea_mod', $event)"
+                      type="button" class="btn">
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-md-6">
+        <table>
+          <tr>
+            <td width="42%">Sysrepo ready?</td>
+            <td>
+              <input [(ngModel)]="nsgModule.is_sr_ready"
+                     name="is_sr_ready"
+                     (click)="toggleBool('is_sr_ready', $event)"
+                      type="button" class="btn">
+            </td>
+          </tr>
+          <tr>
+            <td>Sysrepo callbacks ready?</td>
+            <td>
+              <input [(ngModel)]="nsgModule.sr_cb_ready"
+                     name="sr_cb_ready"
+                      (click)="toggleBool('sr_cb_ready', $event)"
+                      type="button" class="btn">
+            </td>
+          </tr>
+          <tr>
+            <td>Description:</td>
+            <td>
+              <textarea [(ngModel)]="nsgModule.description"
+                        #description="ngModel"
+                        name="description"
+                        required
+                        rows="7"></textarea>
+              <div *ngIf="description.dirty && description.errors && description.errors.required"
+                   class="nsg-err-msg">
+                This field is required
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </form>
+  <div class="row bottom-col">
+    <button (click)="resetForm()"
+            class="btn btn-secondary">
+      Reset values
+    </button>
+    <button (click)="openModal(prefillModal)"
+            class="btn btn-secondary">
+      Prefill values
+    </button>
+    <button form="editForm"
+            type="submit"
+            class="btn btn-success">
+      Save module
+    </button>
+  </div>
+</div>
+
+<ng-template #prefillModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Prefill values from other module</h4>
+    <button type="button" class="close" (click)="d('')">
+      <span>&times;</span>
+    </button>
+  </div>
+    <div class="modal-body">
+      <form #prefillForm="ngForm" id="prefillForm">
+        <label for="prefillFromModuleInput">
+          Choose module to prefill values from:
+        </label>
+        <select [(ngModel)]="prefillFromModule"
+                required
+                name="prefillFromModuleInput"
+                #prefillFromModuleInput="ngModel"
+                id="prefillFromModuleInput"
+                class="custom-select">
+          <option *ngFor="let instance of nsgModule.nsgInstances"
+                  [value]="instance.name">
+            {{instance.name}}
+          </option>
+        </select>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <input (click)="c('')"
+              type="button"
+             class="btn btn-secondary"
+             value="Close">
+      <input (click)="prefill()"
+             [disabled]="prefillForm.invalid"
+              type="button"
+             class="btn btn-primary"
+             form="prefillForm"
+             value="Prefill">
+    </div>
+</ng-template>

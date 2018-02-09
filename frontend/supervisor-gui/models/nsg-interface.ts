@@ -2,5 +2,9 @@ import {NsgInstance} from "./nsg-instance";
 
 export class NsgInterface {
     name : string;
-    nsgInstance : Object<NsgInstance>;
+    nsgInstance : NsgInstance;
+
+    constructor(fields : Object) {
+        Object.assign(this, fields);
+    }
 }

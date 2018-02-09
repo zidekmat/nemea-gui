@@ -2,22 +2,28 @@ import { Component, OnInit } from '@angular/core';
 import { AuthGuard } from 'app/utils/auth.guard';
 
 
-// Supervisor GUI main components
-import {NsgInstancesComponent} from "./nsg-instances/nsg-instances.component";
-import {NsgModulesComponent} from "./nsg-modules/nsg-modules.component";
-import {NsgHowToComponent} from "./nsg-how-to/nsg-how-to.component";
-import {NsgStatusComponent} from "./nsg-status/nsg-status.component";
+// Nemea Supervisor GUI main components
+import {NsgStatusComponent} from "./pages/nsg-status/nsg-status.component";
+import {NsgHowToComponent} from "./pages/nsg-how-to/nsg-how-to.component";
+
+import {NsgModulesListingComponent} from "./pages/nsg-modules-listing/nsg-modules-listing.component";
+import {NsgModulesNewComponent} from "./pages/nsg-modules-new/nsg-module-new.component";
+import {NsgModuleDetailComponent} from "./pages/nsg-module-detail/nsg-module-detail.component";
+
+import {NsgInstancesListingComponent} from "./pages/nsg-instances-listing/nsg-instances-listing.component";
+import {NsgInstancesNewComponent} from "./pages/nsg-instances-new/nsg-instance-new.component";
+import {NsgInstanceDetailComponent} from "./pages/nsg-instance-detail/nsg-instance-detail.component";
 
 @Component({
   selector: 'supervisor-gui',
   templateUrl: './supervisor-gui.component.html',
-  styleUrls: ['./supervisor-gui.component.scss']
+  styleUrls: ['./supervisor-gui.component.scss'],
 })
 export class SupervisorGuiComponent implements OnInit {
 
   static readonly childrenRoutes = [
       {
-          path : 'nsg-status',
+          path : '',
           component: NsgStatusComponent,
           canActivate : [AuthGuard],
           data : {
@@ -26,27 +32,61 @@ export class SupervisorGuiComponent implements OnInit {
           }
       },
       {
-          path : 'nsg-modules',
-          component: NsgModulesComponent,
-          canActivate : [AuthGuard],
-          data : {
-              role : 10,
-              label: ''
-          },
-          children: NsgModulesComponent.childrenRoutes
+        path: 'modules',
+        component: NsgModulesListingComponent,
+        canActivate: [AuthGuard],
+        data: {
+          role: 10,
+          label: ''
+        },
       },
       {
-          path : 'nsg-instances',
-          component: NsgInstancesComponent,
-          canActivate : [AuthGuard],
-          data : {
-              role : 10,
-              label: ''
-          },
-          children: NsgInstancesComponent.childrenRoutes
+        path : 'modules/new',
+        component: NsgModulesNewComponent,
+        canActivate : [AuthGuard],
+        data : {
+          role : 10,
+          label: ''
+        },
       },
       {
-          path : 'nsg-how-to',
+        path : 'module/:module',
+        component: NsgModuleDetailComponent,
+        canActivate : [AuthGuard],
+        data : {
+          role : 10,
+          label: ''
+        }
+      },
+      {
+        path: 'instances',
+        component: NsgInstancesListingComponent,
+        canActivate: [AuthGuard],
+        data: {
+          role: 10,
+          label: ''
+        }
+      },
+      {
+        path : 'instances/new',
+        component: NsgInstancesNewComponent,
+        canActivate : [AuthGuard],
+        data : {
+          role : 10,
+          label: ''
+        }
+      },
+      {
+        path : 'instance/:instance',
+        component: NsgInstanceDetailComponent,
+        canActivate : [AuthGuard],
+        data : {
+          role : 10,
+          label: ''
+        }
+      },
+      {
+          path : 'how-to',
           component: NsgHowToComponent,
           canActivate : [AuthGuard],
           data : {
@@ -61,4 +101,7 @@ export class SupervisorGuiComponent implements OnInit {
   ngOnInit() {
   }
 
+  bigHeader() : string {
+    return "xxx";
+  }
 }

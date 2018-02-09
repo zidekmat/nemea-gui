@@ -1,0 +1,33 @@
+<table>
+  <thead>
+  <tr>
+    <th width="40%">Module name</th>
+    <th width="10%">Nemea module</th>
+    <th width="10%">Sysrepo ready</th>
+    <th width="10%">Sysrepo callbacks ready</th>
+    <th width="30%">&nbsp;</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let module of nsgModules">
+    <td>
+      <a [routerLink]="['/nemea/supervisor-gui/module/', module.name]">
+        {{ module.name }}
+      </a>
+    </td>
+    <td>{{ module.is_nemea_mod }}</td>
+    <td>{{ module.is_sr_ready }}</td>
+    <td>{{ module.sr_cb_ready }}</td>
+    <td>
+      <div>
+        <i class="fa fa-arrow-circle-down"></i>
+        <a [routerLink]="['/nemea/supervisor-gui/module/', module.name]"
+           fragment="edit">
+          <i class="fa fa-edit"></i>
+        </a>
+        <i class="fa fa-times"></i>
+      </div>
+    </td>
+  </tr>
+  </tbody>
+</table>

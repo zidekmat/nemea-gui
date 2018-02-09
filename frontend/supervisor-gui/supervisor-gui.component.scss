@@ -1,3 +1,16 @@
+@import "supervisor-gui.style-defaults";
+
 .ns-navbar {
   border-bottom: 1px solid;
+}
+.nsg-content {
+  margin: auto;
+  padding: 10px;
+
+  height: 87%;
+  display: flex;
+  flex-flow: column;
+}
+input.ng-invalid {
+  border-color: $errColor;
 }

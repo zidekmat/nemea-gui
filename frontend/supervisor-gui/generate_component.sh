@@ -5,7 +5,7 @@ camelName=$(ruby -e "print '$name'.split('-').collect(&:capitalize).join; \$stdo
 
 mkdir $name && cd $name
 
-touch $name.component.html
+echo "<h1>$name.component.html</h1>" > $name.component.html
 touch $name.component.scss
 cat <<COMPONENT_CONTENT > $name.component.ts
 import { Component, OnInit } from '@angular/core';

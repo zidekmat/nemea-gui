@@ -55,7 +55,19 @@ import { NemeaStatusComponent } from './status/nemea_status.component';
 /**
   * NEMEA Supervisor GUI
   */
-import { SupervisorGuiComponent } from './supervisor-gui/supervisor-gui.component';
+import {SupervisorGuiComponent} from "./supervisor-gui/supervisor-gui.component";
+import {NsgStatusComponent} from "./supervisor-gui/pages/nsg-status/nsg-status.component";
+import {NsgModulesListingComponent} from "./supervisor-gui/pages/nsg-modules-listing/nsg-modules-listing.component";
+import {NsgModulesNewComponent} from "./supervisor-gui/pages/nsg-modules-new/nsg-module-new.component";
+import {NsgModuleDetailComponent} from "./supervisor-gui/pages/nsg-module-detail/nsg-module-detail.component";
+import {NsgInstancesListingComponent} from "./supervisor-gui/pages/nsg-instances-listing/nsg-instances-listing.component";
+import {NsgInstancesNewComponent} from "./supervisor-gui/pages/nsg-instances-new/nsg-instance-new.component";
+import {NsgInstanceDetailComponent} from "./supervisor-gui/pages/nsg-instance-detail/nsg-instance-detail.component";
+import {NsgHowToComponent} from "./supervisor-gui/pages/nsg-how-to/nsg-how-to.component";
+
+import {NsgTabsComponent} from "./supervisor-gui/components/nsg-tabs/nsg-tabs.component";
+import {NsgTabComponent} from "./supervisor-gui/components/nsg-tab/nsg-tab.component";
+import {NsgModuleEditFormComponent} from "./supervisor-gui/components/nsg-module-edit-form/nsg-module-edit-form.component";
 
 
 const nemeaRoutes: Routes = [
@@ -146,12 +158,27 @@ const nemeaRoutes: Routes = [
         IdeaPipe,
         NemeaBaseComponent,
         NemeaComponent,
-        SupervisorGuiComponent,
+
         NemeaStatusComponent,
         NemeaReporterConfComponent,
+
+        SupervisorGuiComponent,
+        NsgInstancesListingComponent,
+        NsgInstancesNewComponent,
+        NsgInstanceDetailComponent,
+        NsgModulesListingComponent,
+        NsgModulesNewComponent,
+        NsgModuleDetailComponent,
+        NsgHowToComponent,
+        NsgStatusComponent,
+        NsgModuleEditFormComponent,
+        NsgTabsComponent,
+        NsgTabComponent,
+
         EventsComponent,
         EventItemComponent,
         EventDetailComponent,
+
         DashboardComponent,
         DashBoxModalComponent,
         DashBoxComponent,

@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './nsg-instance-new.component.html',
   styleUrls: ['./nsg-instance-new.component.scss']
 })
-export class NsgInstanceNewComponent implements OnInit {
+export class NsgInstancesNewComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
