@@ -1,4 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, AfterContentInit} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import {NsgTabComponent} from "../nsg-tab/nsg-tab.component";
 
 @Component({
@@ -6,14 +7,21 @@ import {NsgTabComponent} from "../nsg-tab/nsg-tab.component";
     templateUrl: './nsg-tabs.component.html',
     styleUrls: ['./nsg-tabs.component.scss']
 })
-export class NsgTabsComponent implements OnInit {
+export class NsgTabsComponent implements AfterContentInit {
     tabs: NsgTabComponent[] = [];
 
-    constructor() {
+    constructor(private activatedRoute : ActivatedRoute,
+                private router: Router) {
     }
 
-    ngOnInit() {
+    ngAfterContentInit() {
+        // after tabs has called their ngOnInit
         this.setActiveTab();
+        this.activatedRoute.fragment.subscribe(fragment => {
+            for (let tab of this.tabs) {
+                tab.active = tab.slugTitle == fragment;
+            }
+        });
     }
 
     selectTab(tab: NsgTabComponent) {
@@ -21,8 +29,7 @@ export class NsgTabsComponent implements OnInit {
             tab.active = false;
         }
         tab.active = true;
-        history.pushState(null, null,
-            window.location.pathname+'#'+tab.slugTitle);
+        this.router.navigate([], {fragment: tab.slugTitle, replaceUrl: true})
     }
 
     addTab(tab: NsgTabComponent) {
@@ -33,12 +40,14 @@ export class NsgTabsComponent implements OnInit {
         let url = window.location.href.split('#');
 
         if (url.length == 2) {
-            // there is hash so let tab activate itself in it's own ngOnInit
+            for (let tab of this.tabs) {
+                tab.active = tab.slugTitle == url[1];
+            }
             return;
         }
 
         if (this.tabs.length > 0) {
-            this.tabs[0].active = true;
+            this.selectTab(this.tabs[0]);
         }
     }
 }

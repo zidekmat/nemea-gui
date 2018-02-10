@@ -67,7 +67,8 @@ import {NsgHowToComponent} from "./supervisor-gui/pages/nsg-how-to/nsg-how-to.co
 
 import {NsgTabsComponent} from "./supervisor-gui/components/nsg-tabs/nsg-tabs.component";
 import {NsgTabComponent} from "./supervisor-gui/components/nsg-tab/nsg-tab.component";
-import {NsgModuleEditFormComponent} from "./supervisor-gui/components/nsg-module-edit-form/nsg-module-edit-form.component";
+import {NsgModuleEditPlainFormComponent} from "./supervisor-gui/components/nsg-module-edit-plain-form/nsg-module-edit-plain-form.component";
+import {NsgModuleEditXmlFormComponent} from "./supervisor-gui/components/nsg-module-edit-xml-form/nsg-module-edit-xml-form.component";
 
 
 const nemeaRoutes: Routes = [
@@ -171,7 +172,8 @@ const nemeaRoutes: Routes = [
         NsgModuleDetailComponent,
         NsgHowToComponent,
         NsgStatusComponent,
-        NsgModuleEditFormComponent,
+        NsgModuleEditPlainFormComponent,
+        NsgModuleEditXmlFormComponent,
         NsgTabsComponent,
         NsgTabComponent,
 

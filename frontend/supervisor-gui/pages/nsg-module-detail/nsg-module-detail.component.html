@@ -21,8 +21,16 @@
             <td>{{nsgModule.is_sr_ready}}</td>
           </tr>
           <tr>
-            <td>Sysrepo callbacks<br>ready?</td>
+            <td>Sysrepo callbacks ready?</td>
             <td>{{nsgModule.sr_cb_ready}}</td>
+          </tr>
+          <tr>
+            <td>IN interfaces count:</td>
+            <td>{{nsgModule.in_ifces_cnt}}</td>
+          </tr>
+          <tr>
+            <td>OUT interfaces count:</td>
+            <td>{{nsgModule.out_ifces_cnt}}</td>
           </tr>
           <tr>
             <td>Description:</td>
@@ -52,8 +60,8 @@
                 {{ inst.name }}
               </a>
             </td>
-            <td>{{ inst.tableStatus() }}</td>
-            <td>{{ inst.tableIfcesCnt() }}</td>
+            <td>{{ (inst.running ? '' : 'not ') + 'running & ' + (inst.enabled ? 'enabled' : 'disabled') }}</td>
+            <td>{{ inst.in_ifces_cnt + '/' + inst.out_ifces_cnt }}</td>
           </tr>
           </tbody>
         </table>
@@ -61,10 +69,14 @@
       </div>
     </nsg-tab>
     <nsg-tab tabTitle="Edit">
-      <nsg-module-edit-form [nsgModule]="nsgModule"></nsg-module-edit-form>
+      <nsg-module-edit-plain-form (onEdited)="onEdited($event)"
+                                  [passedModule]="nsgModule"
+      ></nsg-module-edit-plain-form>
     </nsg-tab>
     <nsg-tab tabTitle="Edit as XML">
-      Edit as XML
+      <nsg-module-edit-xml-form (onEdited)="onEdited($event)"
+                                [passedModule]="nsgModule"
+      ></nsg-module-edit-xml-form>
     </nsg-tab>
   </nsg-tabs>
 </div>

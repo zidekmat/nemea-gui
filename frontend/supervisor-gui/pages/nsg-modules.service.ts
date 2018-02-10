@@ -4,6 +4,7 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { NsgInstance } from "../models/nsg-instance";
 import { NsgModule } from "../models/nsg-module";
+import { NsgModule2 } from "../models/nsg-module2";
 import { of } from 'rxjs/observable/of';
 
 @Injectable()
@@ -32,7 +33,7 @@ export class NsgModulesService {
       ]);
     }
 
-    getModule(moduleName: string) : Observable<NsgModule> {
+    getModule(moduleName: string) : Observable<NsgModule2> {
         const insts_cnt = Math.random() * 20;
         let nsgInstances = [];
         for(let i = 0; i < insts_cnt; i++) {
@@ -41,7 +42,7 @@ export class NsgModulesService {
         }
         console.log('hujeeeee');
 
-        let nsgModule = new NsgModule({
+        let nsgModule = {
             name: moduleName,
             in_ifces_cnt: '3',
             out_ifces_cnt: '*',
@@ -51,19 +52,20 @@ export class NsgModulesService {
             path: "/a/b/c/d",
             description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
             nsgInstances: nsgInstances,
-        });
+        };
 
         return of(nsgModule);
     }
 
-    createModule(nsgModule: NsgModule) : Observable<Response> {
-        return this.http.post<NsgModule>(`/nemea/sg/modules`, nsgModule);
+    createModule(nsgModule: NsgModule2) : Observable<{}> {
+        return this.http.post(`/nemea/sg/modules`, nsgModule);
     }
-    updateModule(nsgModuleOrigName: string, nsgModule: NsgModule) : Observable<Response> {
-        return this.http.put<NsgModule>(`/nemea/sg/modules/${nsgModuleOrigName}`, nsgModule);
+    updateModule(nsgModuleOrigName: string, nsgModule: NsgModule2) : Observable<{}> {
+        return this.http.put(`/nemea/sg/modules/${nsgModuleOrigName}`, nsgModule);
     }
 
-    removeModule(moduleName: string) : Observable<Response>{
+    removeModule(moduleName: string) : Observable<{}> {
+        return this.http.delete(`/nemea/sg/modules/${moduleName}`);
     }
 
 
@@ -108,7 +110,7 @@ export class NsgModulesService {
         return "TODO";
     };*/
 
-    private handleError(error: HttpErrorResponse) {
+/*    private handleError(error: HttpErrorResponse) {
         console.log(error);
         if (error.error instanceof ErrorEvent) {
             // A client-side or network error occurred. Handle it accordingly.
@@ -123,6 +125,6 @@ export class NsgModulesService {
         // return an ErrorObservable with a user-facing error message
         return new ErrorObservable(
             'Something bad happened; please try again later.');
-    };
+    };*/
 
 }

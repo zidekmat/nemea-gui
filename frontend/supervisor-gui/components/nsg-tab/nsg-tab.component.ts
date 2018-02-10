@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {NsgTabsComponent} from "../nsg-tabs/nsg-tabs.component";
 
 @Component({
@@ -12,21 +13,14 @@ export class NsgTabComponent implements OnInit {
   public active: boolean;
   slugTitle : string;
 
-  constructor(tabs: NsgTabsComponent) {
+  constructor(private activatedRoute : ActivatedRoute,
+              tabs: NsgTabsComponent) {
       tabs.addTab(this);
       this.active = false;
   }
 
   ngOnInit() {
       this.slugTitle = this.tabTitle.toLowerCase().replace(/ /g, '-');
-
-      const url = window.location.href.split('#');
-      if (url.length == 2) {
-          const hash = url[1];
-          if (this.slugTitle == hash) {
-              this.active = true;
-          }
-      }
   }
 
 }

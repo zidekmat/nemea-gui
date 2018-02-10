@@ -23,4 +23,17 @@ export class NsgModule {
             Object.assign(this, fields);
         }
     }
+
+    public assign(module: NsgModule) {
+        console.log('pico');
+        this.name = module.name;
+        this.nsgInstances = module.nsgInstances;
+        this.is_nemea_mod = module.is_nemea_mod;
+        this.is_sr_ready = module.is_sr_ready;
+        this.sr_cb_ready = module.sr_cb_ready;
+        this.path = module.path;
+        this.description = module.description;
+        this.in_ifces_cnt = module.in_ifces_cnt;
+        this.out_ifces_cnt = module.out_ifces_cnt;
+    }
 }
