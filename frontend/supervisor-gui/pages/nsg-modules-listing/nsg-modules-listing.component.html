@@ -20,12 +20,14 @@
     <td>{{ module.sr_cb_ready }}</td>
     <td>
       <div>
-        <i class="fa fa-arrow-circle-down"></i>
+        <i (click)="exportAsSrJsonData(module)"
+           class="fa fa-arrow-circle-down"></i>
         <a [routerLink]="['/nemea/supervisor-gui/module/', module.name]"
            fragment="edit">
           <i class="fa fa-edit"></i>
         </a>
-        <i class="fa fa-times"></i>
+        <i (click)="removeModule(module)"
+           class="fa fa-times"></i>
       </div>
     </td>
   </tr>

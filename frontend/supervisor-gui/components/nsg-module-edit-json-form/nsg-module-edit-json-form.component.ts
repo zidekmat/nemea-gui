@@ -2,14 +2,16 @@ import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import {NsgModule2} from "../../models/nsg-module2";
 import {NsgYangService} from "../../pages/nsg-yang.service";
 import {NsgYangModel} from "../../models/nsg-yang-model";
+import {Router} from '@angular/router';
+import {NsgModulesService} from "../../pages/nsg-modules.service";
 
 @Component({
-    selector: 'nsg-module-edit-xml-form',
-    templateUrl: './nsg-module-edit-xml-form.component.html',
-    styleUrls: ['./nsg-module-edit-xml-form.component.scss']
-    providers: [NsgYangService]
+    selector: 'nsg-module-edit-json-form',
+    templateUrl: './nsg-module-edit-json-form.component.html',
+    styleUrls: ['./nsg-module-edit-json-form.component.scss'],
+    providers: [NsgYangService, NsgModulesService]
 })
-export class NsgModuleEditXmlFormComponent implements OnInit {
+export class NsgModuleEditJsonFormComponent implements OnInit {
 
     /**
      * Module to be changed
@@ -17,15 +19,21 @@ export class NsgModuleEditXmlFormComponent implements OnInit {
     @Input() passedModule: NsgModule2;
 
     /**
-     * After edit this emitter passes changed module object
+     * Whether this component is used for editing existing module
+     * or creating new one
      */
+    @Input() isEditForm: boolean;
+
+    @Output() onSaved = new EventEmitter<NsgModule2>();
     @Output() onEdited = new EventEmitter<NsgModule2>();
 
     yangModel: NsgYangModel;
-    nsgModuleXml: string;
+    nsgModuleJson: string;
     backendErrors: any[];
 
-    constructor(private nsgYangService: NsgYangService) {
+    constructor(private nsgYangService: NsgYangService,
+                private nsgModulesService: NsgModulesService,
+                private router: Router) {
         this.backendErrors = [];
     }
 
@@ -39,36 +47,35 @@ export class NsgModuleEditXmlFormComponent implements OnInit {
                 // TODO onError
             }
         );
-        this.nsgModuleXml = "<?xml";
+        this.resetForm();
     }
 
     insertFromFile($event: any) {
         let reader = new FileReader();
-        myReader.onloadend = (e) => {
-            this.nsgModuleXml = reader.result;
-            // send to validate
+        console.log('insert file called');
+        reader.onloadend = (e) => {
+            console.log('onloaded');
+            this.nsgModuleJson = reader.result;
+            this.beautifyJson();
         };
-
-        var self = this;
-        var file = $event.target.files[0];
-        myReader.readAsText(file);
-        var resultSet = [];
-        myReader.onloadend = function(e){
-            // you can perform an action with data read here
-            // as an example i am just splitting strings by spaces
-            var columns = myReader.result.split(/\r\n|\r|\n/g);
-
-            for (var i = 0; i < columns.length; i++) {
-                resultSet.push(columns[i].split(' '));
-            }
-
-            self.resultSet=resultSet; // probably dont need to do this atall
-            self.complete.next(self.resultSet); // pass along the data which would be used by the parent component
-        };
+        if ($event.target.files.length > 0) {
+            reader.readAsText($event.target.files[0]);
+        }
     }
 
     resetForm() {
+        let srAvModule = JSON.parse(JSON.stringify(this.passedModule));
 
+        // Form JSON object parsable by sysrepo
+        delete srAvModule.instances;
+        this.nsgModuleJson = JSON.stringify({
+            "nemea:supervisor": {
+                "available-module": [
+                    srAvModule
+                ]
+            }
+        });
+        this.beautifyJson();
     }
 
     updateYangModel() {
@@ -81,5 +88,65 @@ export class NsgModuleEditXmlFormComponent implements OnInit {
                 // TODO onError
             }
         );
+    }
+
+
+    onSubmit() {
+        console.log('submitting module json');
+        const nsgModule : NsgModule2 = JSON.parse(this.nsgModuleJson)['nemea:supervisor']['available-module'][0];
+
+        if (this.isEditForm) {
+            console.log('updating module json');
+            this.nsgModulesService.updateModule(
+                this.passedModule.name,
+                nsgModule
+            ).subscribe(
+                (module) => {
+                    this.onSaved.emit(nsgModule);
+                    this.router.navigate(
+                        [`/nemea/supervisor-gui/module/${nsgModule.name}`],
+                        {fragment: 'info'}
+                    )
+                },
+                (error) => {
+                    console.log(error);
+                    this.backendErrors = error.json();
+                }
+            );
+        } else {
+            this.nsgModulesService.createModule(nsgModule).subscribe(
+                (resp) => {
+                    console.log(resp);
+                    this.onSaved.emit(nsgModule);
+                    this.router.navigate(
+                        [`/nemea/supervisor-gui/module/${nsgModule.name}`],
+                        {fragment: 'info'}
+                    )
+                },
+                (error) => {
+                    console.log('create failed with error response:')
+                    console.log(error);
+                    this.backendErrors = error.json().errors;
+                }
+            );
+        }
+    }
+
+    onFormEdit(form) {
+        console.log(form);
+        if (form.valid && !form.submitted) {
+            console.log(form);
+            const nsgModule : NsgModule2 = JSON.parse(this.nsgModuleJson)['nemea:supervisor']['available-module'][0];
+            this.onEdited.emit(nsgModule);
+        }
+    }
+
+    beautifyJson() {
+        try {
+            this.nsgModuleJson = JSON.stringify(
+                JSON.parse(this.nsgModuleJson), null, '  '
+            );
+        } catch (e) {
+        }
     }
 }

@@ -18,19 +18,19 @@ export class NsgModuleEditPlainFormComponent implements OnInit {
     @Input() passedModule: NsgModule2;
 
     /**
-     * After edit this emitter passes changed module object
+     * Whether this component is used for editing existing module
+     * or creating new one
      */
+    @Input() isEditForm: boolean;
+
+    @Output() onSaved = new EventEmitter<NsgModule2>();
     @Output() onEdited = new EventEmitter<NsgModule2>();
+
     nsgModule: NsgModule2; // NsgModule model that is currently edited
     prefillFromModule: string;
     backendErrors: any[];
     prefillModal: any;
-
-    /**
-     * indicates whether this component is used for editing existing module
-     *  or as form for creating new one
-     */
-    isEditForm: boolean;
+    nsgModulesList: NsgModule2[];
 
     constructor(private modalService: NgbModal,
                 private nsgModulesService: NsgModulesService,
@@ -39,22 +39,17 @@ export class NsgModuleEditPlainFormComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.isEditForm = true;
-        this.nsgModule = JSON.parse(JSON.stringify(this.passedModule));
-        /*    if (this.nsgModule == undefined) {
-              this.nsgModule = new NsgModule({});
-            }*/
-    }
-
-    toggleBool(modelAttribute: string, event) {
-        let target = event.target || event.srcElement || event.currentTarget;
-        if (target.value == 'false') {
-            target.value = 'true';
-        } else {
-            target.value = 'false';
-        }
-
-        this.nsgModule[modelAttribute] = target.value == 'true';
+        this.resetForm();
+        this.nsgModulesService.getAllModules().subscribe(
+            (nsgModules) => {
+                this.nsgModulesList = nsgModules;
+            },
+            (error) => {
+                console.log('Error fetching modules list:');
+                console.log(error);
+                // TODO
+            }
+        );
     }
 
     resetForm() {
@@ -84,13 +79,13 @@ export class NsgModuleEditPlainFormComponent implements OnInit {
     }
 
     onSubmit() {
-        const router = this.router;
         console.log('submitting module');
+
         if (this.isEditForm) {
             console.log('updating module');
             this.nsgModulesService.updateModule(this.passedModule.name, this.nsgModule).subscribe(
                 (module) => {
-                    this.onEdited.emit(this.nsgModule);
+                    this.onSaved.emit(this.nsgModule);
                     this.router.navigate([`/nemea/supervisor-gui/module/${this.nsgModule.name}`], {fragment: 'info'})
                 },
                 (error) => {
@@ -101,7 +96,7 @@ export class NsgModuleEditPlainFormComponent implements OnInit {
         } else {
             this.nsgModulesService.createModule(this.nsgModule).subscribe(
                 (module) => {
-                    this.onEdited.emit(this.nsgModule);
+                    this.onSaved.emit(this.nsgModule);
                     this.router.navigate([`/nemea/supervisor-gui/module/${this.nsgModule.name}`], {fragment: 'info'})
                 },
                 (error) => {
@@ -109,6 +104,12 @@ export class NsgModuleEditPlainFormComponent implements OnInit {
                     this.backendErrors = error.json();
                 }
             );
+        }
+    }
+
+    onFormEdit(form) {
+        if (form.valid && !form.submitted) {
+            this.onEdited.emit(this.nsgModule);
         }
     }
 }

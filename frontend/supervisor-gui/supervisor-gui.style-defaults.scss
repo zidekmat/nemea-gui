@@ -1,5 +1,81 @@
 $errColor: #cc0000;
+$successColor: #28a745;
+$secondaryColor: #868e96;
 
 textarea.ng-invalid, input[type=text].ng-invalid {
   border-color: $errColor !important;
 }
+
+
+.custom-file {
+  display: inline-block;
+  height: auto;
+  width: auto !important;
+  input {
+    display: none;
+  }
+  .custom-file-label {
+    cursor: pointer;
+    cursor: hand;
+    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    border-radius: .25rem;
+    font-size: 1.5rem;
+    font-weight: 400;
+    padding: .375rem .75rem;
+    color: #fff;
+    background-color: #868e96;
+    border-color: #868e96;
+  }
+}
+
+// Following is styling of checkbox as Yes/No button
+.toggle-check-input {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+}
+
+.toggle-check-text {
+  display: inline-block;
+  position: relative;
+  text-transform: uppercase;
+  background: $secondaryColor;
+  padding: 0.25em 0.5em 0.25em 2em;
+  border-radius: 1em;
+  min-width: 2em;
+  color: #FFF;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.toggle-check-text:after {
+  content: ' ';
+  display: block;
+  background: #FFF;
+  width: 1.1em;
+  height: 1.1em;
+  border-radius: 1em;
+  position: absolute;
+  left: 0.3em;
+  top: 0.25em;
+}
+
+.toggle-check-text:before {
+  content: 'No';
+}
+
+.toggle-check-input:checked ~ .toggle-check-text {
+  background: $successColor;
+  padding-left: 0.5em;
+  padding-right: 2em;
+}
+
+.toggle-check-input:checked ~ .toggle-check-text:before {
+  content: 'Yes';
+}
+
+.toggle-check-input:checked ~ .toggle-check-text:after {
+  left: 100%;
+  margin-left: -1.4em;
+}
+// End styling of checkbox as Yes/No button

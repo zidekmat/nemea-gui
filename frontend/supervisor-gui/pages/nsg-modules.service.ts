@@ -12,49 +12,14 @@ export class NsgModulesService {
 
     constructor(private http: Http) {}
 
-    getAllModules() : Observable<NsgModule[]> {
-      return of([
-          new NsgModule({name: "IPFIXCOL", is_nemea_mod: false, is_sr_ready: false, sr_cb_ready: false}),
-          new NsgModule({name: "IPFIXSEND", is_nemea_mod: false, is_sr_ready: false, sr_cb_ready: false}),
-          new NsgModule({name: "vportscan_detector", is_nemea_mod: true, is_sr_ready: false, sr_cb_ready: false}),
-          new NsgModule({name: "link_traffic", is_nemea_mod: true, is_sr_ready: true, sr_cb_ready: true}),
-          new NsgModule({name: "IPFIXCOL", is_nemea_mod: false, is_sr_ready: false, sr_cb_ready: false}),
-          new NsgModule({name: "IPFIXSEND", is_nemea_mod: false, is_sr_ready: false, sr_cb_ready: false}),
-          new NsgModule({name: "vportscan_detector", is_nemea_mod: true, is_sr_ready: false, sr_cb_ready: false}),
-          new NsgModule({name: "link_traffic", is_nemea_mod: true, is_sr_ready: true, sr_cb_ready: true}),
-          new NsgModule({name: "IPFIXCOL", is_nemea_mod: false, is_sr_ready: false, sr_cb_ready: false}),
-          new NsgModule({name: "IPFIXSEND", is_nemea_mod: false, is_sr_ready: false, sr_cb_ready: false}),
-          new NsgModule({name: "vportscan_detector", is_nemea_mod: true, is_sr_ready: false, sr_cb_ready: false}),
-          new NsgModule({name: "link_traffic", is_nemea_mod: true, is_sr_ready: true, sr_cb_ready: true}),
-          new NsgModule({name: "IPFIXCOL", is_nemea_mod: false, is_sr_ready: false, sr_cb_ready: false}),
-          new NsgModule({name: "IPFIXSEND", is_nemea_mod: false, is_sr_ready: false, sr_cb_ready: false}),
-          new NsgModule({name: "vportscan_detector", is_nemea_mod: true, is_sr_ready: false, sr_cb_ready: false}),
-          new NsgModule({name: "link_traffic", is_nemea_mod: true, is_sr_ready: true, sr_cb_ready: true}),
-      ]);
+    getAllModules() : Observable<NsgModule2[]> {
+        return this.http.get('/nemea/sg/modules?withInstances=false')
+            .map(response => response.json() as NsgModule2[]);
     }
 
-    getModule(moduleName: string) : Observable<NsgModule2> {
-        const insts_cnt = Math.random() * 20;
-        let nsgInstances = [];
-        for(let i = 0; i < insts_cnt; i++) {
-            console.log('pushing instance');
-            nsgInstances.push(this.mockInstance(moduleName + i));
-        }
-        console.log('hujeeeee');
-
-        let nsgModule = {
-            name: moduleName,
-            in_ifces_cnt: '3',
-            out_ifces_cnt: '*',
-            is_nemea_mod: false,
-            is_sr_ready: false,
-            sr_cb_ready: false,
-            path: "/a/b/c/d",
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            nsgInstances: nsgInstances,
-        };
-
-        return of(nsgModule);
+    getModule(moduleName: string, asExport = true) : Observable<NsgModule2> {
+        return this.http.get(`/nemea/sg/modules/${moduleName}`)
+            .map(response => response.json() as NsgModule2);
     }
 
     createModule(nsgModule: NsgModule2) : Observable<{}> {

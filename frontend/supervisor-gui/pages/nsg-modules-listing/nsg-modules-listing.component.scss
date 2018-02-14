@@ -12,16 +12,28 @@ table {
       padding-top: 5px;
       padding-bottom: 5px;
     }
+    td:first-of-type {
+      :hover {
+        text-decoration: underline;
+      }
+    }
     td:last-of-type {
       font-size: 1.8rem;
       a {
         text-decoration: none;
         color: #000000;
+        i {
+          padding-top: 0.7rem;
+        }
       }
     }
     tr {
       border-bottom: 1px solid;
     }
     overflow-y: scroll;
+  }
+  i {
+    cursor: hand;
+    cursor: pointer;
   }
 }

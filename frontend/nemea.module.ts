@@ -68,7 +68,10 @@ import {NsgHowToComponent} from "./supervisor-gui/pages/nsg-how-to/nsg-how-to.co
 import {NsgTabsComponent} from "./supervisor-gui/components/nsg-tabs/nsg-tabs.component";
 import {NsgTabComponent} from "./supervisor-gui/components/nsg-tab/nsg-tab.component";
 import {NsgModuleEditPlainFormComponent} from "./supervisor-gui/components/nsg-module-edit-plain-form/nsg-module-edit-plain-form.component";
-import {NsgModuleEditXmlFormComponent} from "./supervisor-gui/components/nsg-module-edit-xml-form/nsg-module-edit-xml-form.component";
+import {NsgModuleEditJsonFormComponent} from "./supervisor-gui/components/nsg-module-edit-json-form/nsg-module-edit-json-form.component";
+import {JsonValidatorDirective} from "./supervisor-gui/components/json-validator.directive";
+import {YangLintValidatorDirective} from "./supervisor-gui/components/yang-lint-validator.directive";
+import {JsonModuleValidatorDirective} from "./supervisor-gui/components/nsg-module-edit-json-form/json-module-validator.directive";
 
 
 const nemeaRoutes: Routes = [
@@ -173,7 +176,10 @@ const nemeaRoutes: Routes = [
         NsgHowToComponent,
         NsgStatusComponent,
         NsgModuleEditPlainFormComponent,
-        NsgModuleEditXmlFormComponent,
+        NsgModuleEditJsonFormComponent,
+        JsonValidatorDirective,
+        JsonModuleValidatorDirective,
+        YangLintValidatorDirective,
         NsgTabsComponent,
         NsgTabComponent,
 

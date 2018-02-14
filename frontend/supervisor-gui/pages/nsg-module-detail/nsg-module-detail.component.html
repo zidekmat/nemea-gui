@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="nsgModule">
   <nsg-tabs>
     <nsg-tab tabTitle="Info">
       <div class="nsg-tab-info">
@@ -45,38 +45,61 @@
             Remove module
           </button>
         </div>
-        <table>
-          <thead>
-          <tr>
-            <th width="40%">Instance name</th>
-            <th width="30%">Status</th>
-            <th width="30%">IN/OUT interfaces</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let inst of nsgModule.nsgInstances">
-            <td>
-              <a [routerLink]="['/nemea/supervisor-gui/instances/', inst.name]">
-                {{ inst.name }}
-              </a>
-            </td>
-            <td>{{ (inst.running ? '' : 'not ') + 'running & ' + (inst.enabled ? 'enabled' : 'disabled') }}</td>
-            <td>{{ inst.in_ifces_cnt + '/' + inst.out_ifces_cnt }}</td>
-          </tr>
-          </tbody>
-        </table>
+        <div>
+          <table>
+            <thead>
+            <tr>
+              <th width="40%">Instance name</th>
+              <th width="30%">Status</th>
+              <th width="30%">&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let i of nsgModule?.instances">
+              <td>
+                <a [routerLink]="['/nemea/supervisor-gui/instances/', i.name]">
+                  {{ i.name }}
+                </a>
+              </td>
+              <td>{{ (i.running ? '' : 'not ') + 'running & ' + (i.enabled ? 'enabled' :
+                'disabled') }}</td>
+              <td>
+                <a [routerLink]="['/nemea/supervisor-gui/instance/', i.name]"
+                   fragment="edit">
+                  <i class="fa fa-edit"></i>
+                </a>
+                &nbsp;
+                <i (click)="removeInstance(i)"
+                   class="fa fa-times"></i>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       </div>
     </nsg-tab>
     <nsg-tab tabTitle="Edit">
-      <nsg-module-edit-plain-form (onEdited)="onEdited($event)"
+      <nsg-module-edit-plain-form *ngIf="nsgModule"
+                                  (onSaved)="onSaved($event)"
+                                  (onEdited)="onEdited($event)"
+                                  [isEditForm]="true"
                                   [passedModule]="nsgModule"
       ></nsg-module-edit-plain-form>
     </nsg-tab>
-    <nsg-tab tabTitle="Edit as XML">
-      <nsg-module-edit-xml-form (onEdited)="onEdited($event)"
-                                [passedModule]="nsgModule"
-      ></nsg-module-edit-xml-form>
+    <nsg-tab tabTitle="Edit as JSON">
+      <nsg-module-edit-json-form  *ngIf="nsgModule"
+                                 (onSaved)="onSaved($event)"
+                                 (onEdited)="onEdited($event)"
+                                 [isEditForm]="true"
+                                 [passedModule]="nsgModule"
+      ></nsg-module-edit-json-form>
     </nsg-tab>
   </nsg-tabs>
+</div>
+<div *ngIf="!nsgModule && !moduleNotFound">
+  Module data are loading ...
+</div>
+<div *ngIf="moduleNotFound">
+  Module not found.
 </div>

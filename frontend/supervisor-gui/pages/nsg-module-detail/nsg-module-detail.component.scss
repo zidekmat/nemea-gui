@@ -38,6 +38,7 @@ div {
       }
       td:last-of-type {
         font-size: 1rem;
+        padding-right: 10px;
       }
     }
   }
@@ -47,7 +48,7 @@ div {
     padding: 5px;
     border-left: 1px solid;
 
-    > div {
+    div:first-of-type {
       height: 30%;
       border: none;
       border-bottom: 1px solid;
@@ -61,39 +62,60 @@ div {
       }
     }
 
-    table {
-      height: auto;
-      width: 100%;
+    div:last-of-type {
+      max-height: 70%;
+      overflow-y: scroll;
+      border-left: none;
 
-      td, th {
-        padding: 5px;
-      }
+      table {
+        height: auto;
+        width: 100%;
+        font-size: 1.2rem;
 
-      thead {
-        border: 1px solid;
-        th {
-          text-align: center;
+        td, th {
+          padding: 5px;
         }
-        th:first-of-type {
-          text-align: left;
-        }
-      }
-      tbody {
-        tr {
-          td {
+
+        thead {
+          border: 1px solid;
+          th {
             text-align: center;
           }
-          td:first-of-type {
+          th:first-of-type {
             text-align: left;
           }
         }
-        tr:last-of-type {
-          td:last-of-type {
-            // description text
-            padding: 5px;
+        tbody {
+          tr {
+            td {
+              text-align: center;
+            }
+            td:first-of-type {
+              text-align: left;
+              :hover {
+                text-decoration: underline;
+              }
+            }
+            td:last-of-type {
+              vertical-align: middle;
+            }
+          }
+          a {
+            color: #000000;
+            text-decoration: none;
+          }
+          i {
+            font-size: 2rem;
+            cursor: hand;
+            cursor: pointer;
           }
         }
       }
     }
   }
+}
+
+button {
+  cursor: hand;
+  cursor: pointer;
 }

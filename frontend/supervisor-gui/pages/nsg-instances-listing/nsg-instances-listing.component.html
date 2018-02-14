@@ -26,17 +26,25 @@
       </td>
       <td>
         <div>
-          <i *ngIf="instance.running === false" class="fa fa-play"></i>
-          <i *ngIf="instance.running === true" class="fa fa-stop"></i>
-          <i *ngIf="instance.running === true" class="fa fa-redo"></i>
+          <i *ngIf="instance.running === false"
+             (click)="startInstance(instance)"
+             class="fa fa-play"></i>
+          <i *ngIf="instance.running === true"
+             (click)="stopInstance(instance)"
+             class="fa fa-stop"></i>
+          <i *ngIf="instance.running === true"
+             (click)="restartInstance(instance)"
+             class="fa fa-redo"></i>
         </div>
         <div>
-          <i class="fa fa-arrow-circle-down"></i>
+          <i (click)="exportAsSrJsonData(instance)"
+             class="fa fa-arrow-circle-down"></i>
           <a [routerLink]="['/nemea/supervisor-gui/instances/', instance.name]"
              fragment="edit">
             <i class="fa fa-edit"></i>
           </a>
-          <i class="fa fa-times"></i>
+          <i (click)="removeInstance(instance)"
+             class="fa fa-times"></i>
         </div>
       </td>
     </tr>

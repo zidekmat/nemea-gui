@@ -2,7 +2,7 @@ import {NsgInstance2} from "./nsg-instance2";
 
 export interface NsgModule2 {
     name: string;
-    nsgInstances?: NsgInstance2[];
+    instances?: NsgInstance2[];
     is_nemea_mod?: boolean;
     is_sr_ready?: boolean;
     sr_cb_ready?: boolean;

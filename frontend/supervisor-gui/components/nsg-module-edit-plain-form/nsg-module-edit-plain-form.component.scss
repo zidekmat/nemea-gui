@@ -32,10 +32,12 @@ div.nsg-err-msg {
   }
 
   form {
+    width: 100%;
+
     // First row wrapper
     div:first-of-type {
       flex-direction: row;
-      height: auto;
+      height: 100%;
       margin-left: 0;
       margin-right: 0;
 
@@ -78,7 +80,7 @@ div.nsg-err-msg {
   }
 
   td {
-    vertical-align: top;
+    vertical-align: middle;
 
     div.nsg-err-msg {
       font-size: 1rem !important;
@@ -107,4 +109,14 @@ div.nsg-err-msg {
       font-size: 1.5rem;
     }
   }
+}
+
+.toggle-check-text:after {
+  top: 0.6rem;
+}
+
+.modal-footer {
+  display: inline-block;
+  width: 100%;
+  text-align: right;
 }

@@ -7,7 +7,10 @@
       </li>
     </ul>
   </div>
-  <form id="editForm" (submit)="onSubmit()">
+  <form #editForm="ngForm"
+        id="editForm"
+        (submit)="onSubmit()"
+        (change)="onFormEdit(editForm)">
     <div class="row">
       <div class="col-md-6">
         <table>
@@ -68,10 +71,13 @@
           <tr>
             <td>Nemea module?</td>
             <td>
-              <input [(ngModel)]="nsgModule.is_nemea_mod"
-                     name="is_nemea_mod"
-                     (click)="toggleBool('is_nemea_mod', $event)"
-                      type="button" class="btn">
+              <label class="toggle-check">
+                <input [(ngModel)]="nsgModule.is_nemea_mod"
+                       name="is_nemea_mod"
+                       class="toggle-check-input"
+                       type="checkbox">
+                <span class="toggle-check-text"></span>
+              </label>
             </td>
           </tr>
         </table>
@@ -81,19 +87,25 @@
           <tr>
             <td width="42%">Sysrepo ready?</td>
             <td>
-              <input [(ngModel)]="nsgModule.is_sr_ready"
-                     name="is_sr_ready"
-                     (click)="toggleBool('is_sr_ready', $event)"
-                      type="button" class="btn">
+              <label class="toggle-check">
+                <input [(ngModel)]="nsgModule.is_sr_ready"
+                       name="is_sr_ready"
+                       class="toggle-check-input"
+                       type="checkbox">
+                <span class="toggle-check-text"></span>
+              </label>
             </td>
           </tr>
           <tr>
             <td>Sysrepo callbacks ready?</td>
             <td>
-              <input [(ngModel)]="nsgModule.sr_cb_ready"
-                     name="sr_cb_ready"
-                      (click)="toggleBool('sr_cb_ready', $event)"
-                      type="button" class="btn">
+              <label class="toggle-check">
+                <input [(ngModel)]="nsgModule.sr_cb_ready"
+                       name="sr_cb_ready"
+                       class="toggle-check-input"
+                       type="checkbox">
+                <span class="toggle-check-text"></span>
+              </label>
             </td>
           </tr>
           <tr>
@@ -124,6 +136,7 @@
       Prefill values
     </button>
     <button form="editForm"
+            [disabled]="editForm.invalid"
             type="submit"
             class="btn btn-success">
       Save module
@@ -138,8 +151,12 @@
       <span>&times;</span>
     </button>
   </div>
+  <div *ngIf="!nsgModulesList">
+    Loading modules list...
+  </div>
+  <form *ngIf="nsgModulesList"
+        #prefillForm="ngForm" id="prefillForm">
     <div class="modal-body">
-      <form #prefillForm="ngForm" id="prefillForm">
         <label for="prefillFromModuleInput">
           Choose module to prefill values from:
         </label>
@@ -149,12 +166,11 @@
                 #prefillFromModuleInput="ngModel"
                 id="prefillFromModuleInput"
                 class="custom-select">
-          <option *ngFor="let instance of nsgModule.nsgInstances"
-                  [value]="instance.name">
-            {{instance.name}}
+          <option *ngFor="let module of nsgModulesList"
+                  [value]="module.name">
+            {{module.name}}
           </option>
         </select>
-      </form>
     </div>
     <div class="modal-footer">
       <input (click)="c('')"
@@ -168,4 +184,5 @@
              form="prefillForm"
              value="Prefill">
     </div>
+  </form>
 </ng-template>

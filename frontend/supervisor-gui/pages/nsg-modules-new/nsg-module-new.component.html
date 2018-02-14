@@ -1,1 +1,16 @@
-<h1>./nsg-modules/nsg-module-new/nsg-module-new.component.html</h1>
+<div>
+  <nsg-tabs>
+    <nsg-tab tabTitle="New module">
+      <nsg-module-edit-plain-form (onEdited)="onEdited($event)"
+                                  [isEditForm]="false"
+                                  [passedModule]="nsgModule"
+      ></nsg-module-edit-plain-form>
+    </nsg-tab>
+    <nsg-tab tabTitle="New module from JSON">
+      <nsg-module-edit-json-form (onEdited)="onEdited($event)"
+                                 [isEditForm]="false"
+                                 [passedModule]="nsgModule"
+      ></nsg-module-edit-json-form>
+    </nsg-tab>
+  </nsg-tabs>
+</div>

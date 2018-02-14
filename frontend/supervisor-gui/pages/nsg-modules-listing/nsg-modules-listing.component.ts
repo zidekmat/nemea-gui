@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges } from '@angular/core';
 
 import {NsgModulesService} from "../nsg-modules.service";
-import {NsgModule} from "../../models/nsg-module";
+import {NsgModule2} from "../../models/nsg-module2";
 
 @Component({
   selector: 'nsg-modules-listing',
@@ -11,15 +11,58 @@ import {NsgModule} from "../../models/nsg-module";
 })
 export class NsgModulesListingComponent implements OnInit {
 
-    nsgModules : NsgModule[];
+    nsgModules : NsgModule2[];
 
     constructor(private nsgModulesService: NsgModulesService) { }
 
     ngOnInit() {
-        this.nsgModulesService.getAllModules().subscribe(
-            (modules) => {console.log('received:');console.log(modules);this.nsgModules = modules}
+        this.getModules();
+    }
+
+    ngOnChanges() {
+        this.getModules();
+    }
+
+    exportAsSrJsonData(module: NsgModule2) {
+        const moduleJson = JSON.stringify({
+            'nemea:supervisor': {
+                'available-module': [
+                    module
+                ]
+            }
+        });
+
+        let a = document.createElement("a");
+        const blob = new Blob([moduleJson], { type: 'application/json' });
+        a.href = window.URL.createObjectURL(blob);
+        a.download = `${module.name}.conf-backup.json`;
+        a.click();
+    }
+
+    removeModule(module: NsgModule2) {
+        this.nsgModulesService.removeModule(module.name).subscribe(
+            () => {
+                this.nsgModules = this.nsgModules.filter(
+                    modIter => modIter != module
+                );
+            },
+            (error) => {
+                // TODO
+                console.log(error);
+            }
         );
-        console.log('subscribed:');
+    }
+
+    getModules() {
+        this.nsgModulesService.getAllModules().subscribe(
+            (nsgModules) => {
+                this.nsgModules = nsgModules;
+            },
+            (error) => {
+                // TODO
+                console.log(error);
+            }
+        );
     }
 
 }

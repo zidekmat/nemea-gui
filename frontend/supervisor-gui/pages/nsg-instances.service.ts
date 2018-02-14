@@ -3,6 +3,7 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { NsgInstance } from "../models/nsg-instance";
 import { NsgModule } from "../models/nsg-module";
+import {NsgInstance2} from "../models/nsg-instance2";
 
 @Injectable()
 export class NsgInstancesService {
@@ -20,6 +21,36 @@ export class NsgInstancesService {
     ];
 
     constructor(private http: Http) {}
+
+
+    remove(instanceName: string) : Observable<{}> {
+        return this.http.delete(`/nemea/sg/instances/${instanceName}`);
+    }
+
+    getAll() : Observable<NsgInstance2[]> {
+        return this.http.get('/nemea/sg/instances')
+            .map(response => response.json() as NsgInstance2[]);
+    }
+
+    start(instanceName: string) : Observable<{}> {
+        const cmd = {command: 'start'};
+        return this.http.post(`/nemea/sg/instances/${instanceName}/control`, cmd);
+    }
+    stop(instanceName: string) : Observable<{}> {
+        const cmd = {command: 'stop'};
+        return this.http.post(`/nemea/sg/instances/${instanceName}/control`, cmd);
+    }
+    restart(instanceName: string) : Observable<{}> {
+        const cmd = {command: 'restart'};
+        return this.http.post(`/nemea/sg/instances/${instanceName}/control`, cmd);
+    }
+
+
+
+
+
+
+
 
     getAllInstances() : Object[] {
       return [

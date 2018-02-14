@@ -6,7 +6,7 @@ import { Validator, AbstractControl, NG_VALIDATORS } from '@angular/forms';
     providers: [{provide: NG_VALIDATORS, useExisting: JsonValidatorDirective, multi: true}]
 })
 export class JsonValidatorDirective implements Validator {
-    validate(control: AbstractControl): {[key: string]: any} {
+    validate(control: AbstractControl): {} {
         console.log('validating json');
         try {
             JSON.parse(control.value);
