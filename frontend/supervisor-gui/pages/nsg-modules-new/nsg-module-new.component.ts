@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NsgModule2} from "../../models/nsg-module2";
-import {NsgModuleEditJsonFormComponent} from "../../components/nsg-module-edit-json-form/nsg-module-edit-json-form.component";
-import {NsgModuleEditPlainFormComponent} from "../../components/nsg-module-edit-plain-form/nsg-module-edit-plain-form.component";
-import {NsgModulesService} from "../nsg-modules.service";
+import {NsgModuleEditJsonFormComponent} from "../shared/nsg-edit/json/module/nsg-module-edit-json-form.component";
+import {NsgModuleEditPlainFormComponent} from "../shared/nsg-edit/plain/module/nsg-module-edit-plain-form.component";
+import {NsgModulesService} from "../../services/nsg-modules.service";
 
 @Component({
     selector: 'nsg-module-new',

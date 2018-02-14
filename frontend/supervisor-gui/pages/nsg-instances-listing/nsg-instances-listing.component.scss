@@ -1,3 +1,5 @@
+@import "../../supervisor-gui.style-defaults";
+
 table {
   width: 100%;
   thead {
@@ -21,7 +23,29 @@ table {
     }
     tr {
       border-bottom: 1px solid;
+
+      td:last-of-type {
+        i {
+          cursor: pointer;
+          cursor: hand;
+        }
+        div {
+          display: inline-block;
+        }
+        div:first-of-type {
+          padding-right: 7px;
+        }
+        div:first-of-type {
+          border-right: 1px solid;
+        }
+      }
     }
     overflow-y: scroll;
+  }
+  .running {
+    color: $successColor;
+  }
+  .not-running {
+    color: $errColor;
   }
 }

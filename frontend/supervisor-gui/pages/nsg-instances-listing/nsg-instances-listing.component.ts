@@ -1,5 +1,5 @@
 import {Component, OnInit, OnChanges} from '@angular/core';
-import {NsgInstancesService} from "../nsg-instances.service";
+import {NsgInstancesService} from "../../services/nsg-instances.service";
 import {NsgInstance2} from "../../models/nsg-instance2";
 
 @Component({
@@ -40,7 +40,7 @@ export class NsgInstancesListingComponent implements OnInit {
     }
 
     removeInstance(instance: NsgInstance2) {
-        this.nsgInstancesService.remove(instance.name).subscribe(
+        this.nsgInstancesService.removeInstance(instance.name).subscribe(
             () => {
                 // Remove instance from viewed list
                 this.nsgInstances = this.nsgInstances.filter(
@@ -56,7 +56,7 @@ export class NsgInstancesListingComponent implements OnInit {
     }
 
     getInstances() {
-        this.nsgInstancesService.getAll().subscribe(
+        this.nsgInstancesService.getAllInstances().subscribe(
             (nsgInstances) => {
                 this.nsgInstances = nsgInstances;
             },
@@ -69,7 +69,7 @@ export class NsgInstancesListingComponent implements OnInit {
     }
 
     startInstance(instance : NsgInstance2) {
-        this.nsgInstancesService.start(instance.name).subscribe(
+        this.nsgInstancesService.startInstance(instance.name).subscribe(
             () => {
                 instance.running = true;
             },
@@ -82,7 +82,7 @@ export class NsgInstancesListingComponent implements OnInit {
     }
 
     stopInstance(instance : NsgInstance2) {
-        this.nsgInstancesService.stop(instance.name).subscribe(
+        this.nsgInstancesService.stopInstance(instance.name).subscribe(
             () => {
                 instance.running = false;
             },
@@ -95,7 +95,7 @@ export class NsgInstancesListingComponent implements OnInit {
     }
 
     restartInstance(instance : NsgInstance2) {
-        this.nsgInstancesService.restart(instance.name).subscribe(
+        this.nsgInstancesService.restartInstance(instance.name).subscribe(
             () => {
                 instance.running = true;
             },

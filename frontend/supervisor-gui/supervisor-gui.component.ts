@@ -77,7 +77,7 @@ export class SupervisorGuiComponent implements OnInit {
         }
       },
       {
-        path : 'instance/:instance',
+        path : 'instances/:instance',
         component: NsgInstanceDetailComponent,
         canActivate : [AuthGuard],
         data : {

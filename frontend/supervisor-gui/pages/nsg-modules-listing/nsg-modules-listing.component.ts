@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges } from '@angular/core';
 
-import {NsgModulesService} from "../nsg-modules.service";
+import {NsgModulesService} from "../../services/nsg-modules.service";
 import {NsgModule2} from "../../models/nsg-module2";
 
 @Component({

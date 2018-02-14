@@ -1,13 +1,15 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import {NsgModule2} from "../../models/nsg-module2";
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Router} from '@angular/router';
-import {NsgModulesService} from "../../pages/nsg-modules.service";
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
+import {NsgModule2} from "../../../../../models/nsg-module2";
+import {NsgModulesService} from "../../../../../services/nsg-modules.service";
 
 @Component({
     selector: 'nsg-module-edit-plain-form',
     templateUrl: './nsg-module-edit-plain-form.component.html',
-    styleUrls: ['./nsg-module-edit-plain-form.component.scss']
+    styleUrls: ['./nsg-module-edit-plain-form.component.scss'],
+    providers: [NsgModulesService]
 })
 export class NsgModuleEditPlainFormComponent implements OnInit {
 

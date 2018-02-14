@@ -16,9 +16,16 @@
           {{ instance.name }}
         </a>
       </td>
-      <td>{{ instance.tableStatus() }}</td>
-      <td>{{ instance.ifces_cnt.in }}/{{ instance.ifces_cnt.out }}</td>
-
+      <td>
+        <i [ngClass]="{'running': instance.running, 'not-running': !instance.running}"
+           data-toggle="tooltip"
+           title="{{instance.running ? 'Running' : 'Not running'}}"
+           class="fa fa-circle"></i>
+        &nbsp;/&nbsp;{{ (instance.enabled ? 'enabled' : 'disabled') }}
+      </td>
+      <td>
+        {{ instance.in_ifces.length }}/{{ instance.out_ifces.length }}
+      </td>
       <td>
         <a [routerLink]="['/nemea/supervisor-gui/modules/', instance.module.name]">
           {{ instance.module.name }}
@@ -28,23 +35,35 @@
         <div>
           <i *ngIf="instance.running === false"
              (click)="startInstance(instance)"
+             data-toggle="tooltip"
+             title="Start instance"
              class="fa fa-play"></i>
           <i *ngIf="instance.running === true"
              (click)="stopInstance(instance)"
+             data-toggle="tooltip"
+             title="Stop instance"
              class="fa fa-stop"></i>
           <i *ngIf="instance.running === true"
              (click)="restartInstance(instance)"
-             class="fa fa-redo"></i>
+             data-toggle="tooltip"
+             title="Restart instance"
+             class="fa fa-repeat"></i>
         </div>
         <div>
           <i (click)="exportAsSrJsonData(instance)"
-             class="fa fa-arrow-circle-down"></i>
+             data-toggle="tooltip"
+             title="Export instance configuration as JSON"
+             class="fa fa-arrow-circle-o-down"></i>
           <a [routerLink]="['/nemea/supervisor-gui/instances/', instance.name]"
+             data-toggle="tooltip"
+             title="Edit instance configuration"
              fragment="edit">
-            <i class="fa fa-edit"></i>
+            <i class="fa fa-cog"></i>
           </a>
           <i (click)="removeInstance(instance)"
-             class="fa fa-times"></i>
+             data-toggle="tooltip"
+             title="Remove instance"
+             class="fa fa-trash-o"></i>
         </div>
       </td>
     </tr>

@@ -1,8 +1,8 @@
 import { Directive, Input } from '@angular/core';
 import { Validator, AbstractControl, NG_ASYNC_VALIDATORS, ValidationErrors } from '@angular/forms';
-import {NsgYangService} from "../pages/nsg-yang.service";
+import {NsgYangService} from "../../services/nsg-yang.service";
 import { Observable } from 'rxjs/Observable';
-import {YangLintResult} from "../models/yang-lint-result";
+import {YangLintResult} from "../../models/yang-lint-result";
 
 
 @Directive({

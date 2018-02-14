@@ -1,11 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+
 import {NsgModule2} from "../../models/nsg-module2";
-import {NsgModulesService} from "../nsg-modules.service";
-import {NsgModuleEditPlainFormComponent} from "../../components/nsg-module-edit-plain-form/nsg-module-edit-plain-form.component";
-import {NsgModuleEditJsonFormComponent} from "../../components/nsg-module-edit-json-form/nsg-module-edit-json-form.component";
+import {NsgModulesService} from "../../services/nsg-modules.service";
+import {NsgModuleEditPlainFormComponent} from "../shared/nsg-edit/plain/module/nsg-module-edit-plain-form.component";
+import {NsgModuleEditJsonFormComponent} from "../shared/nsg-edit/json/module/nsg-module-edit-json-form.component";
 import {NsgInstance2} from "../../models/nsg-instance2";
-import {NsgInstancesService} from "../nsg-instances.service";
+import {NsgInstancesService} from "../../services/nsg-instances.service";
 
 @Component({
     selector: 'nsg-module-detail',
@@ -14,7 +15,6 @@ import {NsgInstancesService} from "../nsg-instances.service";
     providers: [NsgModulesService, NsgInstancesService]
 })
 export class NsgModuleDetailComponent implements OnInit {
-
 
     @ViewChild(NsgModuleEditPlainFormComponent)
     private plainFormComponent: NsgModuleEditPlainFormComponent;
@@ -31,6 +31,7 @@ export class NsgModuleDetailComponent implements OnInit {
     }
 
     ngOnInit() {
+        //$('[data-toggle="tooltip"]').tooltip();
         const moduleName = this.route.snapshot.paramMap.get('module');
         this.nsgModulesService.getModule(moduleName).subscribe(
             (module) => {
@@ -97,7 +98,7 @@ export class NsgModuleDetailComponent implements OnInit {
     }
 
     removeInstance(inst: NsgInstance2) {
-        this.nsgInstancesService.remove(inst.name).subscribe(
+        this.nsgInstancesService.removeInstance(inst.name).subscribe(
             () => {
                 // TODO
                 this.nsgModule.instances = this.nsgModule.instances

@@ -8,6 +8,7 @@ import json
 from fake_supervisor_backend_instances_data import INSTANCES
 from fake_supervisor_backend_modules_data import MODULES
 from random import random
+from time import sleep
 
 app = Flask(__name__)
 app.config['APPLICATION_ROOT'] = '/nemea/nemea-supervisor'
@@ -76,12 +77,38 @@ def module_create_and_all():
 
 ####################################################################
 
+@app.route("/nemea/sg/instances/<string:inst>/control", methods=['POST'])
+def instance_control(inst):
+  instName = request.view_args['inst']
+  inst = None
+  req = request.get_json()
+  print(req)
+  for i in INSTANCES:
+    if i['name'] == instName:
+      inst = i
+      break
+  if inst == None:
+    return Response(json.dumps({errors:['Instance not found']}), 404, mimetype='application/json')
+
+  if req['command'] == 'start':
+    inst['running'] = True
+    return ('', 200)
+  elif req['command'] == 'stop':
+    inst['running'] = False
+    return ('', 200)
+  elif req['command'] == 'restart':
+    inst['running'] = True
+    sleep(1.7)
+    return ('', 200)
+  else:
+    return Response(json.dumps({errors:['Invalid or missing \'command\' key']}), 400, mimetype='application/json')
+
 @app.route("/nemea/sg/instances/<string:inst>", methods=['GET', 'PUT', 'DELETE'])
 def instance_rud(inst):
   if request.method == 'GET':
     for m in INSTANCES:
       if m['name'] == request.view_args['inst']:
-        return Response(m, mimetype='application/json')
+        return Response(json.dumps(m), mimetype='application/json')
     return ('', 404)
 
   elif request.method == 'PUT':
@@ -101,13 +128,18 @@ def instance_rud(inst):
   else:
     return ('', 400)
 
-@app.route("/nemea/sg/intances", methods=['GET', 'POST'])
+@app.route("/nemea/sg/instances", methods=['GET', 'POST'])
 def instance_create_and_get_all():
   if request.method == 'GET':
-    return Response(m, mimetype='application/json')
+    return Response(json.dumps(INSTANCES), mimetype='application/json')
+
   else:
-    INSTANCES.append(request.get_json())
-    return ('', 201)
+    m = request.get_json()
+    if all (k in m for k in ('name', 'module')):
+      INSTANCES.append(m)
+      return ('', 201)
+    else:
+      return Response(json.dumps({'errors': ['some keys are missing in json']}), 400, mimetype='application/json')
 
 ####################################################################
 @app.route("/nemea/sg/yang-lint", methods=['POST'])
@@ -127,8 +159,17 @@ if __name__ == '__main__':
   ii = 0
   for idx, mod in enumerate(MODULES):
     mod['instances'] += INSTANCES[ii:ii+cnt]
+    for inst in INSTANCES[ii:ii+cnt]:
+      inst['module'] = {'name':mod['name']}
     ii += cnt
+
   MODULES[-1]['instances'] += INSTANCES[ii:len(INSTANCES)]
+  for inst in INSTANCES[ii:len(INSTANCES)]:
+    inst['module'] = {'name':mod['name']}
+    if 'in_ifces' not in inst:
+      inst['in_ifces'] = []
+    if 'out_ifces' not in inst:
+      inst['out_ifces'] = []
 
   SIMPLE_MODULES = MODULES[:]
   SIMPLE_MODULES = list(map(lambda x: {y: x[y] for y in x if y != 'instances'}, SIMPLE_MODULES))

@@ -31,7 +31,7 @@ def generate_interface(d, i):
   r = random()
   if r < 0.2:
     typ = 'TCP'
-    p_name = 'tcp-params'
+    p_name = 'tcp_params'
     if d == 'IN' and random() > 0.5:
       params = {'host':'somehost_'+str(random())}
     else:
@@ -44,7 +44,7 @@ def generate_interface(d, i):
 
   elif r < 0.4:
     typ = 'TCP-TLS'
-    p_name = 'tcp-tls-params'
+    p_name = 'tcp_tls_params'
     if d == 'IN' and random() > 0.5:
       params = {'host':'somehost_'+str(random())}
     else:
@@ -59,7 +59,7 @@ def generate_interface(d, i):
 
   elif r < 0.6:
     typ = 'UNIXSOCKET'
-    p_name = 'unix-params'
+    p_name = 'unix_params'
     params = {'socket-name': 'socket'+str(random())[2:5]}
     if d == 'OUT' and random() < 0.3:
       params['max-clients'] = int(random() * 10)
@@ -67,7 +67,7 @@ def generate_interface(d, i):
 
   elif r < 0.8:
     typ = 'FILE'
-    p_name = 'file-params'
+    p_name = 'file_params'
     params = {'name':'file'+str(random())[2:5]}
     if d == 'OUT':
       if random() > 0.5:

@@ -1,9 +1,10 @@
 import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
-import {NsgModule2} from "../../models/nsg-module2";
-import {NsgYangService} from "../../pages/nsg-yang.service";
-import {NsgYangModel} from "../../models/nsg-yang-model";
 import {Router} from '@angular/router';
-import {NsgModulesService} from "../../pages/nsg-modules.service";
+
+import {NsgModule2} from "../../../../../models/nsg-module2";
+import {NsgYangService} from "../../../../../services/nsg-yang.service";
+import {NsgYangModel} from "../../../../../models/nsg-yang-model";
+import {NsgModulesService} from "../../../../../services/nsg-modules.service";
 
 @Component({
     selector: 'nsg-module-edit-json-form',

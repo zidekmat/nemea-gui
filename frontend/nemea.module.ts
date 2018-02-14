@@ -65,13 +65,15 @@ import {NsgInstancesNewComponent} from "./supervisor-gui/pages/nsg-instances-new
 import {NsgInstanceDetailComponent} from "./supervisor-gui/pages/nsg-instance-detail/nsg-instance-detail.component";
 import {NsgHowToComponent} from "./supervisor-gui/pages/nsg-how-to/nsg-how-to.component";
 
-import {NsgTabsComponent} from "./supervisor-gui/components/nsg-tabs/nsg-tabs.component";
-import {NsgTabComponent} from "./supervisor-gui/components/nsg-tab/nsg-tab.component";
-import {NsgModuleEditPlainFormComponent} from "./supervisor-gui/components/nsg-module-edit-plain-form/nsg-module-edit-plain-form.component";
-import {NsgModuleEditJsonFormComponent} from "./supervisor-gui/components/nsg-module-edit-json-form/nsg-module-edit-json-form.component";
-import {JsonValidatorDirective} from "./supervisor-gui/components/json-validator.directive";
-import {YangLintValidatorDirective} from "./supervisor-gui/components/yang-lint-validator.directive";
-import {JsonModuleValidatorDirective} from "./supervisor-gui/components/nsg-module-edit-json-form/json-module-validator.directive";
+import {NsgTabsComponent} from "./supervisor-gui/pages/shared/nsg-tabs/nsg-tabs.component";
+import {NsgTabComponent} from "./supervisor-gui/pages/shared/nsg-tab/nsg-tab.component";
+import {NsgModuleEditPlainFormComponent} from "./supervisor-gui/pages/shared/nsg-edit/plain/module/nsg-module-edit-plain-form.component";
+import {NsgModuleEditJsonFormComponent} from "./supervisor-gui/pages/shared/nsg-edit/json/module/nsg-module-edit-json-form.component";
+import {NsgInstanceEditJsonFormComponent} from "./supervisor-gui/pages/shared/nsg-edit/json/instance/nsg-instance-edit-json-form.component";
+import {NsgInstanceEditPlainFormComponent} from "./supervisor-gui/pages/shared/nsg-edit/plain/instance/nsg-instance-edit-plain-form.component";
+import {JsonValidatorDirective} from "./supervisor-gui/pages/shared/json-validator.directive";
+import {YangLintValidatorDirective} from "./supervisor-gui/pages/shared/yang-lint-validator.directive";
+import {JsonModuleValidatorDirective} from "./supervisor-gui/pages/shared/nsg-edit/json/module/json-module-validator.directive";
 
 
 const nemeaRoutes: Routes = [
@@ -177,6 +179,8 @@ const nemeaRoutes: Routes = [
         NsgStatusComponent,
         NsgModuleEditPlainFormComponent,
         NsgModuleEditJsonFormComponent,
+        NsgInstanceEditPlainFormComponent,
+        NsgInstanceEditJsonFormComponent,
         JsonValidatorDirective,
         JsonModuleValidatorDirective,
         YangLintValidatorDirective,

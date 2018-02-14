@@ -1,1 +1,77 @@
-<h1>./nsg-instances/nsg-instance-detail/nsg-instance-detail.component.html</h1>
+<div *ngIf="nsgInstance">
+  <nsg-tabs>
+    <nsg-tab tabTitle="Info">
+      <div class="nsg-tab-info">
+        <div>
+          <div></div>
+          <table>
+            <tr>
+              <td width="35%">Module name:</td>
+              <td>{{nsgInstance.name}}</td>
+            </tr>
+
+          </table>
+        </div>
+        <div>
+          <div>
+            <button (click)="removeInstance()"
+                    type="button" class="btn btn-danger btn-lg">
+              Remove instance
+            </button>
+          </div>
+          <div>
+            <table>
+              <thead>
+              <tr>
+                <th width="40%">Interface name</th>
+                <th width="30%">Status</th>
+                <th width="30%">&nbsp;</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let i of nsgInstance.in_ifces.concat(nsgInstance.out_ifces)">
+                <td>
+                  {{i.name}}
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                    <i
+                       class="fa fa-cog"></i>
+                  &nbsp;
+                  <i
+                     class="fa fa-trash-o"></i>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </nsg-tab>
+    <nsg-tab tabTitle="Edit">
+      <nsg-instance-edit-plain-form *ngIf="nsgInstance"
+                                  (onSaved)="onSaved($event)"
+                                  (onEdited)="onEdited($event)"
+                                  [isEditForm]="true"
+                                  [passedInstance]="nsgInstance"
+      ></nsg-instance-edit-plain-form>
+    </nsg-tab>
+    <nsg-tab tabTitle="Edit as JSON">
+      <nsg-instance-edit-json-form  *ngIf="nsgInstance"
+                                  (onSaved)="onSaved($event)"
+                                  (onEdited)="onEdited($event)"
+                                  [isEditForm]="true"
+                                  [passedInstance]="nsgInstance"
+      ></nsg-instance-edit-json-form>
+    </nsg-tab>
+    <nsg-tab tabTitle="Munin stats"></nsg-tab>
+  </nsg-tabs>
+</div>
+<div *ngIf="!nsgInstance && !instanceNotFound">
+  Instance data are loading ...
+</div>
+<div *ngIf="instanceNotFound">
+  Instance not found.
+</div>

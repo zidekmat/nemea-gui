@@ -66,11 +66,11 @@
               <td>
                 <a [routerLink]="['/nemea/supervisor-gui/instance/', i.name]"
                    fragment="edit">
-                  <i class="fa fa-edit"></i>
+                  <i class="fa fa-cog"></i>
                 </a>
                 &nbsp;
                 <i (click)="removeInstance(i)"
-                   class="fa fa-times"></i>
+                   class="fa fa-trash-o"></i>
               </td>
             </tr>
             </tbody>
@@ -97,9 +97,9 @@
     </nsg-tab>
   </nsg-tabs>
 </div>
-<div *ngIf="!nsgModule && !moduleNotFound">
+<div *ngIf="!nsgInstance && !instanceNotFound">
   Module data are loading ...
 </div>
-<div *ngIf="moduleNotFound">
+<div *ngIf="instanceNotFound">
   Module not found.
 </div>

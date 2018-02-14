@@ -21,13 +21,13 @@
     <td>
       <div>
         <i (click)="exportAsSrJsonData(module)"
-           class="fa fa-arrow-circle-down"></i>
+           class="fa fa-arrow-circle-o-down"></i>
         <a [routerLink]="['/nemea/supervisor-gui/module/', module.name]"
            fragment="edit">
-          <i class="fa fa-edit"></i>
+          <i class="fa fa-cog"></i>
         </a>
         <i (click)="removeModule(module)"
-           class="fa fa-times"></i>
+           class="fa fa-trash-o"></i>
       </div>
     </td>
   </tr>

@@ -17,16 +17,20 @@ export class NsgModulesService {
             .map(response => response.json() as NsgModule2[]);
     }
 
-    getModule(moduleName: string, asExport = true) : Observable<NsgModule2> {
+    getModule(moduleName: string): Observable<NsgModule2> {
         return this.http.get(`/nemea/sg/modules/${moduleName}`)
             .map(response => response.json() as NsgModule2);
     }
 
-    createModule(nsgModule: NsgModule2) : Observable<{}> {
-        return this.http.post(`/nemea/sg/modules`, nsgModule);
+    createModule(mod: NsgModule2): Observable<{}> {
+        return this.http.post(`/nemea/sg/modules`, mod);
     }
-    updateModule(nsgModuleOrigName: string, nsgModule: NsgModule2) : Observable<{}> {
-        return this.http.put(`/nemea/sg/modules/${nsgModuleOrigName}`, nsgModule);
+
+    updateModule(moduleOrigName: string, mod: NsgModule2): Observable<{}> {
+        return this.http.put(
+            `/nemea/sg/modules/${moduleOrigName}`,
+            mod
+        );
     }
 
     removeModule(moduleName: string) : Observable<{}> {
@@ -39,22 +43,6 @@ export class NsgModulesService {
         return Promise.reject(err);
     }
 */
-
-
-    private mockInstance(name: string) : NsgInstance {
-
-        return new NsgInstance({
-            name: name,
-            running: Math.random() > 0.5,
-            enabled: Math.random() > 0.5,
-            in_ifces_cnt: this.randomNumberStr(),
-            out_ifces_cnt: this.randomNumberStr(),
-        });
-    }
-
-    private randomNumberStr() : string {
-        return (Math.floor(Math.random() * 20) + 1).toString();
-    }
 
 /*    private handleError(error: HttpErrorResponse) {
         if (error.error instanceof ErrorEvent) {
