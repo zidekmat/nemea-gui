@@ -1,0 +1,68 @@
+<div class="nsg-tab-xml">
+  <div *ngIf="backendErrors.length > 0"
+       class="nsg-err-msg">
+    <ul>
+      <li *ngFor="let err of backendErrors">
+        {{err.message}}
+      </li>
+    </ul>
+  </div>
+  <form id="editForm" (submit)="onSubmit()">
+    <div class="row">
+      <div *ngIf="backendErrors.length > 0"
+           class="nsg-err-msg">
+        <ul>
+          <li *ngFor="let err of backendErrors">
+            {{err.message}}
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="modXml.dirty && modXml.errors && modXml.errors.required"
+           class="nsg-err-msg col">
+        This field is required
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <textarea [(ngModel)]="nsgModuleXml"
+                  #modXml="ngModel"
+                  name="modXml"
+                  required
+                  rows="7"></textarea>
+      </div>
+      <div class="col-md-6">
+        <select [(ngModel)]="yangModel.type"
+                (change)="updateYangModel()"
+                name="modType"
+                class="custom-select">
+          <option *ngFor="let type of ['yang', 'yin']"
+                  [value]="type">
+            {{type}}
+          </option>
+        </select>
+        <p>
+          {{ yangModel.value }}
+        </p>
+      </div>
+    </div>
+  </form>
+  <div class="row bottom-col">
+    <button (click)="resetForm()"
+            class="btn btn-secondary">
+      Reset values
+    </button>
+    <div class="custom-file">
+      <input (change)="insertFromFile($event)"
+             id="xmlFile"
+             type="file" class="custom-file-input btn-secondary">
+      <label class="custom-file-label" for="xmlFile">
+        Insert from file
+      </label>
+    </div>
+    <button form="editForm"
+            type="submit"
+            class="btn btn-success">
+      Save module
+    </button>
+  </div>
+</div>
