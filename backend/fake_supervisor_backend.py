@@ -8,6 +8,7 @@ import json
 from fake_supervisor_backend_instances_data import INSTANCES
 from fake_supervisor_backend_modules_data import MODULES
 from random import random
+from random import choice
 from time import sleep
 
 app = Flask(__name__)
@@ -164,12 +165,6 @@ if __name__ == '__main__':
     ii += cnt
 
   MODULES[-1]['instances'] += INSTANCES[ii:len(INSTANCES)]
-  for inst in INSTANCES[ii:len(INSTANCES)]:
-    inst['module'] = {'name':mod['name']}
-    if 'in_ifces' not in inst:
-      inst['in_ifces'] = []
-    if 'out_ifces' not in inst:
-      inst['out_ifces'] = []
 
   SIMPLE_MODULES = MODULES[:]
   SIMPLE_MODULES = list(map(lambda x: {y: x[y] for y in x if y != 'instances'}, SIMPLE_MODULES))

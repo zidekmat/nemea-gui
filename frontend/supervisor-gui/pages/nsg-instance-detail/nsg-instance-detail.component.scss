@@ -1,0 +1,154 @@
+@import "../../supervisor-gui.style-defaults";
+
+:host, .if-loaded-instance, .nsg-tab-info {
+  height: 100%;
+  display: flex;
+}
+
+
+body {
+  width: 100%;
+}
+
+.col1, .col2 {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  width: 50%;
+  padding: 5px;
+}
+
+.col1 {
+  border-right: 1px solid;
+  font-size: 1.4rem;
+  tr {
+    td:first-of-type {
+      padding-bottom: 5px;
+    }
+
+    td:last-of-type {
+      padding-left: 10px;
+    }
+  }
+  .running {
+    color: $successColor;
+  }
+  .not-running {
+    color: $errColor;
+  }
+
+}
+
+.col2 {
+  border-right: 1px solid;
+}
+
+.row1, .row2 {
+
+}
+
+.row1 {
+  padding-bottom: 10px;
+}
+
+.row2 {
+  padding-top: 10px;
+  border-top: 1px solid;
+}
+
+.col2 {
+  .row1 {
+    height: 30%;
+    button {
+      cursor: hand;
+      cursor: pointer;
+      width: 50%;
+      display: block;
+      margin: auto;
+      margin-bottom: 1rem;
+    }
+  }
+  .row2 {
+    height: 70%;
+
+    .row1 {
+      display: flex;
+      flex-flow: row;
+      flex-wrap: wrap;
+      font-size: 1.3rem;
+      overflow-y: auto;
+
+      span {
+        font-weight: bold;
+      }
+      .ifc-cell {
+        width: 50%;
+      }
+    }
+
+    .row2 {
+      overflow-y: scroll;
+      height: 40%;
+      max-height: 100%;
+
+      table {
+        height: auto;
+        width: 100%;
+        font-size: 1.2rem;
+
+        .ifc-link {
+          color: blue;
+          cursor: pointer;
+          cursor: hand;
+          :hover {
+            text-decoration: underline;
+          }
+        }
+
+        td, th {
+          padding: 5px;
+        }
+
+        thead {
+          border: 1px solid;
+          th {
+            text-align: center;
+          }
+          th:first-of-type {
+            text-align: left;
+          }
+        }
+        tbody {
+          tr {
+            td {
+              text-align: center;
+            }
+            td:first-of-type {
+              text-align: left;
+              :hover {
+                text-decoration: underline;
+              }
+            }
+            td:last-of-type {
+              vertical-align: middle;
+            }
+          }
+          a {
+            color: #000000;
+            text-decoration: none;
+          }
+          i {
+            font-size: 2rem;
+            cursor: hand;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}
+
+.liner {
+  border-top: 1px solid;
+  height: 0.5rem;
+}

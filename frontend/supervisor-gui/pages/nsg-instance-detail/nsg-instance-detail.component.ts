@@ -21,6 +21,7 @@ export class NsgInstanceDetailComponent implements OnInit {
     private jsonFormComponent: NsgInstanceEditJsonFormComponent;
 
     nsgInstance: NsgInstance2;
+    selectedIfc: NsgInterface2;
     instanceNotFound = false;
 
     constructor(private nsgInstancesService: NsgInstancesService,
@@ -35,6 +36,7 @@ export class NsgInstanceDetailComponent implements OnInit {
                 console.log('Received instance:');
                 console.log(inst);
                 this.nsgInstance = inst;
+                this.selectedIfc = (inst.in_ifces.length > 0 ? inst.in_ifces[0] : (inst.out_ifces.length > 0 ? inst.out_ifces[0] : null ));
                 console.log(this.nsgInstance);
             },
             (error) => {
@@ -108,6 +110,10 @@ export class NsgInstanceDetailComponent implements OnInit {
                 console.log(error);
             }
         );
+    }
+
+    selectInterface(ifc: NsgInterface2) {
+        this.selectedIfc = ifc;
     }
 
 }

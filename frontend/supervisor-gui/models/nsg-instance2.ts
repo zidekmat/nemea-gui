@@ -6,11 +6,10 @@ export interface NsgInstance2 {
     module: NsgModule2;
     running: boolean;
     enabled: boolean;
+    use_sysrepo: boolean;
+    max_restarts_per_min: number;
+    params?: string;
+    sysrepo_xpath?: string;
     in_ifces: object[];
     out_ifces: object[];
-
-    tcp_params?: object;
-    tcp_tls_params?: object;
-    unix_params?: object;
-    file_params?: object;
 }

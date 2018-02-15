@@ -38,7 +38,7 @@ def generate_interface(d, i):
       params = {}
     params['port'] = int(random()*1000)
     if d == 'OUT' and random() < 0.3:
-      params['max-clients'] = int(random() * 10)
+      params['max_clients'] = int(random() * 10)
 
 
 
@@ -51,7 +51,7 @@ def generate_interface(d, i):
       params = {}
     params['port'] = int(random()*1000)
     if d == 'OUT' and random() < 0.3:
-      params['max-clients'] = int(random() * 10)
+      params['max_clients'] = int(random() * 10)
     params['keyfile'] = '/a/b/c/d'
     params['certfile'] = '/rZb/c/d'
     params['cafile'] = '/X/b/c/d'
@@ -60,9 +60,9 @@ def generate_interface(d, i):
   elif r < 0.6:
     typ = 'UNIXSOCKET'
     p_name = 'unix_params'
-    params = {'socket-name': 'socket'+str(random())[2:5]}
+    params = {'socket_name': 'socket'+str(random())[2:5]}
     if d == 'OUT' and random() < 0.3:
-      params['max-clients'] = int(random() * 10)
+      params['max_clients'] = int(random() * 10)
 
 
   elif r < 0.8:
@@ -93,11 +93,13 @@ def generate_interface(d, i):
     return {
       'name': 'i' + d[0] + str(i),
       'direction': d,
+      'type': typ,
     }
   else:
     return {
       'name': 'i' + d[0] + str(i),
       'direction': d,
+      'type': typ,
       p_name: params
 
     }
@@ -128,7 +130,25 @@ if __name__ == '__main__':
       for j in range(0, ifc_max):
         out_ifces.append(generate_interface('OUT', j))
 
-      f.write(str({'name':m['name']+' instance' + str(i), 'running':(random()>0.5), 'enabled':(random()>0.5), 'in_ifces':in_ifces,'out_ifces':out_ifces, 'module':m['name']})+",\n")
+      inst = {
+                'name':m['name']+' instance' + str(i), 
+                'max_restarts_per_min': int(random()*10),
+                 'use_sysrepo': random() < 0.3,
+                'running':(random()>0.5), 
+                'enabled':(random()>0.5), 
+                'in_ifces':in_ifces,'out_ifces':out_ifces, 
+                'module':m['name']
+             }
+
+      if inst['use_sysrepo']:
+        inst['sysrepo_xpath'] = f"/{inst['name']}:{inst['name']}/some/path"
+      else:
+        inst['params'] = ''
+        params_cnt = int(random() * 10) % 5
+        for i in range(0, params_cnt):
+          inst['params'] += choice([' -p', ' -vvv', '', '-X "asdfasdf"', '-q 42'])
+
+      f.write(str(inst)+",\n")
   f.write(']')
   f.close()
   print('fake_supervisor_backend_instances_data.py written')

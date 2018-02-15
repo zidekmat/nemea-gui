@@ -1,51 +1,232 @@
-<div *ngIf="nsgInstance">
+<div *ngIf="nsgInstance" class="if-loaded-instance">
   <nsg-tabs>
     <nsg-tab tabTitle="Info">
       <div class="nsg-tab-info">
-        <div>
-          <div></div>
-          <table>
-            <tr>
-              <td width="35%">Module name:</td>
-              <td>{{nsgInstance.name}}</td>
-            </tr>
+        <div class="col1">
+          <div class="row1">
+            <h2>Module instance: {{ nsgInstance.name }}</h2>
+            <table>
+              <tr>
+                <td width="35%">User CPU usage:</td>
+                <td>
+                  35%
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">Kernel CPU usage:</td>
+                <td>
+                  35%
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">Memory VMS usage:</td>
+                <td>
+                  35%
+                </td>
+              </tr>
+              <tr>
+                <td width="35%">Memory RSS usage:</td>
+                <td>
+                  35%
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="row2">
+            <table>
+              <tr>
+                <td width="35%">Instance of module:</td>
+                <td>
+                  <a [routerLink]="['/nemea/supervisor-gui/modules/', nsgInstance.module.name]">
+                    {{nsgInstance.module.name}}
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>Status</td>
+                <td>
+                  <i [ngClass]="{'running': nsgInstance.running, 'not-running': !nsgInstance.running}"
+                     data-toggle="tooltip"
+                     title="{{nsgInstance.running ? 'Running' : 'Not running'}}"
+                     class="fa fa-circle"></i>
+                  &nbsp;/&nbsp;{{ (nsgInstance.enabled ? 'enabled' : 'disabled') }}
+                </td>
+              </tr>
+              <tr>
+                <td>Maximum of restarts per minute:</td>
+                <td>
+                  {{ nsgInstance.max_restarts_per_min }}
+                </td>
+              </tr>
+              <tr>
+                <td>Uses Sysrepo?</td>
+                <td>
+                  {{ nsgInstance.use_sysrepo }}
+                </td>
+              </tr>
+              <tr *ngIf="!nsgInstance.use_sysrepo">
+                <td>Params:</td>
+                <td>
+                  {{ nsgInstance.params }}
+                </td>
+              </tr>
+              <tr *ngIf="nsgInstance.use_sysrepo">
+                <td>Params:</td>
+                <td>
+                  {{ nsgInstance.sysrepo_xpath }}
+                </td>
+              </tr>
 
-          </table>
+            </table>
+          </div>
         </div>
-        <div>
-          <div>
+        <div class="col2">
+          <div class="row1">
+            <button *ngIf="nsgInstance.running"
+                    type="button" class="btn btn-danger btn-lg">
+              Stop instance
+            </button>
+            <button *ngIf="nsgInstance.running"
+                    type="button" class="btn btn-danger btn-lg">
+              Restart instance
+            </button>
+            <button *ngIf="!nsgInstance.running"
+                    type="button" class="btn btn-danger btn-lg">
+              Start instance
+            </button>
             <button (click)="removeInstance()"
                     type="button" class="btn btn-danger btn-lg">
               Remove instance
             </button>
           </div>
-          <div>
-            <table>
-              <thead>
-              <tr>
-                <th width="40%">Interface name</th>
-                <th width="30%">Status</th>
-                <th width="30%">&nbsp;</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let i of nsgInstance.in_ifces.concat(nsgInstance.out_ifces)">
-                <td>
-                  {{i.name}}
-                </td>
-                <td>
-                  2
-                </td>
-                <td>
+          <div class="row2">
+            <div *ngIf="selectedIfc"
+                 class="row1">
+              <div class="ifc-cell">
+                <span>Name:</span> {{ selectedIfc.name }}
+              </div>
+              <div class="ifc-cell">
+                <span>Type:</span> {{ selectedIfc.type }}/{{ selectedIfc.direction }}
+              </div>
+
+              <div *ngIf="selectedIfc.type == 'TCP' && selectedIfc.tcp_params.host"
+                   class="ifc-cell">
+                <span>Host:</span> {{selectedIfc.tcp_params.host}}
+              </div>
+              <div *ngIf="selectedIfc.type == 'TCP'"
+                   class="ifc-cell">
+                <span>Port:</span> {{selectedIfc.tcp_params.port}}
+              </div>
+              <div *ngIf="selectedIfc.type == 'TCP' && selectedIfc.tcp_params.max_clients"
+                   class="ifc-cell">
+                <span>Maximum of clients:</span> {{selectedIfc.tcp_params.max_clients}}
+              </div>
+
+              <div *ngIf="selectedIfc.type == 'TCP-TLS' && selectedIfc.tcp_tls_params.host"
+                   class="ifc-cell">
+                <span>Host:</span> {{selectedIfc.tcp_tls_params.host}}
+              </div>
+              <div *ngIf="selectedIfc.type == 'TCP-TLS'"
+                   class="ifc-cell">
+                <span>Port:</span> {{selectedIfc.tcp_tls_params.port}}
+              </div>
+              <div *ngIf="selectedIfc.type == 'TCP-TLS'"
+                    class="ifc-cell">
+                <span>Key file:</span> {{selectedIfc.tcp_tls_params.keyfile}}
+              </div>
+              <div *ngIf="selectedIfc.type == 'TCP-TLS'"
+                   class="ifc-cell">
+                <span>Certificate file:</span> {{selectedIfc.tcp_tls_params.certfile}}
+              </div>
+              <div *ngIf="selectedIfc.type == 'TCP-TLS'"
+                   class="ifc-cell">
+                <span>CA certificate file:</span> {{selectedIfc.tcp_tls_params.cafile}}
+              </div>
+              <div *ngIf="selectedIfc.type == 'TCP-TLS' && selectedIfc.tcp_tls_params.max_clients"
+                   class="ifc-cell">
+                <span>Maximum of clients:</span> {{selectedIfc.tcp_tls_params.max_clients}}
+              </div>
+
+              <div *ngIf="selectedIfc.type == 'UNIXSOCKET'"
+                   class="ifc-cell">
+                <span>Socket name:</span> {{selectedIfc.unix_params.socket_name}}
+              </div>
+              <div *ngIf="selectedIfc.type == 'UNIXSOCKET' && selectedIfc.unix_params.max_clients"
+                   class="ifc-cell">
+                <span>Maximum of clients:</span> {{selectedIfc.unix_params.max_clients}}
+              </div>
+
+              <div *ngIf="selectedIfc.type == 'FILE'"
+                   class="ifc-cell">
+                <span>File name:</span> {{selectedIfc.file_params.name}}
+              </div>
+              <div *ngIf="selectedIfc.type == 'FILE' && selectedIfc.file_params.time"
+                   class="ifc-cell">
+                <span>Time:</span> {{selectedIfc.file_params.time}}
+              </div>
+              <div *ngIf="selectedIfc.type == 'FILE' && selectedIfc.file_params.size"
+                   class="ifc-cell">
+                <span>Size:</span> {{selectedIfc.file_params.size}}
+              </div>
+              <div *ngIf="selectedIfc.type == 'FILE' && selectedIfc.file_params.mode"
+                   class="ifc-cell">
+                <span>Mode:</span> {{selectedIfc.file_params.mode}}
+              </div>
+
+
+              <div *ngIf="selectedIfc.buffer"
+                   class="ifc-cell">
+                <span>Buffer:</span> {{selectedIfc.buffer}}
+              </div>
+              <div *ngIf="selectedIfc.autoflush"
+                   class="ifc-cell">
+                <span>Autoflush:</span> {{selectedIfc.autoflush}}
+              </div>
+              <div *ngIf="selectedIfc.timeout"
+                   class="ifc-cell">
+                <span>Timeout:</span> {{selectedIfc.timeout}}
+              </div>
+            </div>
+            <div *ngIf="!selectedIfc && (nsgInstance.in_ifces.length+nsgInstance.out_ifces.length) > 0"
+                 class="row1">
+              No interface selected
+            </div>
+            <div *ngIf="!selectedIfc && (nsgInstance.in_ifces.length+nsgInstance.out_ifces.length) == 0"
+                 class="row1">
+              No interfaces configured
+            </div>
+            <div class="row2">
+              <table>
+                <thead>
+                <tr>
+                  <th width="20%">Interface name</th>
+                  <th width="30%">Type</th>
+                  <th width="30%">Direction</th>
+                  <th>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let i of nsgInstance.in_ifces.concat(nsgInstance.out_ifces)">
+                  <td>
+                    <span (click)="selectInterface(i)"
+                          class="ifc-link">
+                    {{ i.name }}
+                    </span>
+                  </td>
+                  <td>
+                    {{ i.type }}
+                  </td>
+                  <td>
+                    {{ i.direction }}
+                  </td>
+                  <td>
                     <i
-                       class="fa fa-cog"></i>
-                  &nbsp;
-                  <i
-                     class="fa fa-trash-o"></i>
-                </td>
-              </tr>
-              </tbody>
-            </table>
+                            class="fa fa-cog"></i>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -59,7 +240,7 @@
       ></nsg-instance-edit-plain-form>
     </nsg-tab>
     <nsg-tab tabTitle="Edit as JSON">
-      <nsg-instance-edit-json-form  *ngIf="nsgInstance"
+      <nsg-instance-edit-json-form *ngIf="nsgInstance"
                                   (onSaved)="onSaved($event)"
                                   (onEdited)="onEdited($event)"
                                   [isEditForm]="true"

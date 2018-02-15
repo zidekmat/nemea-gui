@@ -10,8 +10,35 @@ export interface NsgInterface2 {
     autoflush?: string;
     timeout?: string;
 
-    tcp_params?: object;
-    tcp_tls_params?: object;
-    unix_params?: object;
-    file_params?: object;
+    tcp_params?: NsgIfcTcpParams;
+    tcp_tls_params?: NsgIfcTcpTlsParams;
+    unix_params?: NsgIfcUnixParams;
+    file_params?: NsgIfcFileParams;
+}
+
+interface NsgIfcTcpParams {
+    host?: string;
+    port: string;
+    max_clients?: number;
+}
+
+interface NsgIfcTcpTlsParams {
+    host?: string;
+    port: string;
+    max_clients?: number;
+    keyfile: string;
+    cafile: string;
+    certfile: string;
+}
+
+interface NsgIfcUnixParams {
+    socket_name: string;
+    max_clients?: number;
+}
+
+interface NsgIfcFileParams {
+    name: string;
+    time?: number;
+    size?: number;
+    mode?: string;
 }
