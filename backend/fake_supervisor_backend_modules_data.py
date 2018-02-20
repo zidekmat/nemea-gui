@@ -137,7 +137,7 @@ if __name__ == '__main__':
                 'running':(random()>0.5), 
                 'enabled':(random()>0.5), 
                 'in_ifces':in_ifces,'out_ifces':out_ifces, 
-                'module':m['name']
+                'module_kind':m['name']
              }
 
       if inst['use_sysrepo']:

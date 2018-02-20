@@ -26,6 +26,7 @@ def authorize():
 
 @app.errorhandler(Exception)
 def all_exception_handler(error):
+  print(traceback.format_exc())
   return Response(json.dumps({'errors':[traceback.format_exc()]}), 500, mimetype='application/json')
 
 ####################################################################
@@ -136,13 +137,96 @@ def instance_create_and_get_all():
 
   else:
     m = request.get_json()
-    if all (k in m for k in ('name', 'module')):
+    if all (k in m for k in ('name', 'module_kind')):
       INSTANCES.append(m)
       return ('', 201)
     else:
       return Response(json.dumps({'errors': ['some keys are missing in json']}), 400, mimetype='application/json')
 
 ####################################################################
+
+def inst_by_name(name):
+  for m in INSTANCES:
+    if m['name'] == name:
+      return m
+  return None
+
+def ifc_by_name(inst, name):
+  for i in inst['in_ifces']:
+    if i['name'] == name:
+      return i
+  for i in inst['out_ifces']:
+    if i['name'] == name:
+      return i
+  return None
+
+@app.route("/nemea/sg/instances/<string:inst>/ifces/<string:ifc>", methods=['GET', 'PUT', 'DELETE'])
+def ifc_rud(inst, ifc):
+  inst = inst_by_name(inst)
+  if inst == None:
+    return ('', 404)
+
+  if request.method == 'GET':
+    i = ifc_by_name(inst, ifc)
+    if i == None:
+      return ('', 404)
+    else:
+      return Response(json.dumps(i), mimetype='application/json')
+
+  elif request.method == 'PUT':
+    newIfc = request.get_json()
+    gut = False
+    for i in (inst['in_ifces'] + inst['out_ifces']):
+      if i['name'] == ifc:
+        i = newIfc
+        gut = True
+
+    if gut:
+      return ('', 201)
+    else:
+      return ('', 404)
+
+  elif request.method == 'DELETE':
+    for idx, i in enumerate(inst['in_ifces']):
+      if i['name'] == ifc:
+        del inst['in_ifces'][idx]
+        return ('', 200)
+    for idx, i in enumerate(inst['out_ifces']):
+      if i['name'] == ifc:
+        del inst['out_ifces'][idx]
+        return ('', 200)
+
+    return ('', 404)
+
+  else:
+    return ('', 400)
+
+@app.route("/nemea/sg/instances/<inst>/ifces", methods=['GET', 'POST'])
+def ifc_create_and_get_all(inst):
+  if request.method == 'GET':
+    inst = inst_by_name(inst)
+    only = request.args.get('only')
+    if only == 'name':
+      ifces = list(map(lambda x: x['name'], inst['in_ifces'] + inst['out_ifces']))
+      return Response(json.dumps(ifces), mimetype='application/json')
+    else:
+      return Response(json.dumps(inst['in_ifces'] + inst['out_ifces']), mimetype='application/json')
+
+  else:
+    ifc = request.get_json()
+    if all (k in ifc for k in ('name', 'direction')):
+      inst = inst_by_name(inst)
+      if ifc['direction'] == 'IN':
+        inst['in_ifces'].append(ifc)
+      else:
+        inst['out_ifces'].append(ifc)
+      return ('', 201)
+    else:
+      return Response(json.dumps({'errors': ['some keys are missing in json']}), 400, mimetype='application/json')
+
+####################################################################
+
+
 @app.route("/nemea/sg/yang-lint", methods=['POST'])
 def yang_lint():
   req = request.get_json()
@@ -161,7 +245,7 @@ if __name__ == '__main__':
   for idx, mod in enumerate(MODULES):
     mod['instances'] += INSTANCES[ii:ii+cnt]
     for inst in INSTANCES[ii:ii+cnt]:
-      inst['module'] = {'name':mod['name']}
+      inst['module_kind'] = mod['name']
     ii += cnt
 
   MODULES[-1]['instances'] += INSTANCES[ii:len(INSTANCES)]

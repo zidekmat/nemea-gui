@@ -166,7 +166,7 @@ export class NsgInstanceEditPlainFormComponent implements OnInit {
                     let others = this.nsgInstsNamesList.filter(
                         x => x.match(new RegExp('^' + moduleName + '[0-9]*'))
                     );
-                    let lastOther = others.length - 1;
+                    let lastOther = others[others.length - 1];
                     let lastNum = others.sort()[lastOther].match(/[0-9]*$/);
                     if (lastNum.length > 0) {
                         this.nsgInstance.name = lastOther.substring(lastNum[1]) + (parseInt(lastNum[0]) + 1).toString();

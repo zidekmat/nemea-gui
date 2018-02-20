@@ -58,10 +58,10 @@ import { NemeaStatusComponent } from './status/nemea_status.component';
 import {SupervisorGuiComponent} from "./supervisor-gui/supervisor-gui.component";
 import {NsgStatusComponent} from "./supervisor-gui/pages/nsg-status/nsg-status.component";
 import {NsgModulesListingComponent} from "./supervisor-gui/pages/nsg-modules-listing/nsg-modules-listing.component";
-import {NsgModulesNewComponent} from "./supervisor-gui/pages/nsg-modules-new/nsg-module-new.component";
+import {NsgModulesNewComponent} from "./supervisor-gui/pages/nsg-module-new/nsg-module-new.component";
 import {NsgModuleDetailComponent} from "./supervisor-gui/pages/nsg-module-detail/nsg-module-detail.component";
 import {NsgInstancesListingComponent} from "./supervisor-gui/pages/nsg-instances-listing/nsg-instances-listing.component";
-import {NsgInstancesNewComponent} from "./supervisor-gui/pages/nsg-instances-new/nsg-instance-new.component";
+import {NsgInstancesNewComponent} from "./supervisor-gui/pages/nsg-instance-new/nsg-instance-new.component";
 import {NsgInstanceDetailComponent} from "./supervisor-gui/pages/nsg-instance-detail/nsg-instance-detail.component";
 import {NsgHowToComponent} from "./supervisor-gui/pages/nsg-how-to/nsg-how-to.component";
 
@@ -74,6 +74,8 @@ import {NsgInstanceEditPlainFormComponent} from "./supervisor-gui/pages/shared/n
 import {JsonValidatorDirective} from "./supervisor-gui/pages/shared/json-validator.directive";
 import {YangLintValidatorDirective} from "./supervisor-gui/pages/shared/yang-lint-validator.directive";
 import {JsonModuleValidatorDirective} from "./supervisor-gui/pages/shared/nsg-edit/json/module/json-module-validator.directive";
+import {JsonInstanceValidatorDirective} from "./supervisor-gui/pages/shared/nsg-edit/json/instance/json-instance-validator.directive";
+import {NsgInterfacesFormComponent} from "./supervisor-gui/pages/shared/nsg-edit/plain/instance/nsg-interfaces-form/nsg-interfaces-form.component";
 
 
 const nemeaRoutes: Routes = [
@@ -180,9 +182,11 @@ const nemeaRoutes: Routes = [
         NsgModuleEditPlainFormComponent,
         NsgModuleEditJsonFormComponent,
         NsgInstanceEditPlainFormComponent,
+        NsgInterfacesFormComponent,
         NsgInstanceEditJsonFormComponent,
         JsonValidatorDirective,
         JsonModuleValidatorDirective,
+        JsonInstanceValidatorDirective,
         YangLintValidatorDirective,
         NsgTabsComponent,
         NsgTabComponent,
