@@ -37,8 +37,8 @@
               <tr>
                 <td width="35%">Instance of module:</td>
                 <td>
-                  <a [routerLink]="['/nemea/supervisor-gui/modules/', nsgInstance.module.name]">
-                    {{nsgInstance.module.name}}
+                  <a [routerLink]="['/nemea/supervisor-gui/modules/', nsgInstance.nsgModule.name]">
+                    {{nsgInstance.nsgModule.name}}
                   </a>
                 </td>
               </tr>
@@ -83,19 +83,19 @@
         <div class="col2">
           <div class="row1">
             <button *ngIf="nsgInstance.running"
-                    type="button" class="btn btn-danger btn-lg">
+                    type="button" class="nsg-btn">
               Stop instance
             </button>
             <button *ngIf="nsgInstance.running"
-                    type="button" class="btn btn-danger btn-lg">
+                    type="button" class="nsg-btn">
               Restart instance
             </button>
             <button *ngIf="!nsgInstance.running"
-                    type="button" class="btn btn-danger btn-lg">
+                    type="button" class="nsg-btn">
               Start instance
             </button>
             <button (click)="removeInstance()"
-                    type="button" class="btn btn-danger btn-lg">
+                    type="button" class="nsg-btn">
               Remove instance
             </button>
           </div>
@@ -233,16 +233,16 @@
     </nsg-tab>
     <nsg-tab tabTitle="Edit">
       <nsg-instance-edit-plain-form *ngIf="nsgInstance"
-                                  (onSaved)="onSaved($event)"
-                                  (onEdited)="onEdited($event)"
+                                  (onChildSaved)="onChildSaved($event)"
+                                  (onChildEdited)="onChildEdited($event)"
                                   [isEditForm]="true"
                                   [passedInstance]="nsgInstance"
       ></nsg-instance-edit-plain-form>
     </nsg-tab>
     <nsg-tab tabTitle="Edit as JSON">
       <nsg-instance-edit-json-form *ngIf="nsgInstance"
-                                  (onSaved)="onSaved($event)"
-                                  (onEdited)="onEdited($event)"
+                                  (onChildSaved)="onChildSaved($event)"
+                                  (onChildEdited)="onChildEdited($event)"
                                   [isEditForm]="true"
                                   [passedInstance]="nsgInstance"
       ></nsg-instance-edit-json-form>

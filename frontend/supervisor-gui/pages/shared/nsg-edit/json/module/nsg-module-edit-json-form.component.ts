@@ -1,7 +1,7 @@
 import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {NsgModule2} from "../../../../../models/nsg-module2";
+import {NsgModule} from "../../../../../models/nsg-module";
 import {NsgYangService} from "../../../../../services/nsg-yang.service";
 import {NsgYangModel} from "../../../../../models/nsg-yang-model";
 import {NsgModulesService} from "../../../../../services/nsg-modules.service";
@@ -17,7 +17,7 @@ export class NsgModuleEditJsonFormComponent implements OnInit {
     /**
      * Module to be changed
      */
-    @Input() passedModule: NsgModule2;
+    @Input() passedModule: NsgModule;
 
     /**
      * Whether this component is used for editing existing module
@@ -25,8 +25,8 @@ export class NsgModuleEditJsonFormComponent implements OnInit {
      */
     @Input() isEditForm: boolean;
 
-    @Output() onSaved = new EventEmitter<NsgModule2>();
-    @Output() onEdited = new EventEmitter<NsgModule2>();
+    @Output() onChildSaved = new EventEmitter<NsgModule>();
+    @Output() onChildEdited = new EventEmitter<NsgModule>();
 
     yangModel: NsgYangModel;
     nsgModuleJson: string;
@@ -39,6 +39,7 @@ export class NsgModuleEditJsonFormComponent implements OnInit {
     }
 
     ngOnInit() {
+        // TODO
         this.nsgYangService.getModelForXpath("").subscribe(
             (model) => {
                 this.yangModel = model;
@@ -65,17 +66,7 @@ export class NsgModuleEditJsonFormComponent implements OnInit {
     }
 
     resetForm() {
-        let srAvModule = JSON.parse(JSON.stringify(this.passedModule));
-
-        // Form JSON object parsable by sysrepo
-        delete srAvModule.instances;
-        this.nsgModuleJson = JSON.stringify({
-            "nemea:supervisor": {
-                "available-module": [
-                    srAvModule
-                ]
-            }
-        });
+        this.nsgModuleJson = this.passedModule.apiJson();
         this.beautifyJson();
     }
 
@@ -93,52 +84,38 @@ export class NsgModuleEditJsonFormComponent implements OnInit {
 
 
     onSubmit() {
-        console.log('submitting module json');
-        const nsgModule : NsgModule2 = JSON.parse(this.nsgModuleJson)['nemea:supervisor']['available-module'][0];
+        const nsgInstance = NsgModule.newFromApi(this.nsgModuleJson);
+
+        const onSuccess = () => {
+            this.onChildSaved.emit(nsgInstance);
+            this.router.navigate(
+                [`/nemea/supervisor-gui/instances/${nsgInstance.name}`],
+                {fragment: 'info'}
+            );
+        };
+        const onError = (error) => {
+            console.log('HTTP failed:');
+            console.log(error);
+            this.backendErrors = error.json();
+        };
 
         if (this.isEditForm) {
             console.log('updating module json');
             this.nsgModulesService.updateModule(
                 this.passedModule.name,
-                nsgModule
-            ).subscribe(
-                (module) => {
-                    this.onSaved.emit(nsgModule);
-                    this.router.navigate(
-                        [`/nemea/supervisor-gui/module/${nsgModule.name}`],
-                        {fragment: 'info'}
-                    )
-                },
-                (error) => {
-                    console.log(error);
-                    this.backendErrors = error.json();
-                }
-            );
+                nsgInstance
+            ).subscribe(onSuccess, onError);
         } else {
-            this.nsgModulesService.createModule(nsgModule).subscribe(
-                (resp) => {
-                    console.log(resp);
-                    this.onSaved.emit(nsgModule);
-                    this.router.navigate(
-                        [`/nemea/supervisor-gui/module/${nsgModule.name}`],
-                        {fragment: 'info'}
-                    )
-                },
-                (error) => {
-                    console.log('create failed with error response:')
-                    console.log(error);
-                    this.backendErrors = error.json().errors;
-                }
-            );
+            this.nsgModulesService.createModule(
+                nsgInstance
+            ).subscribe(onSuccess, onError);
         }
     }
 
     onFormEdit(form) {
-        console.log(form);
         if (form.valid && !form.submitted) {
             console.log(form);
-            const nsgModule : NsgModule2 = JSON.parse(this.nsgModuleJson)['nemea:supervisor']['available-module'][0];
-            this.onEdited.emit(nsgModule);
+            this.onChildEdited.emit(NsgModule.newFromApi(this.nsgModuleJson));
         }
     }
 

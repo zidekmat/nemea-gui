@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {NsgModule2} from "../../models/nsg-module2";
+import {NsgModule} from "../../models/nsg-module";
 import {NsgModuleEditJsonFormComponent} from "../shared/nsg-edit/json/module/nsg-module-edit-json-form.component";
 import {NsgModuleEditPlainFormComponent} from "../shared/nsg-edit/plain/module/nsg-module-edit-plain-form.component";
 import {NsgModulesService} from "../../services/nsg-modules.service";
@@ -17,27 +17,18 @@ export class NsgModulesNewComponent implements OnInit {
     @ViewChild(NsgModuleEditJsonFormComponent)
     private jsonFormComponent: NsgModuleEditJsonFormComponent;
 
-    nsgModule: NsgModule2;
+    nsgModule: NsgModule;
 
     constructor() {
-        this.nsgModule = {
-            name: '',
-            is_nemea_mod: false,
-            is_sr_ready: false,
-            sr_cb_ready: false,
-            in_ifces_cnt: '0',
-            out_ifces_cnt: '0',
-        };
+        this.nsgModule = NsgModule.newFromDefaults();
     }
 
     ngOnInit() {
     }
 
-    /**
-     * This is information from on of child forms that module was saved with
-     * values passed in `module`.
-     */
-    onEdited(module: NsgModule2) {
+    /* This is information from one of children forms that module
+     * was edited with values passed in `module`. */
+    onEdited(module: NsgModule) {
         console.log('onEdited in new');
         console.log(module);
         this.nsgModule = module;

@@ -1,0 +1,16 @@
+<div>
+  <nsg-tabs>
+    <nsg-tab tabTitle="New instance">
+      <nsg-instance-edit-plain-form (onChildEdited)="onChildEdited($event)"
+                                  [isEditForm]="false"
+                                  [passedInstance]="nsgInstance"
+      ></nsg-instance-edit-plain-form>
+    </nsg-tab>
+    <nsg-tab tabTitle="New instance from JSON">
+      <nsg-instance-edit-json-form (onChildEdited)="onChildEdited($event)"
+                                 [isEditForm]="false"
+                                 [passedInstance]="nsgInstance"
+      ></nsg-instance-edit-json-form>
+    </nsg-tab>
+  </nsg-tabs>
+</div>

@@ -9,7 +9,7 @@ export class JsonModuleValidatorDirective implements Validator {
     validate(control: AbstractControl): {[key: string]: any} {
         try {
             let module = JSON.parse(control.value);
-            let keys = Object.keys(module);
+/*            let keys = Object.keys(module);
 
             if (keys.length != 1 || keys[0] != 'nemea:supervisor') {
                 return {
@@ -31,7 +31,7 @@ export class JsonModuleValidatorDirective implements Validator {
                     validateJsonModule: "Invalid JSON: available-module JSON array must" +
                     " have length of 1"
                 };
-            }
+            }*/
             console.log('valid json module');
 
             return null;

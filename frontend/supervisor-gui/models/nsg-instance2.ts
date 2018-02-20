@@ -10,6 +10,6 @@ export interface NsgInstance2 {
     max_restarts_per_min: number;
     params?: string;
     sysrepo_xpath?: string;
-    in_ifces: object[];
-    out_ifces: object[];
+    in_ifces: NsgInterface2[];
+    out_ifces: NsgInterface2[];
 }

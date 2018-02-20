@@ -128,17 +128,17 @@
   </form>
   <div class="row bottom-col">
     <button (click)="resetForm()"
-            class="btn btn-secondary">
+            class="nsg-btn">
       Reset values
     </button>
-    <button (click)="openModal(prefillModal)"
-            class="btn btn-secondary">
+    <button (click)="nsgModalService.openNsgModal(prefillModal)"
+            class="nsg-btn">
       Prefill values
     </button>
     <button form="editForm"
             [disabled]="editForm.invalid"
             type="submit"
-            class="btn btn-success">
+            class="nsg-btn">
       Save module
     </button>
   </div>
@@ -151,10 +151,10 @@
       <span>&times;</span>
     </button>
   </div>
-  <div *ngIf="!nsgModulesList">
+  <div *ngIf="!nsgModsNamesList">
     Loading modules list...
   </div>
-  <form *ngIf="nsgModulesList"
+  <form *ngIf="nsgModsNamesList"
         #prefillForm="ngForm" id="prefillForm">
     <div class="modal-body">
         <label for="prefillFromModuleInput">
@@ -166,21 +166,21 @@
                 #prefillFromModuleInput="ngModel"
                 id="prefillFromModuleInput"
                 class="custom-select">
-          <option *ngFor="let module of nsgModulesList"
-                  [value]="module.name">
-            {{module.name}}
+          <option *ngFor="let name of nsgModsNamesList"
+                  [value]="name">
+            {{name}}
           </option>
         </select>
     </div>
     <div class="modal-footer">
       <input (click)="c('')"
               type="button"
-             class="btn btn-secondary"
+             class="nsg-btn"
              value="Close">
       <input (click)="prefill()"
              [disabled]="prefillForm.invalid"
               type="button"
-             class="btn btn-primary"
+             class="nsg-btn"
              form="prefillForm"
              value="Prefill">
     </div>

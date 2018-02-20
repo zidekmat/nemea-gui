@@ -41,12 +41,13 @@
       <div>
         <div>
           <button (click)="removeModule()"
-                  type="button" class="btn btn-danger btn-lg">
+                  type="button" class="nsg-btn">
             Remove module
           </button>
         </div>
         <div>
-          <table>
+          <h3 *ngIf="!nsgInstances">Loading instance list...</h3>
+          <table *ngIf="nsgInstances">
             <thead>
             <tr>
               <th width="40%">Instance name</th>
@@ -55,7 +56,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let i of nsgModule?.instances">
+            <tr *ngFor="let i of nsgInstances">
               <td>
                 <a [routerLink]="['/nemea/supervisor-gui/instances/', i.name]">
                   {{ i.name }}
@@ -81,16 +82,16 @@
     </nsg-tab>
     <nsg-tab tabTitle="Edit">
       <nsg-module-edit-plain-form *ngIf="nsgModule"
-                                  (onSaved)="onSaved($event)"
-                                  (onEdited)="onEdited($event)"
+                                  (onChildSaved)="onChildSaved($event)"
+                                  (onChildEdited)="onChildEdited($event)"
                                   [isEditForm]="true"
                                   [passedModule]="nsgModule"
       ></nsg-module-edit-plain-form>
     </nsg-tab>
     <nsg-tab tabTitle="Edit as JSON">
       <nsg-module-edit-json-form  *ngIf="nsgModule"
-                                 (onSaved)="onSaved($event)"
-                                 (onEdited)="onEdited($event)"
+                                 (onChildSaved)="onChildSaved($event)"
+                                 (onChildEdited)="onChildEdited($event)"
                                  [isEditForm]="true"
                                  [passedModule]="nsgModule"
       ></nsg-module-edit-json-form>

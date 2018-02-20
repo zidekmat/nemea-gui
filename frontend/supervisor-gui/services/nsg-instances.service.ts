@@ -3,34 +3,48 @@ import {Http, Headers, RequestOptions, Response} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import {NsgInstance} from "../models/nsg-instance";
 import {NsgModule} from "../models/nsg-module";
-import {NsgInstance2} from "../models/nsg-instance2";
-import {NsgInterface2} from "../models/nsg-interface2";
+import {NsgInterface} from "../models/nsg-interface";
 
 @Injectable()
 export class NsgInstancesService {
     constructor(private http: Http) {
     }
 
-    getAllInstances(): Observable<NsgInstance2[]> {
+    getAllInstances(): Observable<NsgInstance[]> {
         return this.http.get('/nemea/sg/instances')
-            .map(response => response.json() as NsgInstance2[]);
+            .map(response => response.json().map(
+                obj => NsgInstance.newFromApi(obj)
+            ));
     }
 
-    // TODO get all just names, rename also in module
-
-    createInstance(inst: NsgInstance2): Observable<{}> {
-        return this.http.post(`/nemea/sg/instances`, inst);
+    getAllInstancesNames(): Observable<string[]> {
+        return this.http.get('/nemea/sg/instances')
+            .map(response => {
+                return response.json().map(x => x.name);
+            });
     }
 
-    getInstance(instName: string): Observable<NsgInstance2> {
+    getAllInstancesByModuleName(moduleName: string): Observable<NsgInstance[]> {
+        // TODO make endpoint
+        return this.http.get('/nemea/sg/instances')
+            .map(response => response.json().filter(
+                obj => obj.module_kind == moduleName
+            ).map(i => new NsgInstance(i)));
+    }
+
+    createInstance(inst: NsgInstance): Observable<{}> {
+        return this.http.post(`/nemea/sg/instances`, inst.apiJson());
+    }
+
+    getInstance(instName: string): Observable<NsgInstance> {
         return this.http.get(`/nemea/sg/instances/${instName}`)
-            .map(response => response.json() as NsgInstance2);
+            .map(resp => NsgInstance.newFromApi(resp.json()));
     }
 
-    updateInstance(instOrigName: string, inst: NsgInstance2): Observable<{}> {
+    updateInstance(instOrigName: string, inst: NsgInstance): Observable<{}> {
         return this.http.put(
             `/nemea/sg/instances/${instOrigName}`,
-            inst
+            inst.apiJson()
         );
     }
 
@@ -63,14 +77,24 @@ export class NsgInstancesService {
         );
     }
 
-    addInterface(instanceName: string, ifc: NsgInterface2): Observable<{}> {
+    getInterface(instName: string, ifcName: string): Observable<NsgInterface> {
+        return this.http.get(`/nemea/sg/instances/${instName}/ifces/${ifcName}`)
+            .map(response => new NsgInterface(response.json()));
+    }
+
+    getAllInterfacesNames(instName: string): Observable<string[]> {
+        return this.http.get(`/nemea/sg/instances/${instName}/ifces?only=name`)
+            .map(response => response.json() as string[]);
+    }
+
+    addInterface(instanceName: string, ifc: NsgInterface): Observable<{}> {
         return this.http.post(
             `/nemea/sg/instances/${instanceName}/ifces`,
             ifc
         );
     }
 
-    updateInterface(instanceName: string, origIfcName: string, ifc: NsgInterface2): Observable<{}> {
+    updateInterface(instanceName: string, origIfcName: string, ifc: NsgInterface): Observable<{}> {
         return this.http.put(
             `/nemea/sg/instances/${instanceName}/ifces/${origIfcName}`,
             ifc

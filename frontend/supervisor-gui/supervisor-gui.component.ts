@@ -7,11 +7,11 @@ import {NsgStatusComponent} from "./pages/nsg-status/nsg-status.component";
 import {NsgHowToComponent} from "./pages/nsg-how-to/nsg-how-to.component";
 
 import {NsgModulesListingComponent} from "./pages/nsg-modules-listing/nsg-modules-listing.component";
-import {NsgModulesNewComponent} from "./pages/nsg-modules-new/nsg-module-new.component";
+import {NsgModulesNewComponent} from "./pages/nsg-module-new/nsg-module-new.component";
 import {NsgModuleDetailComponent} from "./pages/nsg-module-detail/nsg-module-detail.component";
 
 import {NsgInstancesListingComponent} from "./pages/nsg-instances-listing/nsg-instances-listing.component";
-import {NsgInstancesNewComponent} from "./pages/nsg-instances-new/nsg-instance-new.component";
+import {NsgInstancesNewComponent} from "./pages/nsg-instance-new/nsg-instance-new.component";
 import {NsgInstanceDetailComponent} from "./pages/nsg-instance-detail/nsg-instance-detail.component";
 
 @Component({
@@ -50,7 +50,7 @@ export class SupervisorGuiComponent implements OnInit {
         },
       },
       {
-        path : 'module/:module',
+        path : 'modules/:module',
         component: NsgModuleDetailComponent,
         canActivate : [AuthGuard],
         data : {
@@ -99,9 +99,5 @@ export class SupervisorGuiComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-  }
-
-  bigHeader() : string {
-    return "xxx";
   }
 }

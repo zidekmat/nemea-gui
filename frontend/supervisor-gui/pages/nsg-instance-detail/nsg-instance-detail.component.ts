@@ -2,8 +2,8 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {NsgInstancesService} from "../../services/nsg-instances.service";
-import {NsgInterface2} from "../../models/nsg-interface2";
-import {NsgInstance2} from "../../models/nsg-instance2";
+import {NsgInterface} from "../../models/nsg-interface";
+import {NsgInstance} from "../../models/nsg-instance";
 import {NsgInstanceEditPlainFormComponent} from "../shared/nsg-edit/plain/instance/nsg-instance-edit-plain-form.component";
 import {NsgInstanceEditJsonFormComponent} from "../shared/nsg-edit/json/instance/nsg-instance-edit-json-form.component";
 
@@ -20,8 +20,8 @@ export class NsgInstanceDetailComponent implements OnInit {
     @ViewChild(NsgInstanceEditJsonFormComponent)
     private jsonFormComponent: NsgInstanceEditJsonFormComponent;
 
-    nsgInstance: NsgInstance2;
-    selectedIfc: NsgInterface2;
+    nsgInstance: NsgInstance;
+    selectedIfc: NsgInterface;
     instanceNotFound = false;
 
     constructor(private nsgInstancesService: NsgInstancesService,
@@ -34,9 +34,16 @@ export class NsgInstanceDetailComponent implements OnInit {
         this.nsgInstancesService.getInstance(instName).subscribe(
             (inst) => {
                 console.log('Received instance:');
-                console.log(inst);
+                console.log(JSON.stringify(inst));
                 this.nsgInstance = inst;
-                this.selectedIfc = (inst.in_ifces.length > 0 ? inst.in_ifces[0] : (inst.out_ifces.length > 0 ? inst.out_ifces[0] : null ));
+                if (this.nsgInstance.in_ifces.length > 0) {
+                    this.selectedIfc = this.nsgInstance.in_ifces[0];
+                } else if (inst.out_ifces.length > 0) {
+                    this.selectedIfc = this.nsgInstance.out_ifces[0];
+                } else {
+                    this.selectedIfc = undefined;
+                }
+
                 console.log(this.nsgInstance);
             },
             (error) => {
@@ -52,8 +59,8 @@ export class NsgInstanceDetailComponent implements OnInit {
         );
     }
 
-    onSaved(inst: NsgInstance2) {
-        console.log('onSaved in detail');
+    onChildSaved(inst: NsgInstance) {
+        console.log('onChildSaved in detail');
         console.log(inst);
         this.nsgInstance = inst;
 
@@ -64,20 +71,14 @@ export class NsgInstanceDetailComponent implements OnInit {
         this.jsonFormComponent.resetForm();
     }
 
-    onEdited(inst: NsgInstance2) {
-        console.log('onEdited in detail');
+    onChildEdited(inst: NsgInstance) {
+        console.log('onChildEdited in detail');
         console.log(inst);
-
 
         // Edit working values of both forms
         this.plainFormComponent.nsgInstance = inst;
-        this.jsonFormComponent.nsgInstanceJson = JSON.stringify({
-            "nemea:supervisor": {
-                "module": [
-                    inst
-                ]
-            }
-        });
+        this.plainFormComponent.fetchModule();
+        this.jsonFormComponent.nsgInstanceJson = inst.apiJson();
         this.jsonFormComponent.beautifyJson();
     }
 
@@ -93,7 +94,7 @@ export class NsgInstanceDetailComponent implements OnInit {
         );
     }
 
-    removeInterface(ifc: NsgInterface2) {
+    removeInterface(ifc: NsgInterface) {
         this.nsgInstancesService.removeInterface(this.nsgInstance.name, ifc.name).subscribe(
             () => {
                 const ifcFilter = (ifcIter) => ifcIter != ifc;
@@ -112,7 +113,7 @@ export class NsgInstanceDetailComponent implements OnInit {
         );
     }
 
-    selectInterface(ifc: NsgInterface2) {
+    selectInterface(ifc: NsgInterface) {
         this.selectedIfc = ifc;
     }
 

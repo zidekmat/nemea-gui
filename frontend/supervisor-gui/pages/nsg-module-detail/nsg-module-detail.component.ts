@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {NsgModule2} from "../../models/nsg-module2";
+import {NsgModule} from "../../models/nsg-module";
 import {NsgModulesService} from "../../services/nsg-modules.service";
 import {NsgModuleEditPlainFormComponent} from "../shared/nsg-edit/plain/module/nsg-module-edit-plain-form.component";
 import {NsgModuleEditJsonFormComponent} from "../shared/nsg-edit/json/module/nsg-module-edit-json-form.component";
-import {NsgInstance2} from "../../models/nsg-instance2";
+import {NsgInstance} from "../../models/nsg-instance";
 import {NsgInstancesService} from "../../services/nsg-instances.service";
 
 @Component({
@@ -21,7 +21,8 @@ export class NsgModuleDetailComponent implements OnInit {
     @ViewChild(NsgModuleEditJsonFormComponent)
     private jsonFormComponent: NsgModuleEditJsonFormComponent;
 
-    nsgModule: NsgModule2;
+    nsgModule: NsgModule;
+    nsgInstances: NsgInstance[];
     moduleNotFound = false;
 
     constructor(private nsgModulesService: NsgModulesService,
@@ -31,7 +32,6 @@ export class NsgModuleDetailComponent implements OnInit {
     }
 
     ngOnInit() {
-        //$('[data-toggle="tooltip"]').tooltip();
         const moduleName = this.route.snapshot.paramMap.get('module');
         this.nsgModulesService.getModule(moduleName).subscribe(
             (module) => {
@@ -50,13 +50,19 @@ export class NsgModuleDetailComponent implements OnInit {
                 }
             }
         );
+        this.nsgInstancesService.getAllInstancesByModuleName(moduleName).subscribe(
+            (insts) => this.nsgInstances = insts,
+            (error) => {
+                console.log('HTTP error:');
+                console.log(error);
+                //TODO
+            }
+        );
     }
 
-    /**
-     * This is information from on of child forms that module was saved with
-     * values passed in `module`.
-     */
-    onSaved(module: NsgModule2) {
+    /* This is information from one of child forms that module was
+     * saved with values passed in `module`. */
+    onChildSaved(module: NsgModule) {
         console.log('onSaved in detail');
         console.log(module);
         this.nsgModule = module;
@@ -68,19 +74,13 @@ export class NsgModuleDetailComponent implements OnInit {
         this.jsonFormComponent.resetForm();
     }
 
-    onEdited(module: NsgModule2) {
+    onChildEdited(module: NsgModule) {
         console.log('onEdited in detail');
         console.log(module);
 
         // Edit working values of both forms
         this.plainFormComponent.nsgModule = module;
-        this.jsonFormComponent.nsgModuleJson = JSON.stringify({
-            "nemea:supervisor": {
-                "available-module": [
-                    module
-                ]
-            }
-        });
+        this.jsonFormComponent.nsgModuleJson = module.apiJson();
         this.jsonFormComponent.beautifyJson();
     }
 
@@ -97,11 +97,11 @@ export class NsgModuleDetailComponent implements OnInit {
         );
     }
 
-    removeInstance(inst: NsgInstance2) {
+    removeInstance(inst: NsgInstance) {
         this.nsgInstancesService.removeInstance(inst.name).subscribe(
             () => {
                 // TODO
-                this.nsgModule.instances = this.nsgModule.instances
+                this.nsgInstances = this.nsgInstances
                     .filter(
                         instIter => instIter != inst
                     );

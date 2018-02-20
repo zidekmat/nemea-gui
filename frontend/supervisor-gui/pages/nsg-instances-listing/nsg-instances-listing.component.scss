@@ -6,14 +6,20 @@ table {
     font-size: 1.5rem;
     th {
       border-bottom: 1px solid;
+      text-align: center;
+    }
+    th:first-of-type {
+      text-align: left;
     }
   }
   tbody {
     font-size: 1.2rem;
     td {
+      text-align: center;
       padding-top: 5px;
       padding-bottom: 5px;
     }
+
     td:last-of-type {
       font-size: 1.8rem;
       a {
@@ -22,9 +28,13 @@ table {
       }
     }
     tr {
+      td:first-of-type {
+        text-align: left;
+      }
       border-bottom: 1px solid;
 
       td:last-of-type {
+        text-align: right;
         i {
           cursor: pointer;
           cursor: hand;

@@ -1,3 +1,5 @@
+@import "../../supervisor-gui.style-defaults";
+
 :host {
   display: flex;
   flex-flow: column;
@@ -51,13 +53,14 @@ div {
     div:first-of-type {
       height: 30%;
       border: none;
-      border-bottom: 1px solid;
+      border-bottom: 2px solid;
       margin-bottom: 10px;
 
       button {
         margin: auto;
         margin-top: 10%;
         cursor: hand;
+        font-size: 2rem;
         width: 40%;
       }
     }

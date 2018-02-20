@@ -4,7 +4,6 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { NsgInstance } from "../models/nsg-instance";
 import { NsgModule } from "../models/nsg-module";
-import { NsgModule2 } from "../models/nsg-module2";
 import { of } from 'rxjs/observable/of';
 
 @Injectable()
@@ -12,21 +11,28 @@ export class NsgModulesService {
 
     constructor(private http: Http) {}
 
-    getAllModules() : Observable<NsgModule2[]> {
+    getAllModules() : Observable<NsgModule[]> {
         return this.http.get('/nemea/sg/modules?withInstances=false')
-            .map(response => response.json() as NsgModule2[]);
+            .map(response => response.json().map(m => NsgModule.newFromApi(m)));
     }
 
-    getModule(moduleName: string): Observable<NsgModule2> {
+    getAllModulesNames(): Observable<string[]> {
+        return this.http.get('/nemea/sg/modules?withInstances=false')
+            .map(response => {
+                return response.json().map(m => m.name);
+            });
+    }
+
+    getModule(moduleName: string): Observable<NsgModule> {
         return this.http.get(`/nemea/sg/modules/${moduleName}`)
-            .map(response => response.json() as NsgModule2);
+            .map(response => NsgModule.newFromApi(response.json()));
     }
 
-    createModule(mod: NsgModule2): Observable<{}> {
+    createModule(mod: NsgModule): Observable<{}> {
         return this.http.post(`/nemea/sg/modules`, mod);
     }
 
-    updateModule(moduleOrigName: string, mod: NsgModule2): Observable<{}> {
+    updateModule(moduleOrigName: string, mod: NsgModule): Observable<{}> {
         return this.http.put(
             `/nemea/sg/modules/${moduleOrigName}`,
             mod

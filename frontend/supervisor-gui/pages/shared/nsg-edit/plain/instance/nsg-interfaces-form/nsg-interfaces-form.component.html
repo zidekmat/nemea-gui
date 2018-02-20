@@ -1,0 +1,403 @@
+<div class="row1">
+  <div class="row1">
+    <h3>Instance interfaces:</h3>
+  </div>
+  <div class="row2">
+    <div class="col1">
+      <table>
+        <thead>
+        <th width="33%">Name</th>
+        <th width="44">Type</th>
+        <th width="23%"></th>
+        </thead>
+        <tbody>
+        <tr *ngFor="let ifc of nsgInstance.in_ifces">
+            <span (click)="selectIfc(ifc)"
+                  class="ifc-link">
+            {{ifc.name}}
+            </span>
+          <td>{{ifc.type}} / {{ifc.direction}}</td>
+          <td>
+            <i (click)="selectIfc(ifc)"
+               class="fa fa-cog"></i>
+            <i (click)="removeIfc(ifc)"
+               class="fa fa-trash"></i>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col2">
+      <table>
+        <thead>
+        <th width="33%">Name</th>
+        <th width="44">Type</th>
+        <th width="23%"></th>
+        </thead>
+        <tbody>
+        <tr *ngFor="let ifc of nsgInstance.out_ifces">
+          <td>
+            <span (click)="selectIfc(ifc)"
+                  class="ifc-link">
+            {{ifc.name}}
+            </span>
+          </td>
+          <td>{{ifc.type}} / {{ifc.direction}}</td>
+          <td>
+            <i (click)="selectIfc(ifc)"
+               class="fa fa-cog"></i>
+            <i (click)="removeIfc(ifc)"
+               class="fa fa-trash"></i>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div *ngIf="!selectedIfc"
+     class="add-new-ifc-row">
+  <button
+          (click)="createNewIfc()"
+          class="nsg-btn">
+    Create new interface
+  </button>
+</div>
+
+<form #ifcForm="ngForm"
+      id="ifcForm"
+      [hidden]="!selectedIfc"
+      (submit)="saveIfc(ifcForm)">
+  <div *ngIf="selectedIfc"
+       class="row2">
+    <div class="row1">
+      <h3>
+        {{addingIfc ? 'Creating new interface' : 'Configuring interface '
+        +selectedIfc.name}}:
+      </h3>
+      <p *ngIf="nsgInstance.totalIfcesTodo == undefined">
+        Loading count of required interfaces...
+      </p>
+      <p *ngIf="nsgInstance.totalIfcesTodo && nsgInstance.totalIfcesTodo > 0">
+        You have to configure <span>{{nsgInstance.inIfcesTodo}}</span> more IN interfaces
+        and
+        <span>{{nsgInstance.outIfcesTodo}}</span> more OUT interfaces.
+      </p>
+      <ul *ngIf="backendErrors.length > 0">
+        <li *ngFor="let err of backendErrors">
+          {{err}}
+        </li>
+      </ul>
+    </div>
+    <div class="row2">
+      <div class="row1">
+        <div class="ifc-cell">
+          <label for="ifcName">Name*:</label>
+          <input [(ngModel)]="selectedIfc.name"
+                 #ifcName="ngModel"
+                 name="ifcName"
+                 id="ifcName"
+                 required
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+        <div class="ifc-cell">
+          <label for="ifcType">Type*:</label>
+          <select [(ngModel)]="selectedIfc.type"
+                  required
+                  name="ifcType"
+                  id="ifcType"
+                  #ifcType="ngModel"
+                  class="nsg-form-control">
+            <option *ngFor="let type of ifcTypes"
+                    [value]="type">
+              {{type}}
+            </option>
+          </select>
+        </div>
+        <div class="ifc-cell">
+          <label for="ifcDirection">Direction*:</label>
+          <select [(ngModel)]="selectedIfc.direction"
+                  required
+                  name="ifcDirection"
+                  id="ifcDirection"
+                  #ifcDirection="ngModel"
+                  class="nsg-form-control">
+            <option *ngFor="let dir of ifcDirections"
+                    [value]="dir">
+              {{dir}}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div *ngIf="ifcType.value == 'TCP'"
+           class="row2">
+        <div *ngIf="ifcDirection.value == 'OUT'"
+             class="ifc-cell">
+          <label for="ifcTcpHost">Host*:</label>
+          <input [(ngModel)]="selectedIfc.tcp_params.host"
+                 #ifcTcpHost="ngModel"
+                 name="ifcTcpHost"
+                 id="ifcTcpHost"
+                 required
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+        <div class="ifc-cell">
+          <label for="ifcTcpPort">Port*:</label>
+          <input [(ngModel)]="selectedIfc.tcp_params.port"
+                 #ifcTcpPort="ngModel"
+                 name="ifcTcpPort"
+                 id="ifcTcpPort"
+                 required
+                 type="text"
+                 class="nsg-form-control">
+
+        </div>
+        <div *ngIf="ifcDirection.value == 'OUT'"
+             class="ifc-cell">
+          <label for="ifcTcpMaxCli">Maximum of clients:</label>
+          <input [(ngModel)]="selectedIfc.tcp_params.max_clients"
+                 #ifcTcpMaxCli="ngModel"
+                 name="ifcTcpMaxCli"
+                 id="ifcTcpMaxCli"
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+      </div>
+      <div *ngIf="ifcType.value == 'TCP-TLS'"
+           class="row2">
+        <div *ngIf="ifcDirection.value == 'IN'"
+             class="ifc-cell">
+          <label for="ifcTcpTlsHost">Host*:</label>
+          <input [(ngModel)]="selectedIfc.tcp_tls_params.host"
+                 #ifcTcpTlsHost="ngModel"
+                 name="ifcTcpTlsHost"
+                 id="ifcTcpTlsHost"
+                 required
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+        <div class="ifc-cell">
+          <label for="ifcTcpTlsPort">Port*:</label>
+          <input [(ngModel)]="selectedIfc.tcp_tls_params.port"
+                 #ifcTcpTlsPort="ngModel"
+                 name="ifcTcpTlsPort"
+                 id="ifcTcpTlsPort"
+                 required
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+        <div class="ifc-cell">
+          <label for="ifcTcpTlsKeyFile">Key file*:</label>
+          <input [(ngModel)]="selectedIfc.tcp_tls_params.keyfile"
+                 #ifcTcpTlsKeyFile="ngModel"
+                 name="ifcTcpTlsKeyFile"
+                 id="ifcTcpTlsKeyFile"
+                 required
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+        <div class="ifc-cell">
+          <label for="ifcTcpTlsCertFile">Certificate file*:</label>
+          <input [(ngModel)]="selectedIfc.tcp_tls_params.certfile"
+                 #ifcTcpTlsCertFile="ngModel"
+                 name="ifcTcpTlsCertFile"
+                 id="ifcTcpTlsCertFile"
+                 required
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+        <div class="ifc-cell">
+          <label for="ifcTcpTlsCaFile">CA certificate file*:</label>
+          <input [(ngModel)]="selectedIfc.tcp_tls_params.cafile"
+                 #ifcTcpTlsCaFile="ngModel"
+                 name="ifcTcpTlsCaFile"
+                 id="ifcTcpTlsCaFile"
+                 required
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+        <div *ngIf="ifcDirection.value == 'OUT'"
+             class="ifc-cell">
+          <label for="ifcTcpTlsMaxCli">Maximum of clients:</label>
+          <input [(ngModel)]="selectedIfc.tcp_tls_params.max_clients"
+                 #ifcTcpTlsMaxCli="ngModel"
+                 name="ifcTcpTlsMaxCli"
+                 id="ifcTcpTlsMaxCli"
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+      </div>
+      <div *ngIf="ifcType.value == 'UNIXSOCKET'"
+           class="row2">
+        <div class="ifc-cell">
+          <label for="ifcUnixSckName">Socket name*:</label>
+          <input [(ngModel)]="selectedIfc.unix_params.socket_name"
+                 #ifcUnixSckName="ngModel"
+                 name="ifcUnixSckName"
+                 id="ifcUnixSckName"
+                 required
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+        <div *ngIf="ifcDirection.value == 'OUT'"
+             class="ifc-cell">
+          <label for="ifcUnixMaxCli">Maximum of clients:</label>
+          <input [(ngModel)]="selectedIfc.unix_params.max_clients"
+                 #ifcUnixMaxCli="ngModel"
+                 name="ifcUnixMaxCli"
+                 id="ifcUnixMaxCli"
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+      </div>
+      <div *ngIf="ifcType.value == 'FILE'"
+           class="row2">
+        <div class="ifc-cell">
+          <label for="ifcFileName">File name*:</label>
+          <input [(ngModel)]="selectedIfc.file_params.name"
+                 #ifcFileName="ngModel"
+                 name="ifcFileName"
+                 id="ifcFileName"
+                 required
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+
+        <div class="ifc-cell">
+          <label for="ifcFileTime">File time:</label>
+          <input [(ngModel)]="selectedIfc.file_params.time"
+                 #ifcFileTime="ngModel"
+                 name="ifcFileTime"
+                 id="ifcFileTime"
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+
+        <div class="ifc-cell">
+          <label for="ifcFileMode">File mode:</label>
+          <input [(ngModel)]="selectedIfc.file_params.mode"
+                 #ifcFileMode="ngModel"
+                 name="ifcFileMode"
+                 id="ifcFileMode"
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+
+        <div class="ifc-cell">
+          <label for="ifcFileSize">File size:</label>
+          <input [(ngModel)]="selectedIfc.file_params.size"
+                 #ifcFileSize="ngModel"
+                 name="ifcFileSize"
+                 id="ifcFileSize"
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+      </div>
+      <div class="row3">
+        <div *ngIf="ifcDirection.value == 'OUT'"
+             class="ifc-cell">
+          <label for="ifcBuffer">Buffer:</label>
+          <select [(ngModel)]="selectedIfc.buffer"
+                  name="ifcBuffer"
+                  id="ifcBuffer"
+                  #ifcBuffer="ngModel"
+                  class="nsg-form-control">
+            <option *ngFor="let buf of ['on', 'off']"
+                    [value]="buf">
+              {{buf}}
+            </option>
+          </select>
+        </div>
+
+        <div *ngIf="ifcDirection.value == 'OUT'"
+             class="ifc-cell">
+          <label for="ifcAutoflush">Autoflush:</label>
+          <input [(ngModel)]="selectedIfc.autoflush"
+                 #ifcAutoflush="ngModel"
+                 name="ifcAutoflush"
+                 id="ifcAutoflush"
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+
+        <div class="ifc-cell">
+          <label for="ifcTimeout">Timeout:</label>
+          <input [(ngModel)]="selectedIfc.timeout"
+                 #ifcTimeout="ngModel"
+                 name="ifcTimeout"
+                 id="ifcTimeout"
+                 type="text"
+                 class="nsg-form-control">
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div *ngIf="selectedIfc"
+     class="row3">
+  <button (click)="createNewIfc()"
+          [disabled]="nsgInstance.inIfcesTodo == 0 && nsgInstance.outIfcesTodo == 0"
+          class="nsg-btn">
+    Create new
+  </button>
+  <button (click)="resetIfc()"
+          class="nsg-btn">
+    Reset values
+  </button>
+  <button (click)="nsgModalService.openNsgModal(ifcPrefillModal)"
+          class="nsg-btn">
+    Prefill values
+  </button>
+  <button form="ifcForm"
+          [disabled]="ifcForm.invalid"
+          type="submit"
+          class="nsg-btn">
+    Save interface
+  </button>
+</div>
+
+<ng-template #ifcPrefillModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Prefill values from other interface</h4>
+    <button type="button" class="close" (click)="d('')">
+      <span>&times;</span>
+    </button>
+  </div>
+  <div *ngIf="!nsgIfcesNamesList">
+    Loading interfaces list...
+  </div>
+  <form *ngIf="nsgIfcesNamesList"
+        #ifcPrefillForm="ngForm" id="ifcPrefillForm">
+    <div class="modal-body">
+      <label for="prefillFromInstanceInput">
+        Choose interface to prefill values from*:
+      </label>
+      <select [(ngModel)]="prefillIfcName"
+              required
+              name="prefillFromInstanceInput"
+              #prefillFromInstanceInput="ngModel"
+              id="prefillFromInstanceInput"
+              class="custom-select">
+        <option *ngFor="let ifc of nsgIfcesNamesList"
+                [value]="ifc">
+          {{ifc}}
+        </option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <input (click)="c('')"
+             type="button"
+             class="nsg-btn"
+             value="Close">
+      <input (click)="prefill()"
+             [disabled]="ifcPrefillForm.invalid"
+             type="button"
+             class="nsg-btn"
+             form="ifcPrefillForm"
+             value="Prefill">
+    </div>
+  </form>
+</ng-template>

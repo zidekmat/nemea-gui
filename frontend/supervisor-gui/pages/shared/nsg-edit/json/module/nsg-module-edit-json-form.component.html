@@ -41,7 +41,7 @@
                     (change)="updateYangModel()"
                     name="modelType"
                     id="modelType"
-                    class="custom-select">
+                    class="nsg-form-control">
               <option *ngFor="let type of ['yang', 'yin']"
                       [value]="type">
                 {{type}}
@@ -57,7 +57,7 @@
   </div>
   <div class="row bottom-col">
     <button (click)="resetForm()"
-            class="btn btn-secondary">
+            class="nsg-btn">
       Reset values
     </button>
     <div class="custom-file">
@@ -71,7 +71,7 @@
     <button form="jsonEditForm"
             [disabled]="jsonEditForm.invalid"
             type="submit"
-            class="btn btn-success">
+            class="nsg-btn">
       Save module
     </button>
   </div>

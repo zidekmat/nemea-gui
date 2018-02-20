@@ -1,1 +1,189 @@
-<h1>nsg-instance-edit-plain-form.component.html</h1>
+<div class="nsg-tab-edit">
+  <div *ngIf="backendErrors.length > 0"
+       class="nsg-err-msg">
+    <ul>
+      <li *ngFor="let err of backendErrors">
+        {{err.message}}
+      </li>
+    </ul>
+  </div>
+  <div class="row1">
+    <div class="col1">
+      <form #editForm="ngForm"
+            id="editForm"
+            (submit)="onSubmit()"
+            (change)="onFormEdit(editForm)">
+        <table>
+          <tr>
+            <td>Module:</td>
+            <td *ngIf="nsgModulesList">
+              <select (change)="tryPrefillInstNameAndFetch(moduleName)"
+                      [(ngModel)]="nsgInstance.nsgModule.name"
+                      required
+                      name="moduleName"
+                      id="moduleName"
+                      #moduleName="ngModel"
+                      class="nsg-form-control">
+                <option *ngFor="let mod of nsgModulesList"
+                        [value]="mod.name">
+                  {{mod.name}}
+                </option>
+              </select>
+              <div *ngIf="moduleName.dirty && moduleName.errors && moduleName.errors.required"
+                   class="nsg-err-msg">
+                This field is required
+              </div>
+            </td>
+            <td *ngIf="!nsgModulesList">
+              Loading modules list...
+            </td>
+          </tr>
+          <tr>
+            <td width="42%">Instance name:</td>
+            <td>
+              <input [(ngModel)]="nsgInstance.name"
+                     #name="ngModel"
+                     name="name"
+                     required
+                     type="text"
+                     class="nsg-form-control">
+              <div *ngIf="name.dirty && name.errors && name.errors.required"
+                   class="nsg-err-msg">
+                This field is required
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Maximum of restarts per minute:</td>
+            <td>
+              <input [(ngModel)]="nsgInstance.max_restarts_per_min"
+                     #max_restarts_per_min="ngModel"
+                     name="max_restarts_per_min"
+                     required
+                     type="text"
+                     class="nsg-form-control">
+              <div *ngIf="max_restarts_per_min.dirty && max_restarts_per_min.errors && max_restarts_per_min.errors.required"
+                   class="nsg-err-msg">
+                This field is required
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>Enabled:</td>
+            <td>
+              <label class="toggle-check">
+                <input [(ngModel)]="nsgInstance.enabled"
+                       name="enabled"
+                       class="toggle-check-input"
+                       type="checkbox"
+                       checked>
+                <span class="toggle-check-text"></span>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>Use sysrepo:</td>
+            <td>
+              <label class="toggle-check">
+                <input [(ngModel)]="nsgInstance.use_sysrepo"
+                       name="use_sysrepo"
+                       class="toggle-check-input"
+                       type="checkbox">
+                <span class="toggle-check-text"></span>
+              </label>
+            </td>
+          </tr>
+          <tr *ngIf="!nsgInstance.use_sysrepo">
+            <td>Params:</td>
+            <td>
+              <input [(ngModel)]="nsgInstance.params"
+                     #params="ngModel"
+                     name="params"
+                     type="text"
+                     class="nsg-form-control">
+            </td>
+          </tr>
+          <tr *ngIf="nsgInstance.use_sysrepo">
+            <td>Sysrepo XPATH:</td>
+            <td>
+              <input [(ngModel)]="nsgInstance.sysrepo_xpath"
+                     #sysrepo_xpath="ngModel"
+                     name="sysrepo_xpath"
+                     required
+                     type="text"
+                     class="nsg-form-control">
+              <div *ngIf="sysrepo_xpath.dirty && sysrepo_xpath.errors && sysrepo_xpath.errors.required"
+                   class="nsg-err-msg">
+                This field is required
+              </div>
+            </td>
+          </tr>
+          <!-- TODO custom fields from yang model -->
+        </table>
+      </form>
+    </div>
+    <div class="col2">
+      <nsg-interfaces-form [nsgInstance]="nsgInstance"
+                           (onChildEdited)="ifcesEdited($event)"></nsg-interfaces-form>
+    </div>
+  </div>
+  <div class="row2">
+    <button (click)="resetForm()"
+            class="nsg-btn">
+      Reset values
+    </button>
+    <button (click)="nsgModalService.openNsgModal(prefillModal)"
+            class="nsg-btn">
+      Prefill values
+    </button>
+    <button form="editForm"
+            [disabled]="editForm.invalid"
+            type="submit"
+            class="nsg-btn">
+      Save instance
+    </button>
+  </div>
+</div>
+
+<ng-template #prefillModal let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Prefill values from other instance</h4>
+    <button type="button" class="close" (click)="d('')">
+      <span>&times;</span>
+    </button>
+  </div>
+  <div *ngIf="!nsgInstsNamesList">
+    Loading instances list...
+  </div>
+  <form *ngIf="nsgInstsNamesList"
+        #prefillForm="ngForm" id="prefillForm">
+    <div class="modal-body">
+      <label for="prefillInstNameInput">
+        Choose instance to prefill values from:
+      </label>
+      <select [(ngModel)]="prefillInstName"
+              required
+              name="prefillInstNameInput"
+              #prefillInstNameInput="ngModel"
+              id="prefillInstNameInput"
+              class="custom-select">
+        <option *ngFor="let name of nsgInstsNamesList"
+                [value]="name">
+          {{name}}
+        </option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <input (click)="c('')"
+             type="button"
+             class="nsg-btn"
+             value="Close">
+      <input (click)="prefill()"
+             [disabled]="prefillForm.invalid"
+             type="button"
+             class="nsg-btn"
+             form="prefillForm"
+             value="Prefill">
+    </div>
+  </form>
+</ng-template>

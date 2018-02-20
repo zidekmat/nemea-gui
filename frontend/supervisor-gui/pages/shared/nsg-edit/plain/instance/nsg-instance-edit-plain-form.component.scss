@@ -1,0 +1,51 @@
+@import "../../../../../supervisor-gui.style-defaults";
+
+:host, .nsg-tab-edit {
+  height: 100%;
+}
+
+.row1 {
+  height: 90%;
+  width: 100%;
+  display: flex;
+
+  .col1, .col2 {
+    width: 50%;
+  }
+
+  .col1 {
+    border-right: 1px solid;
+    font-size: 1.4rem;
+
+    table {
+      width: 100%;
+      td {
+        padding: 5px;
+        input {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .col2 {
+    border-left: 1px solid;
+    padding: 5px;
+  }
+}
+
+.row2 {
+  margin-top: 5px;
+  border-top: 2px solid;
+
+  height: 10%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  font-size: 1.7rem;
+
+  button {
+    margin-left: 5px;
+  }
+
+}

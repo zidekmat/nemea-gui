@@ -1,6 +1,6 @@
 import {Component, OnInit, OnChanges} from '@angular/core';
 import {NsgInstancesService} from "../../services/nsg-instances.service";
-import {NsgInstance2} from "../../models/nsg-instance2";
+import {NsgInstance} from "../../models/nsg-instance";
 
 @Component({
     selector: 'nsg-instances-listing',
@@ -10,7 +10,7 @@ import {NsgInstance2} from "../../models/nsg-instance2";
 })
 export class NsgInstancesListingComponent implements OnInit {
 
-    nsgInstances: NsgInstance2[];
+    nsgInstances: NsgInstance[];
 
     constructor(private nsgInstancesService: NsgInstancesService) {
     }
@@ -23,23 +23,15 @@ export class NsgInstancesListingComponent implements OnInit {
         this.getInstances();
     }
 
-    exportAsSrJsonData(instance: NsgInstance2) {
-        const instanceJson = JSON.stringify({
-            'nemea:supervisor': {
-                'module': [
-                    instance
-                ]
-            }
-        });
-
+    exportAsSrJsonData(instance: NsgInstance) {
         let a = document.createElement("a");
-        const blob = new Blob([instanceJson], {type: 'application/json'});
+        const blob = new Blob([instance.apiJson()], {type: 'application/json'});
         a.href = window.URL.createObjectURL(blob);
         a.download = `${instance.name}.conf-backup.json`;
         a.click();
     }
 
-    removeInstance(instance: NsgInstance2) {
+    removeInstance(instance: NsgInstance) {
         this.nsgInstancesService.removeInstance(instance.name).subscribe(
             () => {
                 // Remove instance from viewed list
@@ -68,7 +60,7 @@ export class NsgInstancesListingComponent implements OnInit {
         );
     }
 
-    startInstance(instance : NsgInstance2) {
+    startInstance(instance : NsgInstance) {
         this.nsgInstancesService.startInstance(instance.name).subscribe(
             () => {
                 instance.running = true;
@@ -81,7 +73,7 @@ export class NsgInstancesListingComponent implements OnInit {
         );
     }
 
-    stopInstance(instance : NsgInstance2) {
+    stopInstance(instance : NsgInstance) {
         this.nsgInstancesService.stopInstance(instance.name).subscribe(
             () => {
                 instance.running = false;
@@ -94,7 +86,7 @@ export class NsgInstancesListingComponent implements OnInit {
         );
     }
 
-    restartInstance(instance : NsgInstance2) {
+    restartInstance(instance : NsgInstance) {
         this.nsgInstancesService.restartInstance(instance.name).subscribe(
             () => {
                 instance.running = true;

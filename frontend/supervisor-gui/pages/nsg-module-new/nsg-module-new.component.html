@@ -1,13 +1,13 @@
 <div>
   <nsg-tabs>
     <nsg-tab tabTitle="New module">
-      <nsg-module-edit-plain-form (onEdited)="onEdited($event)"
+      <nsg-module-edit-plain-form (onChildEdited)="onChildEdited($event)"
                                   [isEditForm]="false"
                                   [passedModule]="nsgModule"
       ></nsg-module-edit-plain-form>
     </nsg-tab>
     <nsg-tab tabTitle="New module from JSON">
-      <nsg-module-edit-json-form (onEdited)="onEdited($event)"
+      <nsg-module-edit-json-form (onChildEdited)="onChildEdited($event)"
                                  [isEditForm]="false"
                                  [passedModule]="nsgModule"
       ></nsg-module-edit-json-form>

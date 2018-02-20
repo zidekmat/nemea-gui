@@ -1,7 +1,7 @@
 import { Component, OnInit, OnChanges } from '@angular/core';
 
 import {NsgModulesService} from "../../services/nsg-modules.service";
-import {NsgModule2} from "../../models/nsg-module2";
+import {NsgModule} from "../../models/nsg-module";
 
 @Component({
   selector: 'nsg-modules-listing',
@@ -11,7 +11,7 @@ import {NsgModule2} from "../../models/nsg-module2";
 })
 export class NsgModulesListingComponent implements OnInit {
 
-    nsgModules : NsgModule2[];
+    nsgModules : NsgModule[];
 
     constructor(private nsgModulesService: NsgModulesService) { }
 
@@ -23,23 +23,15 @@ export class NsgModulesListingComponent implements OnInit {
         this.getModules();
     }
 
-    exportAsSrJsonData(module: NsgModule2) {
-        const moduleJson = JSON.stringify({
-            'nemea:supervisor': {
-                'available-module': [
-                    module
-                ]
-            }
-        });
-
+    exportAsSrJsonData(module: NsgModule) {
         let a = document.createElement("a");
-        const blob = new Blob([moduleJson], { type: 'application/json' });
+        const blob = new Blob([module.apiJson()], { type: 'application/json' });
         a.href = window.URL.createObjectURL(blob);
         a.download = `${module.name}.conf-backup.json`;
         a.click();
     }
 
-    removeModule(module: NsgModule2) {
+    removeModule(module: NsgModule) {
         this.nsgModulesService.removeModule(module.name).subscribe(
             () => {
                 this.nsgModules = this.nsgModules.filter(

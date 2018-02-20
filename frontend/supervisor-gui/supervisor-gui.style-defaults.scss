@@ -1,5 +1,6 @@
 $errColor: #cc0000;
 $successColor: #28a745;
+$disabledColor: #757575;
 $secondaryColor: #868e96;
 
 textarea.ng-invalid, input[type=text].ng-invalid {
@@ -15,16 +16,19 @@ textarea.ng-invalid, input[type=text].ng-invalid {
     display: none;
   }
   .custom-file-label {
+    color: #000;
+    background-color: #ffffff;
+    border: 1px solid;
+    border-radius: 0;
     cursor: pointer;
+    padding: 1px 6px 1px 6px;
     cursor: hand;
-    transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    border-radius: .25rem;
     font-size: 1.5rem;
     font-weight: 400;
-    padding: .375rem .75rem;
-    color: #fff;
-    background-color: #868e96;
-    border-color: #868e96;
+  }
+  .custom-file-label:hover {
+    color: #ffffff;
+    background-color:#000;
   }
 }
 
@@ -79,3 +83,26 @@ textarea.ng-invalid, input[type=text].ng-invalid {
   margin-left: -1.4em;
 }
 // End styling of checkbox as Yes/No button
+
+.nsg-btn {
+  color: #000;
+  background-color: #ffffff;
+  border: 1px solid;
+  border-radius: 0;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.nsg-btn:disabled {
+  color: $disabledColor;
+}
+
+.nsg-btn:hover:enabled {
+  color: #ffffff;
+  background-color:#000;
+}
+
+input[type=text].nsg-form-control, select.nsg-form-control {
+  padding: 5px 5px 5px 5px;
+  border: 1px solid;
+}
