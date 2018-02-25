@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthGuard } from 'app/utils/auth.guard';
 
 
-// Nemea Supervisor GUI main components
+// NEMEA Supervisor GUI main components
 import {NsgStatusComponent} from "./pages/nsg-status/nsg-status.component";
 import {NsgHowToComponent} from "./pages/nsg-how-to/nsg-how-to.component";
 
