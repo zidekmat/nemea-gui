@@ -10,24 +10,44 @@ This is not really a fork of https://github.com/CESNET/nemea-dashboard/tree/libe
 
 ### Install
 
+Install requirements on ubuntu machine:
 ```
-# Install requirements on ubuntu machine
-curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && \
-apt-get install -y nodejs && \
-npm install -g @angular/cli --allow-root && apt install git python3 python3-pip && \
-ln -s /usr/bin/nodejs /usr/bin/node
+sudo apt install curl -y && curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && \
+sudo apt-get install -y nodejs && \
+sudo npm install --unsafe-perm -g @angular/cli && \
+sudo apt install git python3 && \
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+sudo python3 get-pip.py && \
+sudo ln -s /usr/bin/nodejs /usr/bin/node 2>/dev/null
 ```
 
+Install Liberouter GUI + Staas GUI + Nemea GUI:
 ```
-# Install Liberouter GUI + Staas GUI + Nemea GUI
-mkdir /var/www 2>/dev/null && cd /var/www && \
+sudo mkdir /var/www 2>/dev/null && sudo chown -R $(whoami):$(whoami) /var/www && \
+cd /var/www && \
 git clone https://github.com/CESNET/liberouter-gui && cd liberouter-gui/modules && \
-rm -r examples/ && mkdir -p assets/img/ && touch assets/img/logo.png && \
-git clone https://github.com/CESNET/Staas-GUI && mv Staas-GUI/* . && rm -r NEMEA/ Staas-GUI \
+rm -r example/ && mkdir -p assets/img/ && touch assets/img/logo.png && \
+git clone https://github.com/CESNET/Staas-GUI && mv Staas-GUI/* . && \
+rm -rf NEMEA/ Staas-GUI/ examples/ && \
 git clone https://github.com/zidekmat/nemea-gui nemea/ && \
 cd ../ && python3 bootstrap.py && cd frontend/ && npm install --allow-root && \
-cd ../ && pip3 install -r backend/requirements.txt
+sudo pip3 install flask
+# use this once real API is implemented
+# cd ../ && sudo pip3 install -r backend/requirements.txt
 ```
+
+### Development
+
+In one terminal run the fake API:
+```
+python3 /var/www/liberouter-gui/modules/nemea/backend/fake_supervisor_backend.py
+```
+
+In other terminal run angular:
+```
+cd /var/www/liberouter-gui/frontend && ng serve --proxy proxy.json
+```
+
 
 ### Deploy
 ```
