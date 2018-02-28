@@ -132,9 +132,9 @@
             class="nsg-btn">
       Reset values
     </button>
-    <button (click)="nsgModalService.openNsgModal(prefillModal)"
+    <button (click)="nsgModalService.openNsgModal(copyValuesModal)"
             class="nsg-btn">
-      Prefill values
+      Copy values
     </button>
     <button form="editForm"
             [disabled]="editForm.invalid"
@@ -145,9 +145,9 @@
   </div>
 </div>
 
-<ng-template #prefillModal let-c="close" let-d="dismiss">
+<ng-template #copyValuesModal let-c="close" let-d="dismiss">
   <div class="modal-header">
-    <h4 class="modal-title">Prefill values from other instance</h4>
+    <h4 class="modal-title">Copy values from other instance</h4>
     <button type="button" class="close" (click)="d('')">
       <span>&times;</span>
     </button>
@@ -156,16 +156,16 @@
     Loading instances list...
   </div>
   <form *ngIf="nsgInstsNamesList"
-        #prefillForm="ngForm" id="prefillForm">
+        #copyValuesForm="ngForm" id="copyValuesForm">
     <div class="modal-body">
-      <label for="prefillInstNameInput">
-        Choose instance to prefill values from:
+      <label for="copyInstNameInput">
+        Choose instance to copy values from:
       </label>
-      <select [(ngModel)]="prefillInstName"
+      <select [(ngModel)]="copyValuesInstName"
               required
-              name="prefillInstNameInput"
-              #prefillInstNameInput="ngModel"
-              id="prefillInstNameInput"
+              name="copyInstNameInput"
+              #copyInstNameInput="ngModel"
+              id="copyInstNameInput"
               class="custom-select">
         <option *ngFor="let name of nsgInstsNamesList"
                 [value]="name">
@@ -178,12 +178,12 @@
              type="button"
              class="nsg-btn"
              value="Close">
-      <input (click)="prefill()"
-             [disabled]="prefillForm.invalid"
+      <input (click)="copyValues()"
+             [disabled]="copyValuesForm.invalid"
              type="button"
              class="nsg-btn"
-             form="prefillForm"
-             value="Prefill">
+             form="copyValuesForm"
+             value="Copy values">
     </div>
   </form>
 </ng-template>
