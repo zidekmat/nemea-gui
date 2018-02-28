@@ -141,7 +141,7 @@ if __name__ == '__main__':
              }
 
       if inst['use_sysrepo']:
-        inst['sysrepo_xpath'] = f"/{inst['name']}:{inst['name']}/some/path"
+        inst['sysrepo_xpath'] = "/{}:{}/some/path".format(inst['name'], inst['name'])
       else:
         inst['params'] = ''
         params_cnt = int(random() * 10) % 5

@@ -17,7 +17,7 @@ export class NsgStatusComponent implements OnInit {
       "id":"IPFIXCOL",
       "label":"IPFIXCOL",
       "type": "inst"
-    }
+    },
     {
       "id":"dns_amplification",
       "label":"dns_amplification",
@@ -45,7 +45,7 @@ let edges = [
     {
       "label":"t:12001 to t:12001",
       "id":"2",
-      "from":"dns_amplification"
+      "from":"dns_amplification",
       "to":"dns_amplification_logger"
     },
     {
@@ -55,7 +55,7 @@ let edges = [
       "from":"IPFIXCOL",
       "to":"hoststatsnemea",
     },
-  ]
+  ];
   //      let nodes = new DataSet([
   //          {id: 1, label: 'module 1'},
   //          {id: 2, label: 'module 2'},

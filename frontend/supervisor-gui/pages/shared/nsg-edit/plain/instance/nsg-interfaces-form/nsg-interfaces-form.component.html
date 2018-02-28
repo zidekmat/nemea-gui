@@ -347,9 +347,9 @@
           class="nsg-btn">
     Reset values
   </button>
-  <button (click)="nsgModalService.openNsgModal(ifcPrefillModal)"
+  <button (click)="nsgModalService.openNsgModal(ifccopyValuesModal)"
           class="nsg-btn">
-    Prefill values
+    Copy values
   </button>
   <button form="ifcForm"
           [disabled]="ifcForm.invalid"
@@ -359,9 +359,9 @@
   </button>
 </div>
 
-<ng-template #ifcPrefillModal let-c="close" let-d="dismiss">
+<ng-template #ifccopyValuesModal let-c="close" let-d="dismiss">
   <div class="modal-header">
-    <h4 class="modal-title">Prefill values from other interface</h4>
+    <h4 class="modal-title">Copy values from other interface</h4>
     <button type="button" class="close" (click)="d('')">
       <span>&times;</span>
     </button>
@@ -370,16 +370,16 @@
     Loading interfaces list...
   </div>
   <form *ngIf="nsgIfcesNamesList"
-        #ifcPrefillForm="ngForm" id="ifcPrefillForm">
+        #ifcCopyValuesForm="ngForm" id="ifcCopyValuesForm">
     <div class="modal-body">
-      <label for="prefillFromInstanceInput">
-        Choose interface to prefill values from*:
+      <label for="copyValuesFromInstanceInput">
+        Choose interface to copy values from*:
       </label>
-      <select [(ngModel)]="prefillIfcName"
+      <select [(ngModel)]="copyValuesIfcName"
               required
-              name="prefillFromInstanceInput"
-              #prefillFromInstanceInput="ngModel"
-              id="prefillFromInstanceInput"
+              name="copyValuesFromInstanceInput"
+              #copyValuesFromInstanceInput="ngModel"
+              id="copyValuesFromInstanceInput"
               class="custom-select">
         <option *ngFor="let ifc of nsgIfcesNamesList"
                 [value]="ifc">
@@ -392,12 +392,12 @@
              type="button"
              class="nsg-btn"
              value="Close">
-      <input (click)="prefill()"
-             [disabled]="ifcPrefillForm.invalid"
+      <input (click)="copyValues()"
+             [disabled]="ifcCopyValuesForm.invalid"
              type="button"
              class="nsg-btn"
-             form="ifcPrefillForm"
-             value="Prefill">
+             form="ifcCopyValuesForm"
+             value="Copy values">
     </div>
   </form>
 </ng-template>

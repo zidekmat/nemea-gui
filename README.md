@@ -1,7 +1,7 @@
 This is not really a fork of https://github.com/CESNET/nemea-dashboard/tree/liberouter-gui, a liberouter-gui module.
 
 ### Requirements
- * nodejs, nps
+ * nodejs, npm
  * git
  * Python 3
  * python3-pip (ubuntu package)

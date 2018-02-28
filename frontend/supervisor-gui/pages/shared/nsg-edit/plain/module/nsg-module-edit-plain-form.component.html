@@ -131,9 +131,9 @@
             class="nsg-btn">
       Reset values
     </button>
-    <button (click)="nsgModalService.openNsgModal(prefillModal)"
+    <button (click)="nsgModalService.openNsgModal(copyValuesModal)"
             class="nsg-btn">
-      Prefill values
+      Copy values
     </button>
     <button form="editForm"
             [disabled]="editForm.invalid"
@@ -144,9 +144,9 @@
   </div>
 </div>
 
-<ng-template #prefillModal let-c="close" let-d="dismiss">
+<ng-template #copyValuesModal let-c="close" let-d="dismiss">
   <div class="modal-header">
-    <h4 class="modal-title">Prefill values from other module</h4>
+    <h4 class="modal-title">Copy values from other module</h4>
     <button type="button" class="close" (click)="d('')">
       <span>&times;</span>
     </button>
@@ -155,16 +155,16 @@
     Loading modules list...
   </div>
   <form *ngIf="nsgModsNamesList"
-        #prefillForm="ngForm" id="prefillForm">
+        #copyValuesForm="ngForm" id="copyValuesForm">
     <div class="modal-body">
-        <label for="prefillFromModuleInput">
-          Choose module to prefill values from:
+        <label for="copyValuesFromModuleInput">
+          Choose module to copy values from:
         </label>
-        <select [(ngModel)]="prefillFromModule"
+        <select [(ngModel)]="copyValuesFromModule"
                 required
-                name="prefillFromModuleInput"
-                #prefillFromModuleInput="ngModel"
-                id="prefillFromModuleInput"
+                name="copyValuesFromModuleInput"
+                #copyValuesFromModuleInput="ngModel"
+                id="copyValuesFromModuleInput"
                 class="custom-select">
           <option *ngFor="let name of nsgModsNamesList"
                   [value]="name">
@@ -177,12 +177,12 @@
               type="button"
              class="nsg-btn"
              value="Close">
-      <input (click)="prefill()"
-             [disabled]="prefillForm.invalid"
+      <input (click)="copyValues()"
+             [disabled]="copyValuesForm.invalid"
               type="button"
              class="nsg-btn"
-             form="prefillForm"
-             value="Prefill">
+             form="copyValuesForm"
+             value="Copy values">
     </div>
   </form>
 </ng-template>

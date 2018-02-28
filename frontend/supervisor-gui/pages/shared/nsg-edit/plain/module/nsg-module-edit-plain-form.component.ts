@@ -28,7 +28,7 @@ export class NsgModuleEditPlainFormComponent implements OnInit {
     @Output() onChildEdited = new EventEmitter<NsgModule>();
 
     nsgModule: NsgModule; // NsgModule model that is currently edited
-    prefillFromModule: string;
+    copyValuesFromModule: string;
     backendErrors: any[];
 
     nsgModsNamesList: string[];
@@ -57,8 +57,8 @@ export class NsgModuleEditPlainFormComponent implements OnInit {
         this.nsgModule = JSON.parse(JSON.stringify(this.passedModule));
     }
 
-    prefill() {
-        this.nsgModulesService.getModule(this.prefillFromModule).subscribe(
+    copyValues() {
+        this.nsgModulesService.getModule(this.copyValuesFromModule).subscribe(
             (module) => {
                 this.nsgModule = module;
                 this.nsgModalService.closeNsgModal();

@@ -44,9 +44,9 @@ export class NsgInstanceEditPlainFormComponent implements OnInit {
     /* Values for HTML <select> with id=moduleName */
     nsgModulesList: NsgModule[];
 
-    /* Selected instance name to prefill from*/
-    prefillInstName: string;
-    /* List of instance names for prefill form*/
+    /* Selected instance name to copy values from */
+    copyValuesInstName: string;
+    /* List of instance names to copy values from*/
     nsgInstsNamesList: string[];
 
     constructor(private nsgModalService: NsgModal,
@@ -104,14 +104,14 @@ export class NsgInstanceEditPlainFormComponent implements OnInit {
         this.nsgInstance = new NsgInstance(JSON.parse(JSON.stringify(this.passedInstance)));
     }
 
-    prefill() {
-        this.nsgInstancesService.getInstance(this.prefillInstName).subscribe(
+    copyValues() {
+        this.nsgInstancesService.getInstance(this.copyValuesInstName).subscribe(
             (data) => {
                 this.nsgInstance = data;
                 this.nsgModalService.closeNsgModal();
             },
             (error) => {
-                console.log('Error getting instance for prefill:');
+                console.log('Error getting instance values copy:');
                 console.log(error);
                 // TODO onError
             }

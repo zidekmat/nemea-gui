@@ -25,7 +25,7 @@ export class NsgInstancesService {
     }
 
     getAllInstancesByModuleName(moduleName: string): Observable<NsgInstance[]> {
-        // TODO make endpoint
+        // TODO rather make endpoint? see how it performs
         return this.http.get('/nemea/sg/instances')
             .map(response => response.json().filter(
                 obj => obj.module_kind == moduleName

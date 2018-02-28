@@ -23,7 +23,7 @@ export class NsgInterfacesFormComponent implements OnInit {
      *  a new one */
     addingIfc: boolean;
 
-    prefillIfcName: string;
+    copyValuesIfcName: string;
     nsgIfcesNamesList: string[];
     
     resetIfcVals: string; // JSON string copy of selectedIfc
@@ -119,10 +119,10 @@ export class NsgInterfacesFormComponent implements OnInit {
         }
     }
 
-    prefill() {
-        console.log('prefilling ifc');
+    copyValues() {
+        console.log('copying values of ifc');
 
-        this.nsgInstancesService.getInterface(this.nsgInstance.name, this.prefillIfcName).subscribe(
+        this.nsgInstancesService.getInterface(this.nsgInstance.name, this.copyValuesIfcName).subscribe(
             (ifc) => {
                 this.selectedIfc = ifc;
                 this.nsgModalService.closeNsgModal();
