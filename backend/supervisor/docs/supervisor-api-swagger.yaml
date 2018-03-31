@@ -1,0 +1,1043 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a API for [NEMEA Supervisor daemon version 2](https://github.com/zidekmat/nemea-supervisor-models-edition/).\
+    \ It is capable of following: edit configuration, start/stop/restart supervisor\
+    \ or module, gather statistics about system. \n  All actions of this API are available\
+    \ only to authorized Liberouter GUI users with role Admin. You can see more details\
+    \ about authorization in Liberouter GUI [here](https://github.com/CESNET/liberouter-gui/wiki/API---Authorization).\
+    \ Authorization is not direct part of this API but for clarity we document basic\
+    \ authorization endpoints here so that you don't have to look it up.\n"
+  version: "1.0.0"
+  title: "NEMEA Supervisor API"
+  contact:
+    email: "zidekmat@fit.cvut.cz"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/nemea-supervisor-gui/nemea-supervisor-api/1.0.0"
+schemes:
+- "https"
+- "http"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /authorization:
+    get:
+      tags:
+      - "Liberouter GUI authorization"
+      summary: "Verifies whether session ID is still valid"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID to destroy"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Logout successful"
+        401:
+          description: "Session ID is invalid"
+          schema:
+            type: "object"
+            properties: {}
+    post:
+      tags:
+      - "Liberouter GUI authorization"
+      summary: "Retrieve session ID used for authorization"
+      parameters:
+      - in: "body"
+        name: "login_data"
+        required: true
+        schema:
+          $ref: "#/definitions/login_data"
+      responses:
+        200:
+          description: "Login success"
+          schema:
+            $ref: "#/definitions/inline_response_200"
+    delete:
+      tags:
+      - "Liberouter GUI authorization"
+      summary: "Destroys session ID used for authorization"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID to destroy"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Logout successful"
+  /nemea/modules/{module_name}:
+    get:
+      tags:
+      - "NEMEA Module"
+      summary: "Returns available module by name"
+      operationId: "get_nemea_module_by_name"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      - name: "module_name"
+        in: "path"
+        description: "Name of the module to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties: {}
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        404:
+          description: "Module not found"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+    put:
+      tags:
+      - "NEMEA Module"
+      summary: "Updates available module"
+      operationId: "update_nemea_module_by_name"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      - name: "module_name"
+        in: "path"
+        description: "Name of the module to return"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "module"
+        description: "Module to update"
+        required: true
+        schema:
+          $ref: "#/definitions/Module"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid parameters supplied or validation error(s)"
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        404:
+          description: "Module not found"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      tags:
+      - "NEMEA Module"
+      summary: "Deletes available module by name"
+      operationId: "delete_nemea_module_by_name"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      - name: "module_name"
+        in: "path"
+        description: "Name of the module to return"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "successful operation"
+        400:
+          description: "Invalid parameters supplied or validation error(s)"
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        404:
+          description: "Module not found"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+  /nemea/modules:
+    get:
+      tags:
+      - "NEMEA Module"
+      summary: "Returns all available NEMEA modules"
+      operationId: "get_all_nemea_modules"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Module"
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+    post:
+      tags:
+      - "NEMEA Module"
+      summary: "Creates new NEMEA module"
+      operationId: "create_new_nemea_module"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      - in: "body"
+        name: "module"
+        description: "Module to create"
+        required: true
+        schema:
+          $ref: "#/definitions/Module"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "object"
+            properties: {}
+        400:
+          description: "Invalid parameters supplied or validation error(s)"
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        404:
+          description: "Module not found"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+  /nemea/modules/{module_name}/instances:
+    get:
+      tags:
+      - "NEMEA Module"
+      summary: "Returns instances of given NEMEA module"
+      operationId: "get_instances_by_nemea_module_name"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      - name: "module_name"
+        in: "path"
+        description: "Name of the module whose instances should be returned"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties: {}
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        404:
+          description: "Module not found"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+  /instances/{instance_name}:
+    get:
+      tags:
+      - "NEMEA Module Instance"
+      summary: "Returns single instance"
+      operationId: "get_instance_by_name"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      - name: "instance_name"
+        in: "path"
+        description: "Name of the instance to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties: {}
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        404:
+          description: "Instance not found"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+    put:
+      tags:
+      - "NEMEA Module Instance"
+      summary: "Updates instance"
+      operationId: "update_instance_by_name"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      - name: "instance_name"
+        in: "path"
+        description: "Name of the instance to return"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "instance"
+        description: "Instance to update"
+        required: true
+        schema:
+          $ref: "#/definitions/Instance"
+      responses:
+        200:
+          description: "successful operation"
+        400:
+          description: "Invalid parameters supplied or validation error(s)"
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        404:
+          description: "Instance not found"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      tags:
+      - "NEMEA Module Instance"
+      summary: "Deletes instance by name"
+      operationId: "delete_instance_by_name"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      - name: "instance_name"
+        in: "path"
+        description: "Name of the instance to return"
+        required: true
+        type: "string"
+      responses:
+        204:
+          description: "successful operation"
+        400:
+          description: "Invalid parameters supplied or validation error(s)"
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        404:
+          description: "Module not found"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+  /nemea/instances/{instance_name}/stats:
+    get:
+      tags:
+      - "NEMEA Module Instance"
+      - "Runtime statistics"
+      summary: "Returns runtime statistics of single running instance"
+      operationId: "get_instance_stats_by_name"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      - name: "instance_name"
+        in: "path"
+        description: "Name of the instance to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "object"
+            properties: {}
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        404:
+          description: "Instance doesn't exist or is not running"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+  /nemea/instances/{instance_name}/custom-model:
+    get:
+      tags:
+      - "NEMEA Module Instance"
+      - "Runtime statistics"
+      summary: "Returns instances custom data model"
+      operationId: "get_instance_custom_model_by_name"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      - name: "instance_name"
+        in: "path"
+        description: "Name of the instance whose custom model should be returned"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/CustomInstanceModelValue"
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        404:
+          description: "Instance doesn't have custom data model or it was not found"
+          schema:
+            $ref: "#/definitions/Error"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+  /nemea/instances:
+    get:
+      tags:
+      - "NEMEA Module Instance"
+      summary: "Returns all instances, running or not"
+      operationId: "get_all_instances"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Instance"
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+    post:
+      tags:
+      - "NEMEA Module Instance"
+      summary: "Creates new instance"
+      operationId: "create_new_instance"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      - in: "body"
+        name: "instance"
+        description: "Instance to create"
+        required: true
+        schema:
+          $ref: "#/definitions/Instance"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties: {}
+        400:
+          description: "Invalid parameters supplied or validation error(s)"
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        404:
+          description: "Instance not found"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+  /instances/stats:
+    get:
+      tags:
+      - "NEMEA Module Instance"
+      - "Runtime statistics"
+      summary: "Returns runtime statistics of all running instances"
+      operationId: "get_all_instances_stats"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "object"
+            properties: {}
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+  /nemea/sysrepo/modules:
+    get:
+      tags:
+      - "Sysrepo Modules (data models)"
+      summary: "Returns all Sysrepo module names"
+      description: "WARNING!!! Returns only names, not the whole module string"
+      operationId: "get_all_sysrepo_modules"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              type: "string"
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+  /nemea/sysrepo/modules/{sysrepo_module_name}:
+    get:
+      tags:
+      - "Sysrepo Modules (data models)"
+      summary: "Returns single Sysrepo module"
+      operationId: "get_sysrepo_module_by_name"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      - name: "sysrepo_module_name"
+        in: "path"
+        description: "Name of the Sysrepo module to return"
+        required: true
+        type: "string"
+      - name: "sysrepo_module_type"
+        in: "query"
+        description: "Type of representation of Sysrepo module. If used, only this\
+          \ type is returned is returned in response"
+        required: false
+        type: "string"
+        enum:
+        - "TREE"
+        - "YANG"
+        - "YIN"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/inline_response_200_1"
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        404:
+          description: "Sysrepo module was not found"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+  /nemea/sysrepo/load/{sysrepo_module_name}:
+    post:
+      tags:
+      - "Direct Sysrepo Data Manipulation"
+      summary: "Inserts new or updates existing data in Sysrepo"
+      description: "Inserts new or updates existing data of NEMEA Module, NEMEA Instance\
+        \ or custom NEMEA Instance inside Sysrepo. Accepts JSON that will be directly\
+        \ loaded into Sysrepo"
+      operationId: "sysrepo_load_json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      - name: "sysrepo_module_name"
+        in: "path"
+        description: "Name of Sysrepo model where the data would be loaded to. "
+        required: true
+        type: "string"
+      - in: "body"
+        name: "sysrepoModuleJsonData"
+        description: "JSON of Sysrepo module data"
+        required: true
+        schema:
+          type: "object"
+      responses:
+        200:
+          description: "Successful operation"
+        400:
+          description: "Invalid parameters supplied or validation error(s)"
+          schema:
+            $ref: "#/definitions/Error"
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        404:
+          description: "Instance not found"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+  /nemea/validate:
+    post:
+      tags:
+      - "Value Validation"
+      summary: "Validates values from given XPATH against given Sysrepo model"
+      description: "Validation is done using data-lint"
+      operationId: "validate"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Session ID of logged user"
+        required: false
+        type: "string"
+      - in: "body"
+        name: "validation"
+        description: "Sysrepo module against which the validation is performed"
+        required: true
+        schema:
+          $ref: "#/definitions/validation"
+      responses:
+        200:
+          description: "Value is valid"
+        400:
+          description: "Invalid parameters supplied or validation error(s)"
+          schema:
+            type: "object"
+            properties: {}
+        401:
+          description: "Request is unauthorized. Responses come from liberouter-gui\
+            \ authorization functionality."
+          schema:
+            $ref: "#/definitions/inline_response_401"
+        500:
+          description: "Something unexpected happened on server"
+          schema:
+            $ref: "#/definitions/Error"
+definitions:
+  Module:
+    type: "object"
+    required:
+    - "description"
+    - "is-models-ready"
+    - "name"
+    - "path"
+    - "models-callbacks-ready"
+    - "trap-monitorable"
+    properties:
+      name:
+        type: "string"
+        pattern: "^[0-9a-zA-Z _-]+$"
+      path:
+        type: "string"
+        pattern: "^\\/.+"
+      description:
+        type: "string"
+      trap-monitorable:
+        type: "boolean"
+      use-trap-ifces:
+        type: "boolean"
+      is-sysrepo-ready:
+        type: "boolean"
+      sysrepo-callbacks-ready:
+        type: "boolean"
+      in-ifces-cnt:
+        type: "string"
+        example: "*"
+      out-ifces-cnt:
+        type: "string"
+        example: "3"
+    example:
+      path: "path"
+      out-ifces-cnt: "3"
+      trap-monitorable: true
+      name: "name"
+      in-ifces-cnt: "*"
+      description: "description"
+      is-sysrepo-ready: true
+      use-trap-ifces: true
+      sysrepo-callbacks-ready: true
+  Instance:
+    type: "object"
+    required:
+    - "enabled"
+    - "name"
+    - "use-models"
+    properties:
+      name:
+        type: "string"
+      module:
+        type: "string"
+      enabled:
+        type: "boolean"
+      max-restart-per-min:
+        type: "integer"
+      use-sysrepo:
+        type: "boolean"
+      interfaces:
+        type: "array"
+        items:
+          $ref: "#/definitions/Interface"
+      params:
+        type: "string"
+      custom_attributes:
+        type: "object"
+        properties: {}
+    example:
+      use-sysrepo: true
+      max-restart-per-min: 0
+      interfaces:
+      - autoflush: "autoflush"
+        stats:
+          recv-msg-cnt: 6
+          sent-buff-cnt: 5
+          recv-buff-cnt: 1
+          autoflush-cnt: 7
+          sent-msg-cnt: 5
+          dropped-msg-cnt: 2
+        name: "name"
+        buffer: "ON"
+        type: "TCP"
+        timeout: "timeout"
+        direction: "IN"
+      - autoflush: "autoflush"
+        stats:
+          recv-msg-cnt: 6
+          sent-buff-cnt: 5
+          recv-buff-cnt: 1
+          autoflush-cnt: 7
+          sent-msg-cnt: 5
+          dropped-msg-cnt: 2
+        name: "name"
+        buffer: "ON"
+        type: "TCP"
+        timeout: "timeout"
+        direction: "IN"
+      module: "module"
+      name: "name"
+      params: "params"
+      enabled: true
+      custom_attributes: "{}"
+  CustomInstanceModelValue:
+    type: "object"
+    required:
+    - "name"
+    - "type"
+    properties:
+      name:
+        type: "string"
+        description: "Name of this attribute"
+      type:
+        type: "string"
+        description: "Data type of this attribute"
+        enum:
+        - "string"
+        - "boolean"
+        - "numeric"
+      label:
+        type: "string"
+        description: "Label of this property to display in browser's HTML form"
+      default:
+        type: "string"
+        description: "Default value of this property"
+    description: "Model of single value of custom instance attribute"
+    example:
+      default: "default"
+      name: "name"
+      label: "label"
+      type: "string"
+  Interface:
+    type: "object"
+    required:
+    - "direction"
+    - "name"
+    - "type"
+    properties:
+      name:
+        type: "string"
+        pattern: "^[0-9a-zA-Z _-]+$"
+      type:
+        type: "string"
+        enum:
+        - "TCP"
+        - "TCP-TLS"
+        - "UNIXSOCKET"
+        - "FILE"
+        - "BLACKHOLE"
+      direction:
+        type: "string"
+        enum:
+        - "IN"
+        - "OUT"
+      timeout:
+        type: "string"
+        pattern: "^(([1-9]+[0-9]*)|WAIT|NO_WAIT|HALF_WAIT)"
+      buffer:
+        type: "string"
+        enum:
+        - "ON"
+        - "OFF"
+      autoflush:
+        type: "string"
+        pattern: "^(off|[1-9][0-9]*)$"
+      stats:
+        $ref: "#/definitions/InterfaceStats"
+    example:
+      autoflush: "autoflush"
+      stats:
+        recv-msg-cnt: 6
+        sent-buff-cnt: 5
+        recv-buff-cnt: 1
+        autoflush-cnt: 7
+        sent-msg-cnt: 5
+        dropped-msg-cnt: 2
+      name: "name"
+      buffer: "ON"
+      type: "TCP"
+      timeout: "timeout"
+      direction: "IN"
+  InstanceStats:
+    type: "object"
+    properties:
+      running:
+        type: "boolean"
+      restart-counter:
+        type: "integer"
+      cpu-user:
+        type: "integer"
+      cpu-kern:
+        type: "integer"
+      mem-vms:
+        type: "integer"
+      mem-rss:
+        type: "integer"
+      interfaces:
+        type: "array"
+        items:
+          $ref: "#/definitions/InterfaceStats"
+  InterfaceStats:
+    type: "object"
+    properties:
+      recv-msg-cnt:
+        type: "integer"
+        description: "Only for IN direction"
+      recv-buff-cnt:
+        type: "integer"
+        description: "Only for IN direction"
+      sent-msg-cnt:
+        type: "integer"
+        description: "Only for OUT direction"
+      sent-buff-cnt:
+        type: "integer"
+        description: "Only for OUT direction"
+      dropped-msg-cnt:
+        type: "integer"
+        description: "Only for OUT direction"
+      autoflush-cnt:
+        type: "integer"
+        description: "Only for OUT direction"
+    example:
+      recv-msg-cnt: 6
+      sent-buff-cnt: 5
+      recv-buff-cnt: 1
+      autoflush-cnt: 7
+      sent-msg-cnt: 5
+      dropped-msg-cnt: 2
+  Error:
+    type: "object"
+    properties:
+      messages:
+        type: "array"
+        items:
+          type: "string"
+  login_data:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      password:
+        type: "string"
+  inline_response_200:
+    properties:
+      session_id:
+        type: "string"
+        example: "cfdfeddc-253f-11e8-a91e-080027de08bb"
+        description: "This value is used in Authorization header"
+      user:
+        type: "object"
+        properties: {}
+    example:
+      session_id: "cfdfeddc-253f-11e8-a91e-080027de08bb"
+      user: "{}"
+  inline_response_401:
+    properties:
+      message:
+        type: "string"
+        example: "Session not found"
+      status_code:
+        type: "integer"
+        example: 401
+      error:
+        type: "boolean"
+  inline_response_200_1:
+    required:
+    - "name"
+    properties:
+      name:
+        type: "string"
+        description: "Name of Sysrepo module"
+      TREE:
+        type: "string"
+        description: "Sysrepo module in tree format. This property is only present\
+          \ if `sysrepo_module_type` parameter is not specified or equals TREE"
+      YANG:
+        type: "string"
+        description: "Sysrepo module in YANG format. This property is only present\
+          \ if `sysrepo_module_type` parameter is not specified or equals YANG"
+      YIN:
+        type: "string"
+        description: "Sysrepo module in YIN format. This property is only present\
+          \ if `sysrepo_module_type` parameter is not specified or equals YIN"
+    example:
+      name: "name"
+      YANG: "YANG"
+      TREE: "TREE"
+      YIN: "YIN"
+  validation:
+    type: "object"
+    required:
+    - "models-module"
+    - "value"
+    - "xpath"
+    properties:
+      sysrepo-module:
+        type: "string"
+        description: "Sysrepo module to validate against"
+      xpath:
+        type: "string"
+        description: "XPATH inside given Sysrepo module schema"
+      value:
+        type: "string"
+        description: "Value to validate"
+responses:
+  InvalidRequest:
+    description: "Invalid parameters supplied or validation error(s)"
+    schema:
+      $ref: "#/definitions/Error"
+  NotFound:
+    description: "The specified resource was not found"
+    schema:
+      $ref: "#/definitions/Error"
+  ServerError:
+    description: "Something unexpected happened on server"
+    schema:
+      $ref: "#/definitions/Error"
+  Unauthorized:
+    description: "Request is unauthorized. Responses come from liberouter-gui authorization\
+      \ functionality."
+    schema:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+          example: "Session not found"
+        status_code:
+          type: "integer"
+          example: 401
+        error:
+          type: "boolean"

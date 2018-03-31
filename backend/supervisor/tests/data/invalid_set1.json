@@ -1,0 +1,61 @@
+{
+  "nemea-test-1:supervisor": {
+    "available-module": [
+      {
+        "name": "ipfixcol",
+        "path": "gsdsf",
+        "description": "TODO",
+        "use-trap-ifces": false,
+        "trap-monitorable": true,
+        "use-sysrepo": false
+      },
+      {
+        "name": "module1",
+        "path": "/a/b/c",
+        "description": "desc",
+        "use-trap-ifces": true,
+        "trap-monitorable": true,
+        "use-sysrepo": true,
+        "sr-model-prefix": "module1",
+        "sr-callbacks-ready": false,
+        "in-ifces-cnt":"1",
+        "out-ifces-cnt":"*"
+      }
+    ],
+    "module": [
+      {
+        "name": "ipfixcol1",
+        "module-kind": "ipfixcol",
+        "enabled": true,
+        "last-pid": 3333,
+        "params": ""
+      },
+      {
+        "name": "module1-1",
+        "module-kind": "module1",
+        "enabled": true,
+        "last-pid": 3334,
+        "interface":[
+	  {
+  	    "name": "if2",
+  	    "type": "UNIXSOCKET",
+  	    "direction": "IN",
+  	    "unix-params": { "socket-name": "test_in" }
+  	  },
+	  {
+  	    "name": "tcp-out",
+  	    "type": "TCP",
+  	    "direction": "OUT",
+  	    "timeout": "HALF_WAIT",
+  	    "buffer": "on",
+  	    "autoflush": "off",
+  	    "tcp-params": {
+  	      "port": "8989",
+  	      "max-clients": "2"
+  	    }
+  	  } 
+        ]
+      }
+    ]
+  }
+}
