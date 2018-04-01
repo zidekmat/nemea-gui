@@ -3,6 +3,40 @@ from helpers import ControllerTest, unittest, test, json, set_trace
 
 class NemeaModuleControllerTest(ControllerTest):
 
+    def test_api_update_nemea_module_by_name(self):
+        # invalid data
+        data = {'test': 'test'}
+        result = test.put_json('/nemea/modules/ipfixcol', data=data)
+        self.assertEqual(result.status_code, 400)
+
+        # invalid data, required fields are missing
+        data = {'name': 'test'}
+        result = test.put_json('/nemea/modules/ipfixcol', data=data)
+        self.assertEqual(result.status_code, 400)
+
+        # valid data and invalid name of instance to be updated
+        data = {
+            "name": "IPFIXCOL",
+            "path": "/a/XXXXX/c",
+            "description": "cccccc",
+            "use-trap-ifces": False,
+            "trap-monitorable": True,
+            "is-sysrepo-ready": False
+        }
+        result = test.put_json('/nemea/modules/ipfixcoL3', data=data)
+        self.assertEqual(result.status_code, 404)
+
+        # try again with valid name that would change
+        result = test.put_json('/nemea/modules/ipfixcol', data=data)
+        self.assertEqual(result.status_code, 200)
+
+        # test if it is really changed
+        result = test.get('/nemea/modules/ipfixcol')
+        self.assertEqual(result.status_code, 404)
+        result = test.get('/nemea/modules/IPFIXCOL')
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(json.loads(result.data)['path'], "/a/XXXXX/c")
+
     def test_api_delete_nemea_module_by_name(self):
         # try to inject command (remove non-existing module)
         result = test.delete('/nemea/modules/; rm -rf %2fhome%2fuser')
@@ -15,7 +49,6 @@ class NemeaModuleControllerTest(ControllerTest):
         result = test.get('/nemea/modules/ipfixcol')
         self.assertEqual(result.status_code, 404)
 
-"""
     def test_api_create_new_nemea_module(self):
         data = {'test': 'test'}
         result = test.post_json('/nemea/modules', data=data)
@@ -62,7 +95,6 @@ class NemeaModuleControllerTest(ControllerTest):
         self.assertEqual(result.status_code, 200)
         mod = json.loads(result.data)
         self.assertEqual(mod['name'], 'link_traffic')
-"""
 
 
 

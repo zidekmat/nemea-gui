@@ -22,17 +22,17 @@
         "out-ifces-cnt":"*"
       }
     ],
-    "module": [
+    "instance": [
       {
         "name": "ipfixcol1",
-        "module-kind": "ipfixcol",
+        "module-ref": "ipfixcol",
         "enabled": true,
         "last-pid": 3333,
         "params": ""
       },
       {
         "name": "module1-1",
-        "module-kind": "module1",
+        "module-ref": "module1",
         "enabled": true,
         "last-pid": 3334,
         "interface":[

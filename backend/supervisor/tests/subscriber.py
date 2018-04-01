@@ -1,3 +1,9 @@
+"""
+This file is used to pretend that NEMEA Supervisor and link_traffic are subscribed to
+running datastore changes in sysrepo. Without this there would be no running datastore
+to test on.
+"""
+
 import libsysrepoPython3 as sr
 
 

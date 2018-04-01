@@ -2,17 +2,17 @@ from .helpers import *
 from . import nemea_module as nm_model
 
 
-def get_instances():
+def get_all():
     data = sysrepocfg_fetch(NEMEA_SR_PREFIX)
     if data is None:
         return []
 
     base_key = '{}:supervisor'.format(NEMEA_SR_PREFIX)
-    return data[base_key]['module']
+    return data[base_key]['instance']
 
 
 def get_custom_attrs(inst):
-    nmod = nm_model.get_nemea_module_by_name(inst['module'])
+    nmod = nm_model.get_by_name(inst['module-ref'])
 
     # search the custom model and retrieve data for this instance
     data = sysrepocfg_fetch(nmod['sr-model-prefix'])
@@ -28,12 +28,12 @@ def get_custom_attrs(inst):
     return custom_attrs
 
 
-def get_instance_by_name(instance_name):
+def get_by_name(instance_name):
     data = sysrepocfg_fetch(NEMEA_SR_PREFIX)
     if data is None:
         raise NotFoundException("No configuration data found.")
 
-    insts = data['{}:supervisor'.format(NEMEA_SR_PREFIX)]['module']
+    insts = data['{}:supervisor'.format(NEMEA_SR_PREFIX)]['instance']
     for stored_inst in insts:
         if stored_inst['name'] == instance_name:
             return stored_inst
@@ -41,10 +41,20 @@ def get_instance_by_name(instance_name):
     raise NotFoundException("Instance '%s' was not found." % instance_name)
 
 
-def get_instance_custom_attrs_obj(inst_name, nemea_module=None):
+def get_by_nemea_module_name(module_name):
+    stored_insts = get_all()
+    insts = []
+    for inst in stored_insts:
+        if inst['module-ref'] == module_name:
+            insts.append(inst)
+
+    return insts
+
+
+def get_custom_attrs_obj_by_name(inst_name, nemea_module=None):
     if nemea_module is None:
-        inst = nm_model.get_nemea_module_by_name(inst_name)
-        nemea_module = nm_model.get_nemea_module_by_name(inst['module-kind'])
+        inst = nm_model.get_by_name(inst_name)
+        nemea_module = nm_model.get_by_name(inst['module-ref'])
     sr_model = nemea_module['sr-model-prefix']
 
     data = sysrepocfg_fetch(sr_model)
@@ -62,17 +72,217 @@ def get_instance_custom_attrs_obj(inst_name, nemea_module=None):
     raise NotFoundException("Instance '%s' was not found in '%s' sysrepo model." % (inst_name, sr_model))
 
 
-def delete_instance(inst, nmod=None):
+def delete(inst, nmod=None):
     if nmod is None:
-        nmod = nm_model.get_nemea_module_by_name(inst['module-kind'])
+        nmod = nm_model.get_by_name(inst['module-ref'])
 
     # delete custom model first
     if nmod['is-sysrepo-ready']:
-        xpath = "/{}:instance[name='{}']".format(nmod['sr-model-prefix'],
-                                                 inst['name'])
+        xpath = "/{}:instance[name='{}']".format(nmod['sr-model-prefix'], inst['name'])
         sysrepocfg_delete(nmod['sr-model-prefix'], xpath, 'running')
         sysrepocfg_sync_ds(nmod['sr-model-prefix'], 'running', 'startup')
 
-    xpath = "/{}:supervisor/module[name='{}']".format(NEMEA_SR_PREFIX, inst['name'])
+    xpath = "/{}:supervisor/instance[name='{}']".format(NEMEA_SR_PREFIX, inst['name'])
     sysrepocfg_delete(NEMEA_SR_PREFIX, xpath, 'running')
     sysrepocfg_sync_ds(NEMEA_SR_PREFIX, 'running', 'startup')
+
+
+def update_without_name_change(sup_update_data, do_update_custom_attrs, sr_model, custom_update_data):
+    """
+    Since name doesn't change we don't have to delete the instance first
+    """
+    try:
+        # create the new one
+        sysrepocfg_merge(NEMEA_SR_PREFIX, sup_update_data, 'startup')
+    except:
+        # recover from failed transaction by copying unchanged running datastore
+        # to startup
+        sysrepocfg_sync_ds(NEMEA_SR_PREFIX, 'running', 'startup')
+        raise
+    finally:
+        """
+        After an attempt to update supervisor's instance data, try to update instance's 
+        custom model using custom-attributes
+        """
+        if do_update_custom_attrs:
+            try:
+                sysrepocfg_merge(sr_model, custom_update_data, 'startup')
+            except:
+                # recover from failed transaction by copying unchanged running
+                # datastore to startup
+                sysrepocfg_sync_ds(sr_model, 'running', 'startup')
+                raise
+
+    # update was success, sync startup to running. this should not fail
+    sysrepocfg_sync_ds(NEMEA_SR_PREFIX, 'startup', 'running')
+    if do_update_custom_attrs:
+        sysrepocfg_sync_ds(sr_model, 'startup', 'running')
+
+
+def update_with_name_change(old_name, sup_update_data, do_update_custom_attrs, sr_model, custom_update_data):
+    """
+    First try to delete and update in startup datastore to see whether update fails.
+    Because invalid data could be supplied to update and the transaction (delete+update)
+    would fail. It is easier to recover from this error from startup datastore because
+    supervisor doesn't care about changes there.
+    """
+    try:
+        # delete the old instance
+        xpath = "/{}:supervisor/instance[name='{}']".format(NEMEA_SR_PREFIX,
+                                                          old_name)
+        sysrepocfg_delete(NEMEA_SR_PREFIX, xpath, 'startup')
+
+        # create the new one
+        sysrepocfg_merge(NEMEA_SR_PREFIX, sup_update_data, 'startup')
+    except:
+        # recover from failed transaction by copying unchanged running datastore
+        # to startup
+        sysrepocfg_sync_ds(NEMEA_SR_PREFIX, 'running', 'startup')
+        raise
+    finally:
+        """
+        After an attempt to update supervisor's instance data, try to update instance's 
+        custom model using custom-attributes
+        """
+        if do_update_custom_attrs:
+            try:
+                # delete the old instance from startup configuration
+                xpath = "/{}:instance[name='{}']".format(sr_model, old_name)
+                sysrepocfg_delete(sr_model, xpath, 'startup')
+
+                sysrepocfg_merge(sr_model, custom_update_data, 'startup')
+            except:
+                # recover from failed transaction by copying unchanged running
+                # datastore to startup
+                sysrepocfg_sync_ds(sr_model, 'running', 'startup')
+                raise
+
+    # transaction was success, sync startup to running. this should not fail
+    sysrepocfg_sync_ds(NEMEA_SR_PREFIX, 'startup', 'running')
+    if do_update_custom_attrs:
+        sysrepocfg_sync_ds(sr_model, 'startup', 'running')
+
+
+def update(inst, data, nmod):
+    """
+    Yang doesn't allow to change name of list key so first we delete the instance
+    and then create a new one.
+
+    :param dict inst: Dictionary of instance to be updated
+    :param dict data: Dictionary data that should be instance updated with
+    :param dict nmod: NEMEA module of instance after update
+    """
+    if 'name' not in data:
+        raise InvalidRequest("Key 'name' is missing.")
+
+    if data['name'] == 'stats':
+        raise InvalidRequest(
+            "Instance cannot be named 'stats' it's reserved keyword.")
+
+    # helper var to know we have every value needed to update custom-attributes
+    do_update_custom_attrs = 'is-sysrepo-ready' in nmod and nmod['is-sysrepo-ready'] \
+                             and 'custom-attributes' in data
+
+    sr_model = None
+    custom_update_data = None
+    # get custom attributes to separate variable
+    if do_update_custom_attrs:
+        custom_attrs = data['custom-attributes']
+        # delete because otherwise merge to supervisor's data model would fail
+        del data['custom-attributes']
+        custom_attrs.update({"name": data['name']})
+
+        # prepare update data for custom model
+        sr_model = nmod['sr-model-prefix']
+        base_key = '{}:instance'.format(sr_model)
+        custom_update_data = {base_key: [custom_attrs]}
+
+    # prepare update data for NEMEA supervisor model
+    base_key = '{}:supervisor'.format(NEMEA_SR_PREFIX)
+    sup_update_data = {
+        base_key: {
+            'instance': [data]
+        }
+    }
+
+    # test if it gets new name after update
+    if inst['name'] == data['name']:
+        update_without_name_change(sup_update_data, do_update_custom_attrs, sr_model,
+                                   custom_update_data)
+    else:
+        # verify that new name doesn't exist
+        validate_instance_name_doesnt_exist(data['name'], nmod)
+        update_with_name_change(inst['name'], sup_update_data, do_update_custom_attrs,
+                                sr_model, custom_update_data)
+
+
+def create(inst_data):
+    if 'name' not in inst_data:
+        raise InvalidRequest("Key 'name' is missing.")
+    if inst_data['name'] == 'stats':
+        raise InvalidRequest("Instance cannot be named 'stats' it's reserved keyword.")
+
+    if 'module-ref' not in inst_data:
+        raise InvalidRequest("Key 'module-ref' is missing")
+
+    nmod = nm_model.get_by_name(inst_data['module-ref'])
+    validate_instance_name_doesnt_exist(inst_data, nmod)
+
+    # helper to know we have every value needed to create instance in custom model
+    do_create_custom_attrs = 'is-sysrepo-ready' in nmod and nmod['is-sysrepo-ready']\
+                             and 'custom-attributes' in inst_data
+
+    if do_create_custom_attrs:
+        base_key = "{}:instance".format(nmod['sr-model-prefix'])
+        custom_attrs = inst_data['custom-attributes']
+        # delete because otherwise merge to supervisor's data model would fail
+        del inst_data['custom-attributes']
+        custom_attrs.update({"name": inst_data['name']})
+        data = {
+            base_key: [custom_attrs]
+        }
+        sysrepocfg_merge(nmod['sr-model-prefix'], data, 'running')
+        sysrepocfg_sync_ds(nmod['sr-model-prefix'], 'running', 'startup')
+
+    base_key = '{}:supervisor'.format(NEMEA_SR_PREFIX)
+    inst_data = {base_key: {'instance': [inst_data]}}
+
+    sysrepocfg_merge(NEMEA_SR_PREFIX, inst_data, 'running')
+    sysrepocfg_sync_ds(NEMEA_SR_PREFIX, 'running', 'startup')
+
+
+def validate_instance_name_doesnt_exist(inst_name, nmod):
+    # Validate if instance with name doesn't exist in supervisor model
+    try:
+        get_by_name(inst_name)
+        raise InvalidRequest(
+            "Instance '%s' already exists in supervisor's configuration." %
+            inst_name)
+    except NotFoundException:
+        pass
+
+    # Validate if instance with name doesn't exist in custom model
+    if nmod['is-sysrepo-ready']:
+        try:
+            get_custom_attrs_obj_by_name(inst_name, nmod)
+            raise InvalidRequest(
+                "Instance '%s' already exists in '%s' model configuration." % (
+                    inst_name, nmod['sr-model-prefix']))
+        except NotFoundException:
+            pass
+
+
+def all_stats():
+    data = sysrepocfg_get_stats()
+    base_key = "%s:supervisor" % NEMEA_SR_PREFIX
+    return data[base_key]['instance']
+
+
+def stats_by_name(instance_name):
+    data = sysrepocfg_get_stats()
+    base_key = "%s:supervisor" % NEMEA_SR_PREFIX
+    for inst_stats in data[base_key]['instance']:
+        if 'name' in inst_stats and inst_stats['name'] == instance_name:
+            return inst_stats
+
+    raise NotFoundException("Instance '%s' was not found." % instance_name)

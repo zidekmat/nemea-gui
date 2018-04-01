@@ -1,4 +1,7 @@
 /**
+ * This file provides simulates NEMEA Supervisor daemon and returns some fake statistics
+ * as Supervisor would have.
+ *
  * Some code was used from https://github.com/sysrepo/sysrepo/blob/master/examples/oper_data_example.c
  *
  * Authors of that code are Rastislav Szabo <raszabo@cisco.com>, Lukas Macko <lmacko@cisco.com>
@@ -297,13 +300,13 @@ int main(int argc, char **argv)
     }
 
     /* subscribe for providing operational data */
-    rc = sr_dp_get_items_subscribe(session, "/nemea-test-1:supervisor/module/stats", inst_get_stats_cb, NULL,
+    rc = sr_dp_get_items_subscribe(session, "/nemea-test-1:supervisor/instance/stats", inst_get_stats_cb, NULL,
                                    SR_SUBSCR_DEFAULT, &subscription);
     if (SR_ERR_OK != rc) {
         fprintf(stderr, "Error by sr_dp_get_items_subscribe: %s\n", sr_strerror(rc));
         goto cleanup;
     }
-    rc = sr_dp_get_items_subscribe(session, "/nemea-test-1:supervisor/module/interface/stats", interface_get_stats_cb, NULL,
+    rc = sr_dp_get_items_subscribe(session, "/nemea-test-1:supervisor/instance/interface/stats", interface_get_stats_cb, NULL,
             SR_SUBSCR_CTX_REUSE, &subscription);
     if (SR_ERR_OK != rc) {
         fprintf(stderr, "Error by sr_dp_get_items_subscribe2: %s\n", sr_strerror(rc));

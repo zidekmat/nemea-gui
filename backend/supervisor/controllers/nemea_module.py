@@ -1,116 +1,81 @@
 from liberouterapi.modules.nemea.supervisor.controllers.helpers import *
+from liberouterapi.modules.nemea.supervisor.models import nemea_module as nm_model
+from liberouterapi.modules.nemea.supervisor.models import instance as i_model
+
+@auth.required(Role.admin)
+def api_create_new_nemea_module():
+    """
+    Creates new NEMEA module
+    """
+
+    data = request.get_json()
+    nm_model.create(data)
+
+    return '', 201
 
 
 @auth.required(Role.admin)
-def create_new_nemea_module(module):
-    """Creates new NEMEA module
-
-     # noqa: E501
-
-    :param module: Module to create
-    :type module: dict | bytes
-
-    :rtype: object
+def api_delete_nemea_module_by_name(module_name):
     """
-    # find whether module already exists
-    # sr_get_items /{}:supervisor/module[name='{}']
-    # sr_set_item /{}:supervisor/module[name='{}']
+    Deletes available module by name but also all of its instances with their custom
+    models
+    """
 
-    # Module.find_by_name(module['name'])
-    # Module.new(module)
-    # Module.save()
-    return 'do some magic!'
+    # verify it exists by fetching it
+    nmod = nm_model.get_by_name(module_name)
+    nm_model.delete(nmod)
+
+    return '', 204
 
 
 @auth.required(Role.admin)
-def delete_nemea_module_by_name(module_name):
-    """Deletes available module by name
-
-     # noqa: E501
-
-    :param module_name: Name of the module to return
-    :type module_name: str
-
-    :rtype: None
+def api_get_all_nemea_modules():
     """
-    # sr_delete_item /{}:supervisor/module[name='{}']
+    Returns all available NEMEA modules
+    """
 
-    # Module.delete_by_name(module_name)
-    return 'do some magic!'
+    return json_resp(nm_model.get_all())
 
 
 @auth.required(Role.admin)
-def get_all_nemea_modules():
-    """Returns all available NEMEA modules
-
-     # noqa: E501
-
-
-    :rtype: List[Module]
+def api_get_instances_by_nemea_module_name(module_name):
     """
-    # sr_get_items /{}:supervisor/module/*
+    Returns instances of given NEMEA module
+    """
 
-    # Module.all()
-    return 'do some magic!'
+    # verify that module exists
+    nm_model.get_by_name(module_name)
+
+    insts = i_model.get_by_nemea_module_name(module_name)
+
+    return json_resp(insts)
 
 
 @auth.required(Role.admin)
-def get_instances_by_nemea_module_name(module_name):
-    """Returns instances of given NEMEA module
-
-     # noqa: E501
-
-    :param module_name: Name of the module whose instances should be returned
-    :type module_name: str
-
-    :rtype: object
+def api_get_nemea_module_by_name(module_name):
     """
-    # sr_get_items /{}:supervisor/instance/module-kind
-    # sr_get_items /{}:supervisor/instance[name='{}']/*
-    # sr_get_items /{}:supervisor/instance[name='{}']/*
-    # sr_get_items /{}:supervisor/instance[name='{}']/*
+    Returns available module by name
+    """
 
-    # m = Module.find_by_name(module_name)
-    # insts = Instance.find_by_module(m.name)
-    # map(insts, serialize)
-    return 'do some magic!'
+    nmod = nm_model.get_by_name(module_name)
+    return json_resp(nmod)
 
 
 @auth.required(Role.admin)
-def get_nemea_module_by_name(module_name):
-    """Returns available module by name
-
-     # noqa: E501
-
-    :param module_name: Name of the module to return
-    :type module_name: str
-
-    :rtype: object
+def api_update_nemea_module_by_name(module_name):
     """
-    # sr_get_items /{}:supervisor/module[name='{}']
-
-    # m = Module.find_by_name(module_name)
-    return 'do some magic!'
-
-
-@auth.required(Role.admin)
-def update_nemea_module_by_name(module_name, module):
-    """Updates available module
-
-     # noqa: E501
-
-    :param module_name: Name of the module to return
-    :type module_name: str
-    :param module: Module to update
-    :type module: dict | bytes
-
-    :rtype: None
+    Updates available module
     """
-    # find whether module already exists
-    # sr_get_items /{}:supervisor/module[name='{}']
-    # sr_set_item /{}:supervisor/module[name='{}']
 
-    # m = Module.find_by_name(module_name)
-    # m.update(module)
-    
-    return 'do some magic!'
+    # Validate that NEMEA module to be updated really exists by fetching it's details
+    nmod = nm_model.get_by_name(module_name)
+
+    update_data = request.get_json()
+    nm_model.update(nmod, update_data)
+
+    return '', 200
+
+##################################################################################
+# Following functions are not API endpoints, just helpers for this file
+
+

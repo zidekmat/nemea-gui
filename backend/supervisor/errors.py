@@ -1,11 +1,24 @@
-class InvalidContentType(Exception):
-    def __init__(self):
-        Exception.__init__(self, 'Invalid content type, add HTTP'
-                                 ' header "Content-Type: application/json".')
+"""
+Exception classes used in Supervisor API and handled in controllers/__init__.py
+"""
 
-class NotFoundError(Exception):
+
+class InternalError(Exception):
     pass
 
-class SupervisorNotRunninError(Exception):
+
+class SysrepocfgException(Exception):
+    pass
+
+
+class YanglintException(Exception):
+    pass
+
+
+class NotFoundException(Exception):
+    pass
+
+
+class InvalidRequest(Exception):
     pass
 
