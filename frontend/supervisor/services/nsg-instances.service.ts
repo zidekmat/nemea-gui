@@ -51,27 +51,18 @@ export class NsgInstancesService {
 
 
     startInstance(instanceName: string): Observable<{}> {
-        const cmd = {command: 'start'};
-        return this.http.post(
-            `/nemea/instances/${instanceName}/control`,
-            cmd
-        );
+        return this.http.post(`/nemea/instances/${instanceName}/start`,{});
     }
 
     stopInstance(instanceName: string): Observable<{}> {
-        const cmd = {command: 'stop'};
-        return this.http.post(
-            `/nemea/instances/${instanceName}/control`,
-            cmd
-        );
+        return this.http.post(`/nemea/instances/${instanceName}/stop`, {});
     }
 
     restartInstance(instanceName: string): Observable<{}> {
-        const cmd = {command: 'restart'};
-        return this.http.post(
-            `/nemea/instances/${instanceName}/control`,
-            cmd
-        );
+        return this.http.post(`/nemea/instances/${instanceName}/stop`, {})
+            .flatMap(() => {
+                return this.http.post(`/nemea/instances/${instanceName}/start`, {});
+            });
     }
 
     getInterface(instName: string, ifcName: string): Observable<NsgInterface> {
