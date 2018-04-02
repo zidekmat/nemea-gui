@@ -70,12 +70,6 @@
                   {{ nsgInstance.params }}
                 </td>
               </tr>
-              <tr *ngIf="nsgInstance.use_sysrepo">
-                <td>Params:</td>
-                <td>
-                  {{ nsgInstance.sysrepo_xpath }}
-                </td>
-              </tr>
 
             </table>
           </div>
@@ -239,7 +233,7 @@
                                   [passedInstance]="nsgInstance"
       ></nsg-instance-edit-plain-form>
     </nsg-tab>
-    <nsg-tab tabTitle="Edit as JSON">
+<!--    <nsg-tab tabTitle="Edit as JSON">
       <nsg-instance-edit-json-form *ngIf="nsgInstance"
                                   (onChildSaved)="onChildSaved($event)"
                                   (onChildEdited)="onChildEdited($event)"
@@ -247,6 +241,7 @@
                                   [passedInstance]="nsgInstance"
       ></nsg-instance-edit-json-form>
     </nsg-tab>
+      -->
     <nsg-tab tabTitle="Munin stats"></nsg-tab>
   </nsg-tabs>
 </div>

@@ -55,27 +55,27 @@ import { NemeaStatusComponent } from './status/nemea_status.component';
 /**
   * NEMEA Supervisor GUI
   */
-import {SupervisorGuiComponent} from "./supervisor-gui/supervisor-gui.component";
-import {NsgStatusComponent} from "./supervisor-gui/pages/nsg-status/nsg-status.component";
-import {NsgModulesListingComponent} from "./supervisor-gui/pages/nsg-modules-listing/nsg-modules-listing.component";
-import {NsgModulesNewComponent} from "./supervisor-gui/pages/nsg-module-new/nsg-module-new.component";
-import {NsgModuleDetailComponent} from "./supervisor-gui/pages/nsg-module-detail/nsg-module-detail.component";
-import {NsgInstancesListingComponent} from "./supervisor-gui/pages/nsg-instances-listing/nsg-instances-listing.component";
-import {NsgInstancesNewComponent} from "./supervisor-gui/pages/nsg-instance-new/nsg-instance-new.component";
-import {NsgInstanceDetailComponent} from "./supervisor-gui/pages/nsg-instance-detail/nsg-instance-detail.component";
-import {NsgHowToComponent} from "./supervisor-gui/pages/nsg-how-to/nsg-how-to.component";
+import {SupervisorGuiComponent} from "./supervisor/supervisor-gui.component";
+import {NsgStatusComponent} from "./supervisor/pages/nsg-status/nsg-status.component";
+import {NsgModulesListingComponent} from "./supervisor/pages/nsg-modules-listing/nsg-modules-listing.component";
+import {NsgModulesNewComponent} from "./supervisor/pages/nsg-module-new/nsg-module-new.component";
+import {NsgModuleDetailComponent} from "./supervisor/pages/nsg-module-detail/nsg-module-detail.component";
+import {NsgInstancesListingComponent} from "./supervisor/pages/nsg-instances-listing/nsg-instances-listing.component";
+import {NsgInstancesNewComponent} from "./supervisor/pages/nsg-instance-new/nsg-instance-new.component";
+import {NsgInstanceDetailComponent} from "./supervisor/pages/nsg-instance-detail/nsg-instance-detail.component";
+import {NsgHowToComponent} from "./supervisor/pages/nsg-how-to/nsg-how-to.component";
 
-import {NsgTabsComponent} from "./supervisor-gui/pages/shared/nsg-tabs/nsg-tabs.component";
-import {NsgTabComponent} from "./supervisor-gui/pages/shared/nsg-tab/nsg-tab.component";
-import {NsgModuleEditPlainFormComponent} from "./supervisor-gui/pages/shared/nsg-edit/plain/module/nsg-module-edit-plain-form.component";
-import {NsgModuleEditJsonFormComponent} from "./supervisor-gui/pages/shared/nsg-edit/json/module/nsg-module-edit-json-form.component";
-import {NsgInstanceEditJsonFormComponent} from "./supervisor-gui/pages/shared/nsg-edit/json/instance/nsg-instance-edit-json-form.component";
-import {NsgInstanceEditPlainFormComponent} from "./supervisor-gui/pages/shared/nsg-edit/plain/instance/nsg-instance-edit-plain-form.component";
-import {JsonValidatorDirective} from "./supervisor-gui/pages/shared/json-validator.directive";
-import {YangLintValidatorDirective} from "./supervisor-gui/pages/shared/yang-lint-validator.directive";
-import {JsonModuleValidatorDirective} from "./supervisor-gui/pages/shared/nsg-edit/json/module/json-module-validator.directive";
-import {JsonInstanceValidatorDirective} from "./supervisor-gui/pages/shared/nsg-edit/json/instance/json-instance-validator.directive";
-import {NsgInterfacesFormComponent} from "./supervisor-gui/pages/shared/nsg-edit/plain/instance/nsg-interfaces-form/nsg-interfaces-form.component";
+import {NsgTabsComponent} from "./supervisor/pages/shared/nsg-tabs/nsg-tabs.component";
+import {NsgTabComponent} from "./supervisor/pages/shared/nsg-tab/nsg-tab.component";
+import {NsgModuleEditPlainFormComponent} from "./supervisor/pages/shared/nsg-edit/plain/module/nsg-module-edit-plain-form.component";
+import {NsgModuleEditJsonFormComponent} from "./supervisor/pages/shared/nsg-edit/json/module/nsg-module-edit-json-form.component";
+import {NsgInstanceEditJsonFormComponent} from "./supervisor/pages/shared/nsg-edit/json/instance/nsg-instance-edit-json-form.component";
+import {NsgInstanceEditPlainFormComponent} from "./supervisor/pages/shared/nsg-edit/plain/instance/nsg-instance-edit-plain-form.component";
+import {JsonValidatorDirective} from "./supervisor/pages/shared/json-validator.directive";
+import {YangLintValidatorDirective} from "./supervisor/pages/shared/yang-lint-validator.directive";
+import {JsonModuleValidatorDirective} from "./supervisor/pages/shared/nsg-edit/json/module/json-module-validator.directive";
+import {JsonInstanceValidatorDirective} from "./supervisor/pages/shared/nsg-edit/json/instance/json-instance-validator.directive";
+import {NsgInterfacesFormComponent} from "./supervisor/pages/shared/nsg-edit/plain/instance/nsg-interfaces-form/nsg-interfaces-form.component";
 
 
 const nemeaRoutes: Routes = [

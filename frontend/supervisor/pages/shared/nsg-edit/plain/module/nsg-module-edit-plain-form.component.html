@@ -72,14 +72,30 @@
             <td>NEMEA module?</td>
             <td>
               <label class="toggle-check">
-                <input [(ngModel)]="nsgModule.is_nemea_mod"
-                       name="is_nemea_mod"
+                <input [(ngModel)]="nsgModule.trap_monitorable"
+                       name="trap_monitorable"
                        class="toggle-check-input"
                        type="checkbox">
                 <span class="toggle-check-text"></span>
               </label>
             </td>
           </tr>
+
+<!--            <tr *ngIf="nsgModule.is_sysrepo_ready">
+                <td>Sysrepo model prefix:</td>
+                <td>
+                    <input [(ngModel)]="nsgModule.sr_model_prefix"
+                           #sysrepo_xpath="ngModel"
+                           name="sr_model_prefix"
+                           required
+                           type="text"
+                           class="nsg-form-control">
+                    <div *ngIf="sr_model_prefix.dirty && sr_model_prefix.errors && sr_model_prefix.errors.required"
+                         class="nsg-err-msg">
+                        This field is required
+                    </div>
+                </td>
+            </tr>-->
         </table>
       </div>
       <div class="col-md-6">
@@ -88,8 +104,8 @@
             <td width="42%">Sysrepo ready?</td>
             <td>
               <label class="toggle-check">
-                <input [(ngModel)]="nsgModule.is_sr_ready"
-                       name="is_sr_ready"
+                <input [(ngModel)]="nsgModule.is_sysrepo_ready"
+                       name="is_sysrepo_ready"
                        class="toggle-check-input"
                        type="checkbox">
                 <span class="toggle-check-text"></span>
@@ -100,8 +116,8 @@
             <td>Sysrepo callbacks ready?</td>
             <td>
               <label class="toggle-check">
-                <input [(ngModel)]="nsgModule.sr_cb_ready"
-                       name="sr_cb_ready"
+                <input [(ngModel)]="nsgModule.sr_callbacks_ready"
+                       name="sr_callbacks_ready"
                        class="toggle-check-input"
                        type="checkbox">
                 <span class="toggle-check-text"></span>

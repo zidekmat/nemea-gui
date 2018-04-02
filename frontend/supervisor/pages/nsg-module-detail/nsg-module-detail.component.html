@@ -14,15 +14,15 @@
           </tr>
           <tr>
             <td>NEMEA module?</td>
-            <td>{{nsgModule.is_nemea_mod}}</td>
+            <td>{{nsgModule.trap_monitorable}}</td>
           </tr>
           <tr>
             <td>Sysrepo ready?</td>
-            <td>{{nsgModule.is_sr_ready}}</td>
+            <td>{{nsgModule.is_sysrepo_ready}}</td>
           </tr>
           <tr>
             <td>Sysrepo callbacks ready?</td>
-            <td>{{nsgModule.sr_cb_ready}}</td>
+            <td>{{nsgModule.sr_callbacks_ready}}</td>
           </tr>
           <tr>
             <td>IN interfaces count:</td>
@@ -88,14 +88,14 @@
                                   [passedModule]="nsgModule"
       ></nsg-module-edit-plain-form>
     </nsg-tab>
-    <nsg-tab tabTitle="Edit as JSON">
+<!--    <nsg-tab tabTitle="Edit as JSON">
       <nsg-module-edit-json-form  *ngIf="nsgModule"
                                  (onChildSaved)="onChildSaved($event)"
                                  (onChildEdited)="onChildEdited($event)"
                                  [isEditForm]="true"
                                  [passedModule]="nsgModule"
       ></nsg-module-edit-json-form>
-    </nsg-tab>
+    </nsg-tab>-->
   </nsg-tabs>
 </div>
 <div *ngIf="!nsgModule && !instanceNotFound">

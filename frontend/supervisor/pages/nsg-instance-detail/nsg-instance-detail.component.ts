@@ -5,7 +5,7 @@ import {NsgInstancesService} from "../../services/nsg-instances.service";
 import {NsgInterface} from "../../models/nsg-interface";
 import {NsgInstance} from "../../models/nsg-instance";
 import {NsgInstanceEditPlainFormComponent} from "../shared/nsg-edit/plain/instance/nsg-instance-edit-plain-form.component";
-import {NsgInstanceEditJsonFormComponent} from "../shared/nsg-edit/json/instance/nsg-instance-edit-json-form.component";
+//import {NsgInstanceEditJsonFormComponent} from "../shared/nsg-edit/json/instance/nsg-instance-edit-json-form.component";
 
 @Component({
     selector: 'nsg-instance-detail',
@@ -17,8 +17,8 @@ export class NsgInstanceDetailComponent implements OnInit {
 
     @ViewChild(NsgInstanceEditPlainFormComponent)
     private plainFormComponent: NsgInstanceEditPlainFormComponent;
-    @ViewChild(NsgInstanceEditJsonFormComponent)
-    private jsonFormComponent: NsgInstanceEditJsonFormComponent;
+/*    @ViewChild(NsgInstanceEditJsonFormComponent)
+    private jsonFormComponent: NsgInstanceEditJsonFormComponent;*/
 
     nsgInstance: NsgInstance;
     selectedIfc: NsgInterface;
@@ -67,8 +67,8 @@ export class NsgInstanceDetailComponent implements OnInit {
         // update default values in both children
         this.plainFormComponent.passedInstance = this.nsgInstance;
         this.plainFormComponent.resetForm();
-        this.jsonFormComponent.passedInstance = this.nsgInstance;
-        this.jsonFormComponent.resetForm();
+/*        this.jsonFormComponent.passedInstance = this.nsgInstance;
+        this.jsonFormComponent.resetForm();*/
     }
 
     onChildEdited(inst: NsgInstance) {
@@ -78,14 +78,14 @@ export class NsgInstanceDetailComponent implements OnInit {
         // Edit working values of both forms
         this.plainFormComponent.nsgInstance = inst;
         this.plainFormComponent.fetchModule();
-        this.jsonFormComponent.nsgInstanceJson = inst.apiJson();
-        this.jsonFormComponent.beautifyJson();
+/*        this.jsonFormComponent.nsgInstanceJson = inst.apiJson();
+        this.jsonFormComponent.beautifyJson();*/
     }
 
     removeInstance() {
         this.nsgInstancesService.removeInstance(this.nsgInstance.name).subscribe(
             () => {
-                this.router.navigate(['/nemea/supervisor-gui/instances'])
+                this.router.navigate(['/nemea/supervisor/instances'])
             },
             (error) => {
                 // TODO
@@ -95,19 +95,13 @@ export class NsgInstanceDetailComponent implements OnInit {
     }
 
     removeInterface(ifc: NsgInterface) {
-        this.nsgInstancesService.removeInterface(this.nsgInstance.name, ifc.name).subscribe(
+        this.nsgInstance.removeIfc(ifc);
+        this.nsgInstancesService.updateInstance(this.nsgInstance.name, this.nsgInstance).subscribe(
             () => {
-                const ifcFilter = (ifcIter) => ifcIter != ifc;
-                if (ifc.direction == 'IN') {
-                    this.nsgInstance.in_ifces = this.nsgInstance.in_ifces.filter(ifcFilter);
-                } else {
-                    this.nsgInstance.out_ifces = this.nsgInstance.out_ifces.filter(ifcFilter);
-                }
-
                 console.log(`interface ${ifc.name} deleted`);
             },
             (error) => {
-                // TODO
+                console.log('Failed to remove interface:');
                 console.log(error);
             }
         );

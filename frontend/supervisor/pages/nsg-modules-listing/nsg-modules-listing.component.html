@@ -15,9 +15,9 @@
         {{ module.name }}
       </a>
     </td>
-    <td>{{ module.is_nemea_mod }}</td>
-    <td>{{ module.is_sr_ready }}</td>
-    <td>{{ module.sr_cb_ready }}</td>
+    <td>{{ module.trap_monitorable }}</td>
+    <td>{{ module.is_sysrepo_ready }}</td>
+    <td>{{ module.sr_callbacks_ready }}</td>
     <td>
       <div>
         <i (click)="exportAsSrJsonData(module)"

@@ -20,7 +20,7 @@ export class NsgYangService {
     }
 
     lintValidate(jsonData: string, srModelName: string): Observable<YangLintResult> {
-        return this.http.post('/nemea/sg/yang-lint', {model: srModelName, data: jsonData})
+        return this.http.post('/nemea/validate', {model: srModelName, data: jsonData})
             .map(response => response.json() as YangLintResult);
     }
 

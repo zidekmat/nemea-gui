@@ -12,35 +12,35 @@ export class NsgModulesService {
     constructor(private http: Http) {}
 
     getAllModules() : Observable<NsgModule[]> {
-        return this.http.get('/nemea/sg/modules?withInstances=false')
+        return this.http.get('/nemea/modules')
             .map(response => response.json().map(m => NsgModule.newFromApi(m)));
     }
 
     getAllModulesNames(): Observable<string[]> {
-        return this.http.get('/nemea/sg/modules?withInstances=false')
+        return this.http.get('/nemea/modules')
             .map(response => {
                 return response.json().map(m => m.name);
             });
     }
 
     getModule(moduleName: string): Observable<NsgModule> {
-        return this.http.get(`/nemea/sg/modules/${moduleName}`)
+        return this.http.get(`/nemea/modules/${moduleName}`)
             .map(response => NsgModule.newFromApi(response.json()));
     }
 
     createModule(mod: NsgModule): Observable<{}> {
-        return this.http.post(`/nemea/sg/modules`, mod);
+        return this.http.post(`/nemea/modules`, mod);
     }
 
     updateModule(moduleOrigName: string, mod: NsgModule): Observable<{}> {
         return this.http.put(
-            `/nemea/sg/modules/${moduleOrigName}`,
+            `/nemea/modules/${moduleOrigName}`,
             mod
         );
     }
 
     removeModule(moduleName: string) : Observable<{}> {
-        return this.http.delete(`/nemea/sg/modules/${moduleName}`);
+        return this.http.delete(`/nemea/modules/${moduleName}`);
     }
 
 

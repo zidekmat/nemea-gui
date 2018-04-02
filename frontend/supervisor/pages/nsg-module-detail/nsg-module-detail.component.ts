@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {NsgModule} from "../../models/nsg-module";
 import {NsgModulesService} from "../../services/nsg-modules.service";
 import {NsgModuleEditPlainFormComponent} from "../shared/nsg-edit/plain/module/nsg-module-edit-plain-form.component";
-import {NsgModuleEditJsonFormComponent} from "../shared/nsg-edit/json/module/nsg-module-edit-json-form.component";
+//import {NsgModuleEditJsonFormComponent} from "../shared/nsg-edit/json/module/nsg-module-edit-json-form.component";
 import {NsgInstance} from "../../models/nsg-instance";
 import {NsgInstancesService} from "../../services/nsg-instances.service";
 
@@ -18,8 +18,8 @@ export class NsgModuleDetailComponent implements OnInit {
 
     @ViewChild(NsgModuleEditPlainFormComponent)
     private plainFormComponent: NsgModuleEditPlainFormComponent;
-    @ViewChild(NsgModuleEditJsonFormComponent)
-    private jsonFormComponent: NsgModuleEditJsonFormComponent;
+/*    @ViewChild(NsgModuleEditJsonFormComponent)
+    private jsonFormComponent: NsgModuleEditJsonFormComponent;*/
 
     nsgModule: NsgModule;
     nsgInstances: NsgInstance[];
@@ -70,8 +70,8 @@ export class NsgModuleDetailComponent implements OnInit {
         // update default values in both children
         this.plainFormComponent.passedModule = this.nsgModule;
         this.plainFormComponent.resetForm();
-        this.jsonFormComponent.passedModule = this.nsgModule;
-        this.jsonFormComponent.resetForm();
+/*        this.jsonFormComponent.passedModule = this.nsgModule;
+        this.jsonFormComponent.resetForm();*/
     }
 
     onChildEdited(module: NsgModule) {
@@ -80,15 +80,15 @@ export class NsgModuleDetailComponent implements OnInit {
 
         // Edit working values of both forms
         this.plainFormComponent.nsgModule = module;
-        this.jsonFormComponent.nsgModuleJson = module.apiJson();
-        this.jsonFormComponent.beautifyJson();
+/*        this.jsonFormComponent.nsgModuleJson = module.apiJson();
+        this.jsonFormComponent.beautifyJson();*/
     }
 
     removeModule() {
         this.nsgModulesService.removeModule(this.nsgModule.name)
             .subscribe(
             () => {
-                this.router.navigate(['/nemea/supervisor-gui/modules'])
+                this.router.navigate(['/nemea/supervisor/modules'])
             },
             (error) => {
                 // TODO

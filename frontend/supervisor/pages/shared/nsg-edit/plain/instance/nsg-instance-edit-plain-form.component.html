@@ -103,21 +103,6 @@
                      class="nsg-form-control">
             </td>
           </tr>
-          <tr *ngIf="nsgInstance.use_sysrepo">
-            <td>Sysrepo XPATH:</td>
-            <td>
-              <input [(ngModel)]="nsgInstance.sysrepo_xpath"
-                     #sysrepo_xpath="ngModel"
-                     name="sysrepo_xpath"
-                     required
-                     type="text"
-                     class="nsg-form-control">
-              <div *ngIf="sysrepo_xpath.dirty && sysrepo_xpath.errors && sysrepo_xpath.errors.required"
-                   class="nsg-err-msg">
-                This field is required
-              </div>
-            </td>
-          </tr>
           <!-- TODO custom fields from yang model -->
         </table>
       </form>

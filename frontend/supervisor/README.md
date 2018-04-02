@@ -1,0 +1,2 @@
+### NEMEA Supervisor Frontend
+This frontend allows you to configure [NEMEA Supervisor V2](https://github.com/zidekmat/nemea-supervisor-sysrepo-edition) using NEMEA Supervisor API (see ../../backend folder).

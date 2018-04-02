@@ -57,9 +57,10 @@ export class NsgInterfacesFormComponent implements OnInit {
     }
 
     removeIfc(ifc: NsgInterface) {
-        this.nsgInstancesService.removeInterface(this.nsgInstance.name, ifc.name).subscribe(
+        this.nsgInstance.removeIfc(ifc);
+
+        this.nsgInstancesService.updateInstance(this.nsgInstance.name, this.nsgInstance).subscribe(
             () => {
-                this.nsgInstance.removeIfc(ifc);
                 this.onChildEdited.emit();
             },
             (error) => {
@@ -81,13 +82,12 @@ export class NsgInterfacesFormComponent implements OnInit {
     }
 
     saveIfc(ifcForm) {
-        //if (ifcForm.valid &&
+        this.nsgInstance.addIfc(this.selectedIfc);
         if (this.addingIfc) {
-            this.nsgInstancesService.addInterface(
+            this.nsgInstancesService.updateInstance(
                 this.nsgInstance.name,
-                this.selectedIfc).subscribe(
+                this.nsgInstance).subscribe(
                 () => {
-                    this.nsgInstance.addIfc(this.selectedIfc);
                     this.updateIfcesNamesList();
                     this.selectedIfc = null;
                     this.onChildEdited.emit();
@@ -100,12 +100,10 @@ export class NsgInterfacesFormComponent implements OnInit {
                 }
             );
         } else {
-            this.nsgInstancesService.updateInterface(
+            this.nsgInstancesService.updateInstance(
                 this.nsgInstance.name,
-                JSON.parse(this.resetIfcVals).name,
-                this.selectedIfc).subscribe(
+                this.nsgInstance).subscribe(
                 () => {
-                    this.nsgInstance.addIfc(this.selectedIfc);
                     this.updateIfcesNamesList();
                     this.selectedIfc = null;
                     // TODO notify instance

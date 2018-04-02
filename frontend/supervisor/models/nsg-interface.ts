@@ -1,5 +1,4 @@
 import {NsgInstance} from "./nsg-instance";
-import {NsgInstance2} from "./nsg-instance2";
 
 export class NsgInterface {
 

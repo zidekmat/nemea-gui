@@ -9,7 +9,6 @@ export class NsgInstance {
     use_sysrepo: boolean;
     max_restarts_per_min: number;
     params?: string;
-    sysrepo_xpath?: string;
 
     in_ifces: NsgInterface[];
     out_ifces: NsgInterface[];
@@ -90,39 +89,16 @@ export class NsgInstance {
         }
     }
 
-    /*
-        asSrJson(): string {
-            return JSON.stringify({
-                "nemea:supervisor": {
-                    "module": [
-                        {
-                            name: this.name,
-                            module_kind: this.nsgModule.name,
-                            enabled: this.enabled,
-                            use_sysrepo: this.use_sysrepo,
-                            max_restarts_per_min: this.max_restarts_per_min,
-                            params: this.params,
-                            sysrepo_xpath: this.sysrepo_xpath,
-                            in_ifces: this.in_ifces,
-                            out_ifces: this.out_ifces,
-                        }
-                    ]
-                }
-            });
-        }*/
-
     apiJson(): string {
         return JSON.stringify(
             {
                 name: this.name,
-                module_kind: this.nsgModule.name,
+                'module-ref': this.nsgModule.name,
                 enabled: this.enabled,
-                use_sysrepo: this.use_sysrepo,
+                "use-sysrepo": this.use_sysrepo,
                 max_restarts_per_min: this.max_restarts_per_min,
                 params: this.params,
-                sysrepo_xpath: this.sysrepo_xpath,
-                in_ifces: this.in_ifces,
-                out_ifces: this.out_ifces,
+                'interface': this.in_ifces.concat(this.out_ifces)
             }
         );
     }
@@ -133,12 +109,20 @@ export class NsgInstance {
         }
 
         obj['nsgModule'] = new NsgModule({
-            name: obj.module_kind
+            name: obj['module-ref']
         });
-        delete obj.module_kind;
+        obj['in_ifces'] = [];
+        obj['out_ifces'] = [];
 
-        obj['in_ifces'] = obj['in_ifces'].map(i => new NsgInterface(i));
-        obj['out_ifces'] = obj['out_ifces'].map(i => new NsgInterface(i));
+        for (let i = 0; i < obj['interface']; i++) {
+            if (obj['interface'][i].direction == 'IN') {
+                obj['in_ifces'].push(new NsgInterface(obj['interface'][i]));
+            } else {
+                obj['out_ifces'].push(new NsgInterface(obj['interface'][i]));
+            }
+        }
+        delete obj['module-ref'];
+        delete obj['interface'];
 
         return new NsgInstance(obj);
     }
@@ -156,14 +140,4 @@ export class NsgInstance {
             out_ifces: [],
         });
     }
-
-    /*
-        static newFromApiJson(json: string) {
-            return this.newFromApi(JSON.parse(json));
-        }
-
-        static newFromSrJson(json: string) {
-            let obj = JSON.parse(json)['nemea:supervisor']['module'][0];
-            return this.newFromApiJson(obj.toString());
-        }*/
 }
