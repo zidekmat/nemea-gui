@@ -251,6 +251,26 @@ def create(inst_data):
     sysrepocfg_sync_ds(NEMEA_SR_PREFIX, 'running', 'startup')
 
 
+def start(instance_name):
+    # verify instance exists
+    get_by_name(instance_name)
+    xpath = "/{}:supervisor/instance[name='{}']/enabled".format(NEMEA_SR_PREFIX,
+                                                                instance_name)
+    sysrepocfg_set_by_xpath(NEMEA_SR_PREFIX, xpath, 'true', 'running')
+
+    return '', 200
+
+
+def stop(instance_name):
+    # verify instance exists
+    get_by_name(instance_name)
+    xpath = "/{}:supervisor/instance[name='{}']/enabled".format(NEMEA_SR_PREFIX,
+                                                                instance_name)
+    sysrepocfg_set_by_xpath(NEMEA_SR_PREFIX, xpath, 'false', 'running')
+
+    return '', 200
+
+
 def validate_instance_name_doesnt_exist(inst_name, nmod):
     # Validate if instance with name doesn't exist in supervisor model
     try:

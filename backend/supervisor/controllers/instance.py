@@ -87,6 +87,22 @@ def api_get_instance_stats_by_name(instance_name):
     return json_resp(i_model.stats_by_name(instance_name))
 
 
+@auth.required(Role.admin)
+def api_control_instance(instance_name, action):
+    """
+    Start/stop instance
+    """
+    if action not in ['start', 'stop']:
+        raise InvalidRequest("Invalid action '{}' for instance '{}'.".format(
+            instance_name, action))
+
+    if action == 'start':
+        i_model.start(instance_name)
+    else:
+        i_model.stop(instance_name)
+
+    return '', 200
+
 ##################################################################################
 # Following functions are not API endpoints, just helpers for this file
 

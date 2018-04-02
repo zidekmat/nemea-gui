@@ -345,6 +345,39 @@ paths:
           $ref: '#/responses/Unauthorized'
         500:
           $ref: '#/responses/ServerError'
+  "/nemea/instances/{instance_name}/{action}":
+    parameters:
+      - in: header
+        name: "Authorization"
+        description: "Session ID of logged user"
+        type: string
+      - name: "instance_name"
+        in: "path"
+        description: "Name of the instance to return"
+        required: true
+        type: string
+      - name: "action"
+        in: 'path'
+        required: true
+        type: string
+        description: "Action to take over the instance. Either 'start' or 'stop'"
+        enum: ['start', 'stop']
+    post:
+      summary: Start/stop instance by name
+      operationId: "control_instance"
+      tags:
+        - NEMEA Module Instance
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/InstanceStats"
+        404:
+          description: "Instance doesn't exist"
+        401:
+          $ref: '#/responses/Unauthorized'
+        500:
+          $ref: '#/responses/ServerError'
   "/nemea/instances":
     parameters:
       - in: header
@@ -583,7 +616,7 @@ definitions:
         type: integer
       use-sysrepo:
         type: boolean
-      interfaces:
+      interface:
         type: array
         items:
           $ref: '#/definitions/Interface'

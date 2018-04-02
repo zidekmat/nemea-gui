@@ -31,7 +31,7 @@ def all_exception_handler(error):
 
 ####################################################################
 
-@app.route("/nemea/sg/modules/<string:module>", methods=['GET', 'PUT', 'DELETE'])
+@app.route("/nemea/modules/<string:module>", methods=['GET', 'PUT', 'DELETE'])
 def module_rud(module):
   if request.method == 'GET':
     for m in MODULES:
@@ -58,7 +58,7 @@ def module_rud(module):
   else:
     return ('', 400)
 
-@app.route("/nemea/sg/modules", methods=['GET', 'POST'])
+@app.route("/nemea/modules", methods=['GET', 'POST'])
 def module_create_and_all():
   if request.method == 'GET':
     withInstances = request.args.get('withInstances')
@@ -79,7 +79,7 @@ def module_create_and_all():
 
 ####################################################################
 
-@app.route("/nemea/sg/instances/<string:inst>/control", methods=['POST'])
+@app.route("/nemea/instances/<string:inst>/control", methods=['POST'])
 def instance_control(inst):
   instName = request.view_args['inst']
   inst = None
@@ -105,7 +105,7 @@ def instance_control(inst):
   else:
     return Response(json.dumps({errors:['Invalid or missing \'command\' key']}), 400, mimetype='application/json')
 
-@app.route("/nemea/sg/instances/<string:inst>", methods=['GET', 'PUT', 'DELETE'])
+@app.route("/nemea/instances/<string:inst>", methods=['GET', 'PUT', 'DELETE'])
 def instance_rud(inst):
   if request.method == 'GET':
     for m in INSTANCES:
@@ -130,7 +130,7 @@ def instance_rud(inst):
   else:
     return ('', 400)
 
-@app.route("/nemea/sg/instances", methods=['GET', 'POST'])
+@app.route("/nemea/instances", methods=['GET', 'POST'])
 def instance_create_and_get_all():
   if request.method == 'GET':
     return Response(json.dumps(INSTANCES), mimetype='application/json')
@@ -160,7 +160,7 @@ def ifc_by_name(inst, name):
       return i
   return None
 
-@app.route("/nemea/sg/instances/<string:inst>/ifces/<string:ifc>", methods=['GET', 'PUT', 'DELETE'])
+@app.route("/nemea/instances/<string:inst>/ifces/<string:ifc>", methods=['GET', 'PUT', 'DELETE'])
 def ifc_rud(inst, ifc):
   inst = inst_by_name(inst)
   if inst == None:
@@ -201,7 +201,7 @@ def ifc_rud(inst, ifc):
   else:
     return ('', 400)
 
-@app.route("/nemea/sg/instances/<inst>/ifces", methods=['GET', 'POST'])
+@app.route("/nemea/instances/<inst>/ifces", methods=['GET', 'POST'])
 def ifc_create_and_get_all(inst):
   if request.method == 'GET':
     inst = inst_by_name(inst)
@@ -227,7 +227,7 @@ def ifc_create_and_get_all(inst):
 ####################################################################
 
 
-@app.route("/nemea/sg/yang-lint", methods=['POST'])
+@app.route("/nemea/yang-lint", methods=['POST'])
 def yang_lint():
   req = request.get_json()
   # {model: '', data: {}}

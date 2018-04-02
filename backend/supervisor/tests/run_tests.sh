@@ -6,6 +6,8 @@ msg() {
 
 msg 'Preparing test environment'
 
+# Bootstrap Liberouter GUI
+python3 ../../../../../bootstrap.py
 # Start Liberouter backend and create new user admin:admin there
 python3 ../../../../../backend &
 LIBEROUTER_GUI_API_PID=$!
@@ -13,7 +15,7 @@ LIBEROUTER_GUI_API_PID=$!
 # wait for Liberouter GUI backend to start
 sleep 0.5
 
-curl -s -v -X POST \
+curl -s -X POST \
   -H 'Content-Type: application/json' \
   -d '{"username":"admin","password":"admin","password2":"admin"}' \
   http://localhost:5555/setup >/dev/null

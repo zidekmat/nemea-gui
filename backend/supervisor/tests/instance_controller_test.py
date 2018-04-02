@@ -1,8 +1,15 @@
 from helpers import ControllerTest, unittest, test, json, set_trace
 
 
-
 class InstanceControllerTest(ControllerTest):
+
+    def test_api_api_control_instance(self):
+        result = test.post('/nemea/instances/module1-1/start')
+        self.assertEqual(result.status_code, 200)
+        result = test.post('/nemea/instances/module1-1/sXQAWE')
+        self.assertEqual(result.status_code, 400)
+        result = test.post('/nemea/instances/module1-1/stop')
+        self.assertEqual(result.status_code, 200)
 
     def test_api_get_instance_stats_by_name(self):
         result = test.get('/nemea/instances/module1-1/stats')
@@ -29,11 +36,11 @@ class InstanceControllerTest(ControllerTest):
         self.assertEqual(inst['name'], 'ipfixcol1')
 
     def test_api_create_new_instance(self):
-        data = {'test':'test'}
+        data = {'test': 'test'}
         result = test.post_json('/nemea/instances', data=data)
         self.assertEqual(result.status_code, 400)
 
-        data = {'name':'test'}
+        data = {'name': 'test'}
         result = test.post_json('/nemea/instances', data=data)
         self.assertEqual(result.status_code, 400)
 

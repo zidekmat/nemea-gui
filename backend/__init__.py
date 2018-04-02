@@ -94,6 +94,9 @@ nemea_bp.add_url_rule('/instances',
 nemea_bp.add_url_rule('/instances',
                       view_func=instance.api_create_new_instance,
                       methods=['POST'])
+nemea_bp.add_url_rule('/instances/<string:instance_name>/<string:action>',
+                      view_func=instance.api_control_instance,
+                      methods=['POST'])
 nemea_bp.add_url_rule('/instances/stats',
                       view_func=instance.api_get_all_instances_stats,
                       methods=['GET'])
