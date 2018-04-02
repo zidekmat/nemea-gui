@@ -17,9 +17,9 @@
   },
   "homepage": "https://github.com/CESNET/nemea-gui#readme",
   "dependencies" : {
-    "angular2-grid": "^2.0.2",
+    "angular2-grid": "^2.1.0",
     "d3": "^4.9.1",
-    "@swimlane/ngx-charts": "^5.3.1",
+    "@swimlane/ngx-charts": "^7.1.1",
     "vis": "^4.21.0"
   }
 }

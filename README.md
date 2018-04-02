@@ -1,27 +1,25 @@
-This is not really a fork of https://github.com/CESNET/nemea-dashboard/tree/liberouter-gui, a liberouter-gui module.
+This is fork of [https://github.com/CESNET/nemea-dashboard/tree/liberouter-gui](https://github.com/CESNET/nemea-dashboard/tree/liberouter-gui), a [Liberouter GUI](https://github.com/CESNET/liberouter-gui) module. It adds ability to configure new [NEMEA Supervisor V2](https://github.com/zidekmat/nemea-supervisor-sysrepo-edition) that uses sysrepo as it's configuration datastore.
 
 ### Requirements
+ * NEMEA Supervisor V2 (and its dependencies)
+ * MongoDB (for backend/events.py)
  * nodejs, npm
  * git
- * Python 3
- * python3-pip (ubuntu package)
+ * Python 3, Pip 3
  * **> 1GB RAM** (because of Angular)
 
 
 ### Install
-
-Install requirements on ubuntu machine:
+1) Install requirements. Here are specific instructions for Fedora 27 machine:
 ```
-sudo apt install curl -y && curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && \
-sudo apt-get install -y nodejs && \
+sudo dnf install -y curl && curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash - && \
+sudo yum install -y nodejs && \
 sudo npm install --unsafe-perm -g @angular/cli && \
-sudo apt install git python3 && \
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-sudo python3 get-pip.py && \
-sudo ln -s /usr/bin/nodejs /usr/bin/node 2>/dev/null
+sudo dnf install -y python3-pip python3-devel libffi-devel redhead-rpm-config git mongodb-server
 ```
 
-Install Liberouter GUI + Staas GUI + Nemea GUI:
+2) For installation instructions on how to install NEMEA Supervisor V2 see its git repository.
+3) Install and configureLiberouter GUI + Staas GUI + Nemea GUI:
 ```
 sudo mkdir /var/www 2>/dev/null && sudo chown -R $(whoami):$(whoami) /var/www && \
 cd /var/www && \
@@ -31,25 +29,24 @@ git clone https://github.com/CESNET/Staas-GUI && mv Staas-GUI/* . && \
 rm -rf NEMEA/ Staas-GUI/ examples/ && \
 git clone https://github.com/zidekmat/nemea-gui nemea/ && \
 cd ../ && python3 bootstrap.py && cd frontend/ && npm install --allow-root && \
-sudo pip3 install flask
-# use this once real API is implemented
-# cd ../ && sudo pip3 install -r backend/requirements.txt
+cd ../ && sudo pip3 install -r backend/requirements.txt
 ```
 
-### Development
-
-In one terminal run the fake API:
+### Run (devel mode)
+Start MongoDB first:
 ```
-python3 /var/www/liberouter-gui/modules/nemea/backend/fake_supervisor_backend.py
+sudo systemctl start mongod
 ```
-
-In other terminal run angular:
+In one terminal serve angular files:
 ```
-cd /var/www/liberouter-gui/frontend && ng serve --proxy proxy.json
+cd /var/www/liberouter-gui/frontend && ng serve --preserve-symlinks --proxy proxy.json
 ```
 
+In second terminal run Flask API:
+```
+python3 /var/www/liberouter-gui/backend
+```
+Now you should have the web application available at //localhost:4200.
 
-### Deploy
-```
-TODO
-```
+### Run (production mode)
+See [Liberouter GUI wiki](https://github.com/CESNET/liberouter-gui/wiki/Deploying-LiberouterGUI).

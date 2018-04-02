@@ -1,9 +1,3 @@
-try:
-    import libsysrepoPython3 as sr
-except ImportError:
-    raise ImportError("You don't have Python3 bindings for models installed."
-                      " See https://github.com/models/models for details on"
-                      " how to install it.")
 import json
 import subprocess
 from pdb import set_trace

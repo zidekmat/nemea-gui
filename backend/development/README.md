@@ -1,5 +1,5 @@
-### Development
-To make it easier to develop Supervisor GUI, you can use following fake backend that requires nothing but Python3 and Flask to run. Documenation can be found here: ....
+### Deprecated!
+To make it easier to develop Supervisor GUI, you can use following fake backend that requires nothing but Python3 and Flask to run.
 
 Install Flask with:
 ```

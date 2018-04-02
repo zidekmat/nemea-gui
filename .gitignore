@@ -57,3 +57,7 @@ css
 node_modules/
 app.min.js
 public
+
+
+.idea
+backend/.idea/

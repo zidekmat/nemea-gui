@@ -1,5 +1,5 @@
 ### How-to ###
-Tests don't need NEMEA Supervisor running but still require it's dependencies (sysrepo). Also since this nemea Liberouter module uses MongoDB you should have it running even though Supervisor API doesn't use it.
+Tests don't need NEMEA Supervisor running but still require it's dependencies (sysrepo) and libsysrepoPython3 from sysrepo (it's required by `subscriber.py`). Also since this nemea Liberouter module uses MongoDB you should have it running even though Supervisor API doesn't use it.
 
 If you have all prerequisites you can run tests using `bash ./run_tests.sh`.
 
