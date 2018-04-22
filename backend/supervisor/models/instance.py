@@ -234,8 +234,6 @@ def create(inst_data):
         if len(inst_data['interface']) == 0:
             del inst_data['interface']
 
-    print(inst_data)
-
     nmod = nm_model.get_by_name(inst_data['module-ref'])
     validate_instance_name_doesnt_exist(inst_data, nmod)
 

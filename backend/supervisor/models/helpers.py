@@ -108,8 +108,7 @@ def sysrepocfg_merge(sysrepo_module, data, datastore=USED_SR_DATASTORE):
         raise SysrepocfgException(
             'Unknown error during configuration data import: ' + str(e))
     finally:
-        pass
-        #remove(fname)
+        remove(fname)
 
     if res.stdout == b"The new configuration was successfully applied.\n":
         return
@@ -204,9 +203,6 @@ def sysrepocfg_get_stats():
     try:
         return json.loads(res.stdout)
     except ValueError:
-        print(res.stdout)
-        print(res.stderr)
-        print(res.returncode)
         raise SysrepocfgException(
             'Unable to parse JSON during state data export: {}/{}'.format(res.stdout,
                                                                           res.stderr))
