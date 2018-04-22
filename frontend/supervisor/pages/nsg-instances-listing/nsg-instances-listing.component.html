@@ -9,8 +9,8 @@
     <th width="20%">&nbsp;</th>
   </tr>
   </thead>
-  <tbody>
-    <tr *ngFor="let instance of nsgInstances">
+  <tbody *ngIf="nsgInstances">
+    <tr *ngFor="let instance of nsgInstances" [ngClass]="{'inst-restarting': instance.restarting}">
       <td>
         <a [routerLink]="['/nemea/supervisor-gui/instances/', instance.name]">
           {{ instance.name }}
@@ -31,7 +31,7 @@
           {{ instance.nsgModule.name }}
         </a>
       </td>
-      <td>
+      <td *ngIf="instance.restarting === false">
         <div>
           <i *ngIf="instance.running === false"
              (click)="startInstance(instance)"
@@ -66,6 +66,11 @@
              class="fa fa-trash-o"></i>
         </div>
       </td>
+    </tr>
+  </tbody>
+  <tbody *ngIf="!nsgInstances">
+    <tr>
+      <td colspan="5">No instances found. Verify that Supervisor is running.</td>
     </tr>
   </tbody>
 </table>

@@ -117,10 +117,6 @@
             class="nsg-btn">
       Reset values
     </button>
-<!--    <button (click)="nsgModalService.openNsgModal(copyValuesModal)"
-            class="nsg-btn">
-      Copy values
-    </button>-->
     <button form="editForm"
             [disabled]="editForm.invalid"
             type="submit"
@@ -129,46 +125,3 @@
     </button>
   </div>
 </div>
-
-<ng-template #copyValuesModal let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h4 class="modal-title">Copy values from other instance</h4>
-    <button type="button" class="close" (click)="d('')">
-      <span>&times;</span>
-    </button>
-  </div>
-  <div *ngIf="!nsgInstsNamesList">
-    Loading instances list...
-  </div>
-  <form *ngIf="nsgInstsNamesList"
-        #copyValuesForm="ngForm" id="copyValuesForm">
-    <div class="modal-body">
-      <label for="copyInstNameInput">
-        Choose instance to copy values from:
-      </label>
-      <select [(ngModel)]="copyValuesInstName"
-              required
-              name="copyInstNameInput"
-              #copyInstNameInput="ngModel"
-              id="copyInstNameInput"
-              class="custom-select">
-        <option *ngFor="let name of nsgInstsNamesList"
-                [value]="name">
-          {{name}}
-        </option>
-      </select>
-    </div>
-    <div class="modal-footer">
-      <input (click)="c('')"
-             type="button"
-             class="nsg-btn"
-             value="Close">
-      <input (click)="copyValues()"
-             [disabled]="copyValuesForm.invalid"
-             type="button"
-             class="nsg-btn"
-             form="copyValuesForm"
-             value="Copy values">
-    </div>
-  </form>
-</ng-template>

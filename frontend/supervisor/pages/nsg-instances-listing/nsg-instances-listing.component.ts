@@ -64,6 +64,7 @@ export class NsgInstancesListingComponent implements OnInit {
         this.nsgInstancesService.startInstance(instance.name).subscribe(
             () => {
                 instance.running = true;
+                instance.enabled = true;
             },
             (error) => {
                 console.log('Error starting instance:');
@@ -77,6 +78,7 @@ export class NsgInstancesListingComponent implements OnInit {
         this.nsgInstancesService.stopInstance(instance.name).subscribe(
             () => {
                 instance.running = false;
+                instance.enabled = false;
             },
             (error) => {
                 console.log('Error stopping instance:');
@@ -87,9 +89,13 @@ export class NsgInstancesListingComponent implements OnInit {
     }
 
     restartInstance(instance : NsgInstance) {
+        instance.restarting = true;
         this.nsgInstancesService.restartInstance(instance.name).subscribe(
             () => {
                 instance.running = true;
+                setTimeout(function() {
+                    instance.restarting = false;
+                }, 3);
             },
             (error) => {
                 console.log('Error restarting instance:');

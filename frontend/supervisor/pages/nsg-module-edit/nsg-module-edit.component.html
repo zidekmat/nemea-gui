@@ -147,10 +147,6 @@
             class="nsg-btn">
       Reset values
     </button>
-    <button (click)="nsgModalService.openNsgModal(copyValuesModal)"
-            class="nsg-btn">
-      Copy values
-    </button>
     <button form="editForm"
             [disabled]="editForm.invalid"
             type="submit"
@@ -159,46 +155,3 @@
     </button>
   </div>
 </div>
-
-<ng-template #copyValuesModal let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h4 class="modal-title">Copy values from other module</h4>
-    <button type="button" class="close" (click)="d('')">
-      <span>&times;</span>
-    </button>
-  </div>
-  <div *ngIf="!nsgModsNamesList">
-    Loading modules list...
-  </div>
-  <form *ngIf="nsgModsNamesList"
-        #copyValuesForm="ngForm" id="copyValuesForm">
-    <div class="modal-body">
-        <label for="copyValuesFromModuleInput">
-          Choose module to copy values from:
-        </label>
-        <select [(ngModel)]="copyValuesFromModule"
-                required
-                name="copyValuesFromModuleInput"
-                #copyValuesFromModuleInput="ngModel"
-                id="copyValuesFromModuleInput"
-                class="custom-select">
-          <option *ngFor="let name of nsgModsNamesList"
-                  [value]="name">
-            {{name}}
-          </option>
-        </select>
-    </div>
-    <div class="modal-footer">
-      <input (click)="c('')"
-              type="button"
-             class="nsg-btn"
-             value="Close">
-      <input (click)="copyValues()"
-             [disabled]="copyValuesForm.invalid"
-              type="button"
-             class="nsg-btn"
-             form="copyValuesForm"
-             value="Copy values">
-    </div>
-  </form>
-</ng-template>

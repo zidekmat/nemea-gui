@@ -27,10 +27,7 @@ export class NsgModuleEditComponent implements OnInit {
     @Output() onChildEdited = new EventEmitter<NsgModule>();
 
     nsgModule: NsgModule; // NsgModule model that is currently edited
-    copyValuesFromModule: string;
     backendErrors: any[];
-
-    nsgModsNamesList: string[];
 
     constructor(private nsgModalService: NsgModal,
                 private nsgModulesService: NsgModulesService,
@@ -40,33 +37,10 @@ export class NsgModuleEditComponent implements OnInit {
 
     ngOnInit() {
         this.resetForm();
-        this.nsgModulesService.getAllModulesNames().subscribe(
-            (data) => {
-                this.nsgModsNamesList = data;
-            },
-            (error) => {
-                console.log('Error fetching modules list:');
-                console.log(error);
-                // TODO
-            }
-        );
     }
 
     resetForm() {
         this.nsgModule = JSON.parse(JSON.stringify(this.passedModule));
-    }
-
-    copyValues() {
-        this.nsgModulesService.getModule(this.copyValuesFromModule).subscribe(
-            (module) => {
-                this.nsgModule = module;
-                this.nsgModalService.closeNsgModal();
-            },
-            (error) => {
-                console.log(error);
-                // TODO onError
-            }
-        );
     }
 
     onSubmit() {

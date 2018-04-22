@@ -75,14 +75,6 @@
         {{addingIfc ? 'Creating new interface' : 'Configuring interface '
         +selectedIfc.name}}:
       </h3>
-<!--      <p *ngIf="nsgInstance.totalIfcesTodo == undefined">
-        Loading count of required interfaces...
-      </p>
-      <p *ngIf="nsgInstance.totalIfcesTodo && nsgInstance.totalIfcesTodo > 0">
-        You have to configure <span>{{nsgInstance.inIfcesTodo}}</span> more IN interfaces
-        and
-        <span>{{nsgInstance.outIfcesTodo}}</span> more OUT interfaces.
-      </p>-->
       <ul *ngIf="backendErrors.length > 0">
         <li *ngFor="let err of backendErrors">
           {{err}}
@@ -347,10 +339,6 @@
           class="nsg-btn">
     Reset values
   </button>
-  <button (click)="nsgModalService.openNsgModal(ifccopyValuesModal)"
-          class="nsg-btn">
-    Copy values
-  </button>
   <button form="ifcForm"
           [disabled]="ifcForm.invalid"
           type="submit"
@@ -358,46 +346,3 @@
     Save interface
   </button>
 </div>
-
-<ng-template #ifccopyValuesModal let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h4 class="modal-title">Copy values from other interface</h4>
-    <button type="button" class="close" (click)="d('')">
-      <span>&times;</span>
-    </button>
-  </div>
-  <div *ngIf="!nsgIfcesNamesList">
-    Loading interfaces list...
-  </div>
-  <form *ngIf="nsgIfcesNamesList"
-        #ifcCopyValuesForm="ngForm" id="ifcCopyValuesForm">
-    <div class="modal-body">
-      <label for="copyValuesFromInstanceInput">
-        Choose interface to copy values from*:
-      </label>
-      <select [(ngModel)]="copyValuesIfcName"
-              required
-              name="copyValuesFromInstanceInput"
-              #copyValuesFromInstanceInput="ngModel"
-              id="copyValuesFromInstanceInput"
-              class="custom-select">
-        <option *ngFor="let ifc of nsgIfcesNamesList"
-                [value]="ifc">
-          {{ifc}}
-        </option>
-      </select>
-    </div>
-    <div class="modal-footer">
-      <input (click)="c('')"
-             type="button"
-             class="nsg-btn"
-             value="Close">
-      <input (click)="copyValues()"
-             [disabled]="ifcCopyValuesForm.invalid"
-             type="button"
-             class="nsg-btn"
-             form="ifcCopyValuesForm"
-             value="Copy values">
-    </div>
-  </form>
-</ng-template>

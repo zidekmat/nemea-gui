@@ -23,9 +23,6 @@ export class NsgInterfacesFormComponent implements OnInit {
      *  a new one */
     addingIfc: boolean;
 
-    copyValuesIfcName: string;
-    nsgIfcesNamesList: string[];
-    
     resetIfcVals: string; // JSON string copy of selectedIfc
     selectedIfc: NsgInterface;
 
@@ -49,7 +46,6 @@ export class NsgInterfacesFormComponent implements OnInit {
 
     updateIfcesNamesList() {
         let getName = (ifc) => ifc.name;
-        this.nsgIfcesNamesList = this.nsgInstance.in_ifces.map(getName).concat(this.nsgInstance.out_ifces.map(getName));
     }
 
     selectIfc(ifc: NsgInterface) {
@@ -121,20 +117,5 @@ export class NsgInterfacesFormComponent implements OnInit {
                 }
             );
         }
-    }
-
-    copyValues() {
-        console.log('copying values of ifc');
-        this.nsgInstancesService.getInterface(this.nsgInstance.name, this.copyValuesIfcName).subscribe(
-            (ifc) => {
-                this.selectedIfc = ifc;
-                this.nsgModalService.closeNsgModal();
-            },
-            (error) => {
-                console.log('Error getting ifc:');
-                console.log(error);
-                this.backendErrors = error.json().errors;
-            }
-        );
     }
 }

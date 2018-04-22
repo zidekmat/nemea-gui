@@ -1,14 +1,15 @@
 <table>
   <thead>
   <tr>
-    <th width="40%">Module name</th>
-    <th width="10%">NEMEA module</th>
-    <th width="10%">Sysrepo ready</th>
-    <th width="10%">Sysrepo callbacks ready</th>
-    <th width="30%">&nbsp;</th>
+    <th width="25%">Module name</th>
+    <th width="15%">TRAP monitorable</th>
+    <th width="15%">Use TRAP interfaces</th>
+    <th width="15%">Sysrepo ready</th>
+    <th width="15%">Sysrepo callbacks ready</th>
+    <th width="15%">&nbsp;</th>
   </tr>
   </thead>
-  <tbody>
+  <tbody *ngIf="nsgModules">
   <tr *ngFor="let module of nsgModules">
     <td>
       <a [routerLink]="['/nemea/supervisor-gui/modules/', module.name]">
@@ -16,6 +17,7 @@
       </a>
     </td>
     <td>{{ module.trap_monitorable }}</td>
+    <td>{{ module.use_trap_ifces }}</td>
     <td>{{ module.is_sysrepo_ready }}</td>
     <td>{{ module.sr_callbacks_ready }}</td>
     <td>
@@ -31,5 +33,10 @@
       </div>
     </td>
   </tr>
+  </tbody>
+  <tbody *ngIf="!nsgModules">
+    <tr>
+      <td colspan="5">No modules found. Verify that Supervisor is running.</td>
+    </tr>
   </tbody>
 </table>
