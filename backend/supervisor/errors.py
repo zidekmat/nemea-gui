@@ -3,6 +3,10 @@ Exception classes used in Supervisor API and handled in controllers/__init__.py
 """
 
 
+class SysrepoError(Exception):
+    pass
+
+
 class InternalError(Exception):
     pass
 

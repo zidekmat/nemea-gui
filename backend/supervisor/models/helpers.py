@@ -1,5 +1,6 @@
 import json
 import subprocess
+import libsysrepoPython3 as sr
 from pdb import set_trace
 from time import time
 from liberouterapi.modules.nemea.supervisor.errors import *
@@ -12,6 +13,18 @@ if 'NEMEA_SUPERVISOR_API_TEST' in environ:
     NEMEA_SR_PREFIX = 'nemea-test-1'
 else:
     NEMEA_SR_PREFIX = 'nemea'
+
+
+def sr_get_session():
+    conn = sr.Connection("helpers.py")
+    if conn is None:
+        raise SysrepoError('Failed to connect to sysrepo')
+
+    sess = sr.Session(conn, sr.SR_DS_RUNNING)
+    if sess is None:
+        raise SysrepoError('Failed to create sysrepo session to running datastore')
+
+    return sess
 
 
 def sysrepocfg_set_by_xpath(sysrepo_module, xpath, value, datastore=USED_SR_DATASTORE):
@@ -95,7 +108,8 @@ def sysrepocfg_merge(sysrepo_module, data, datastore=USED_SR_DATASTORE):
         raise SysrepocfgException(
             'Unknown error during configuration data import: ' + str(e))
     finally:
-        remove(fname)
+        pass
+        #remove(fname)
 
     if res.stdout == b"The new configuration was successfully applied.\n":
         return
@@ -151,6 +165,7 @@ def sysrepocfg_sync_ds(sysrepo_module, from_ds, to_ds):
             + str(e))
 
     if res.stdout != b"The configuration was successfully exported.\n":
+        remove(fname)
         raise SysrepocfgException(
             'Failed to export configuration from datastore {}: {}/{}'.format(from_ds,
             str(res.stdout), str(res.stderr)))
@@ -164,6 +179,8 @@ def sysrepocfg_sync_ds(sysrepo_module, from_ds, to_ds):
         raise SysrepocfgException(
             'Unknown error during configuration datastore sync (import):'
             + str(e))
+    finally:
+        remove(fname)
 
     if res.stdout == b"The new configuration was successfully applied.\n":
         return

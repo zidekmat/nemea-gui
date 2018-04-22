@@ -4,8 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {NsgInstancesService} from "../../services/nsg-instances.service";
 import {NsgInterface} from "../../models/nsg-interface";
 import {NsgInstance} from "../../models/nsg-instance";
-import {NsgInstanceEditPlainFormComponent} from "../shared/nsg-edit/plain/instance/nsg-instance-edit-plain-form.component";
-//import {NsgInstanceEditJsonFormComponent} from "../shared/nsg-edit/json/instance/nsg-instance-edit-json-form.component";
+import {NsgInstanceEditComponent} from "../nsg-instance-edit/nsg-instance-edit.component";
 
 @Component({
     selector: 'nsg-instance-detail',
@@ -15,10 +14,8 @@ import {NsgInstanceEditPlainFormComponent} from "../shared/nsg-edit/plain/instan
 })
 export class NsgInstanceDetailComponent implements OnInit {
 
-    @ViewChild(NsgInstanceEditPlainFormComponent)
-    private plainFormComponent: NsgInstanceEditPlainFormComponent;
-/*    @ViewChild(NsgInstanceEditJsonFormComponent)
-    private jsonFormComponent: NsgInstanceEditJsonFormComponent;*/
+    @ViewChild(NsgInstanceEditComponent)
+    private editForm: NsgInstanceEditComponent;
 
     nsgInstance: NsgInstance;
     selectedIfc: NsgInterface;
@@ -65,10 +62,8 @@ export class NsgInstanceDetailComponent implements OnInit {
         this.nsgInstance = inst;
 
         // update default values in both children
-        this.plainFormComponent.passedInstance = this.nsgInstance;
-        this.plainFormComponent.resetForm();
-/*        this.jsonFormComponent.passedInstance = this.nsgInstance;
-        this.jsonFormComponent.resetForm();*/
+        this.editForm.passedInstance = this.nsgInstance;
+        this.editForm.resetForm();
     }
 
     onChildEdited(inst: NsgInstance) {
@@ -76,10 +71,8 @@ export class NsgInstanceDetailComponent implements OnInit {
         console.log(inst);
 
         // Edit working values of both forms
-        this.plainFormComponent.nsgInstance = inst;
-        this.plainFormComponent.fetchModule();
-/*        this.jsonFormComponent.nsgInstanceJson = inst.apiJson();
-        this.jsonFormComponent.beautifyJson();*/
+        this.editForm.nsgInstance = inst;
+        this.editForm.fetchModule();
     }
 
     removeInstance() {

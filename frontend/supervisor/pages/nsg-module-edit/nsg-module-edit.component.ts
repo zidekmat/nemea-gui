@@ -2,17 +2,17 @@ import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import {Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
-import {NsgModule} from "../../../../../models/nsg-module";
-import {NsgModulesService} from "../../../../../services/nsg-modules.service";
-import {NsgModal} from "../../../../../services/nsg-modal.service";
+import {NsgModule} from "../../models/nsg-module";
+import {NsgModulesService} from "../../services/nsg-modules.service";
+import {NsgModal} from "../../services/nsg-modal.service";
 
 @Component({
-    selector: 'nsg-module-edit-plain-form',
-    templateUrl: './nsg-module-edit-plain-form.component.html',
-    styleUrls: ['./nsg-module-edit-plain-form.component.scss'],
+    selector: 'nsg-module-edit',
+    templateUrl: './nsg-module-edit.component.html',
+    styleUrls: ['./nsg-module-edit.component.scss'],
     providers: [NsgModulesService, NsgModal]
 })
-export class NsgModuleEditPlainFormComponent implements OnInit {
+export class NsgModuleEditComponent implements OnInit {
 
 
     /* Module to be changed */
@@ -22,8 +22,7 @@ export class NsgModuleEditPlainFormComponent implements OnInit {
      * existing instance or creating new one */
     @Input() isEditForm: boolean;
 
-    /* Both are used to notify detail component
-     * to update data in JSON tab */
+    /* Both are used to notify detail component */
     @Output() onChildSaved = new EventEmitter<NsgModule>();
     @Output() onChildEdited = new EventEmitter<NsgModule>();
 

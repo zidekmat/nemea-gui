@@ -3,8 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {NsgModule} from "../../models/nsg-module";
 import {NsgModulesService} from "../../services/nsg-modules.service";
-import {NsgModuleEditPlainFormComponent} from "../shared/nsg-edit/plain/module/nsg-module-edit-plain-form.component";
-//import {NsgModuleEditJsonFormComponent} from "../shared/nsg-edit/json/module/nsg-module-edit-json-form.component";
+import {NsgModuleEditComponent} from "../nsg-module-edit/nsg-module-edit.component";
 import {NsgInstance} from "../../models/nsg-instance";
 import {NsgInstancesService} from "../../services/nsg-instances.service";
 
@@ -16,10 +15,8 @@ import {NsgInstancesService} from "../../services/nsg-instances.service";
 })
 export class NsgModuleDetailComponent implements OnInit {
 
-    @ViewChild(NsgModuleEditPlainFormComponent)
-    private plainFormComponent: NsgModuleEditPlainFormComponent;
-/*    @ViewChild(NsgModuleEditJsonFormComponent)
-    private jsonFormComponent: NsgModuleEditJsonFormComponent;*/
+    @ViewChild(NsgModuleEditComponent)
+    private editForm: NsgModuleEditComponent;
 
     nsgModule: NsgModule;
     nsgInstances: NsgInstance[];
@@ -68,10 +65,8 @@ export class NsgModuleDetailComponent implements OnInit {
         this.nsgModule = module;
 
         // update default values in both children
-        this.plainFormComponent.passedModule = this.nsgModule;
-        this.plainFormComponent.resetForm();
-/*        this.jsonFormComponent.passedModule = this.nsgModule;
-        this.jsonFormComponent.resetForm();*/
+        this.editForm.passedModule = this.nsgModule;
+        this.editForm.resetForm();
     }
 
     onChildEdited(module: NsgModule) {
@@ -79,9 +74,7 @@ export class NsgModuleDetailComponent implements OnInit {
         console.log(module);
 
         // Edit working values of both forms
-        this.plainFormComponent.nsgModule = module;
-/*        this.jsonFormComponent.nsgModuleJson = module.apiJson();
-        this.jsonFormComponent.beautifyJson();*/
+        this.editForm.nsgModule = module;
     }
 
     removeModule() {

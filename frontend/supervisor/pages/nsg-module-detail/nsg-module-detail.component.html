@@ -81,21 +81,13 @@
       </div>
     </nsg-tab>
     <nsg-tab tabTitle="Edit">
-      <nsg-module-edit-plain-form *ngIf="nsgModule"
+      <nsg-module-edit *ngIf="nsgModule"
                                   (onChildSaved)="onChildSaved($event)"
                                   (onChildEdited)="onChildEdited($event)"
                                   [isEditForm]="true"
                                   [passedModule]="nsgModule"
-      ></nsg-module-edit-plain-form>
+      ></nsg-module-edit>
     </nsg-tab>
-<!--    <nsg-tab tabTitle="Edit as JSON">
-      <nsg-module-edit-json-form  *ngIf="nsgModule"
-                                 (onChildSaved)="onChildSaved($event)"
-                                 (onChildEdited)="onChildEdited($event)"
-                                 [isEditForm]="true"
-                                 [passedModule]="nsgModule"
-      ></nsg-module-edit-json-form>
-    </nsg-tab>-->
   </nsg-tabs>
 </div>
 <div *ngIf="!nsgModule && !instanceNotFound">

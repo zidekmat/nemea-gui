@@ -1,10 +1,10 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import {NsgInterface} from "../../../../../../models/nsg-interface";
-import {NsgModule} from "../../../../../../models/nsg-module";
-import {NsgInstance} from "../../../../../../models/nsg-instance";
-import {NsgModal} from "../../../../../../services/nsg-modal.service";
-import {NsgInstancesService} from "../../../../../../services/nsg-instances.service";
-import {NsgModulesService} from "../../../../../../services/nsg-modules.service";
+import {NsgInterface} from "../../../models/nsg-interface";
+import {NsgModule} from "../../../models/nsg-module";
+import {NsgInstance} from "../../../models/nsg-instance";
+import {NsgModal} from "../../../services/nsg-modal.service";
+import {NsgInstancesService} from "../../../services/nsg-instances.service";
+import {NsgModulesService} from "../../../services/nsg-modules.service";
 
 @Component({
     selector: 'nsg-interfaces-form',
@@ -42,6 +42,8 @@ export class NsgInterfacesFormComponent implements OnInit {
 
     ngOnInit() {
         this.updateIfcesNamesList();
+        console.log('init');
+        console.log(this.nsgInstance)
     }
 
 
@@ -53,6 +55,8 @@ export class NsgInterfacesFormComponent implements OnInit {
     selectIfc(ifc: NsgInterface) {
         this.addingIfc = false;
         this.selectedIfc = ifc;
+        console.log('selected')
+        console.log(ifc);
         this.resetIfcVals = JSON.stringify(ifc);
     }
 
@@ -66,6 +70,7 @@ export class NsgInterfacesFormComponent implements OnInit {
             (error) => {
                 console.log('Failed to remove interface:');
                 console.log(error);
+                this.backendErrors = error.json().errors;
             }
         );
     }
@@ -77,13 +82,12 @@ export class NsgInterfacesFormComponent implements OnInit {
     }
 
     resetIfc() {
-        console.log('resetting ifc');
-        this.selectedIfc = JSON.parse(this.resetIfcVals);
+        this.selectedIfc = new NsgInterface(JSON.parse(this.resetIfcVals));
     }
 
     saveIfc(ifcForm) {
-        this.nsgInstance.addIfc(this.selectedIfc);
         if (this.addingIfc) {
+            this.nsgInstance.addIfc(this.selectedIfc);
             this.nsgInstancesService.updateInstance(
                 this.nsgInstance.name,
                 this.nsgInstance).subscribe(
@@ -106,12 +110,14 @@ export class NsgInterfacesFormComponent implements OnInit {
                 () => {
                     this.updateIfcesNamesList();
                     this.selectedIfc = null;
-                    // TODO notify instance
+                    console.log('emitting edit');
+                    console.log(this.nsgInstance);
+                    this.onChildEdited.emit();
                 },
-                (resp) => {
+                (error) => {
                     console.log('Error updating ifc:');
-                    console.log(resp);
-                    this.backendErrors = resp.json().errors;
+                    console.log(error);
+                    this.backendErrors = error.json().errors;
                 }
             );
         }
@@ -119,7 +125,6 @@ export class NsgInterfacesFormComponent implements OnInit {
 
     copyValues() {
         console.log('copying values of ifc');
-
         this.nsgInstancesService.getInterface(this.nsgInstance.name, this.copyValuesIfcName).subscribe(
             (ifc) => {
                 this.selectedIfc = ifc;
@@ -128,7 +133,7 @@ export class NsgInterfacesFormComponent implements OnInit {
             (error) => {
                 console.log('Error getting ifc:');
                 console.log(error);
-                // TODO onError
+                this.backendErrors = error.json().errors;
             }
         );
     }

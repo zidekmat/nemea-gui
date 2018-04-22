@@ -17,8 +17,17 @@ export class NsgInstance {
     outIfcesTodo: number;
     totalIfcesTodo: number;
 
+    restarting = false; // serves to tell that instance is being restarted
 
     constructor(fields: any) {
+        console.log('instance constructor')
+        if (fields['in_ifces']) {
+            fields['in_ifces'] = fields['in_ifces'].map(i => new NsgInterface(i));
+        }
+        if (fields['out_ifces']) {
+            fields['out_ifces'] = fields['out_ifces'].map(i => new NsgInterface(i));
+        }
+        console.log(fields);
         Object.assign(this, fields);
         //this.nsgModule = fields.module;
     }
@@ -90,15 +99,21 @@ export class NsgInstance {
     }
 
     apiJson(): string {
+        let ifces = JSON.parse(JSON.stringify(this.in_ifces.concat(this.out_ifces)));
+        console.log('api json')
+        console.log(ifces);
+        ifces = ifces.map(i => (new NsgInterface(i)).apiJsonObj())
+        console.log(ifces);
+
         return JSON.stringify(
             {
                 name: this.name,
                 'module-ref': this.nsgModule.name,
                 enabled: this.enabled,
                 "use-sysrepo": this.use_sysrepo,
-                max_restarts_per_min: this.max_restarts_per_min,
+                "max-restarts-per-min": this.max_restarts_per_min,
                 params: this.params,
-                'interface': this.in_ifces.concat(this.out_ifces)
+                'interface': ifces
             }
         );
     }
@@ -114,15 +129,31 @@ export class NsgInstance {
         obj['in_ifces'] = [];
         obj['out_ifces'] = [];
 
-        for (let i = 0; i < obj['interface']; i++) {
-            if (obj['interface'][i].direction == 'IN') {
-                obj['in_ifces'].push(new NsgInterface(obj['interface'][i]));
-            } else {
-                obj['out_ifces'].push(new NsgInterface(obj['interface'][i]));
+        if ('max-restarts-per-min' in obj) {
+            obj['max_restarts_per_min'] = obj['max-restarts-per-min'];
+            delete obj['max-restarts-per-min'];
+        } else {
+            obj['max_restarts_per_min'] = 3;
+        }
+
+        if ('use-sysrepo' in obj) {
+            obj['use_sysrepo'] = obj['use-sysrepo'];
+            delete obj['use-sysrepo'];
+        } else {
+            obj['use_sysrepo'] = false;
+        }
+
+        if ('interface' in obj) {
+            for (let i = 0; i < obj['interface'].length; i++) {
+                if (obj['interface'][i].direction == 'IN') {
+                    obj['in_ifces'].push(NsgInterface.newFromApi(obj['interface'][i]));
+                } else {
+                    obj['out_ifces'].push(NsgInterface.newFromApi(obj['interface'][i]));
+                }
             }
+            delete obj['interface'];
         }
         delete obj['module-ref'];
-        delete obj['interface'];
 
         return new NsgInstance(obj);
     }

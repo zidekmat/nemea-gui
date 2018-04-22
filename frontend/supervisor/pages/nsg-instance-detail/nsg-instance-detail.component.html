@@ -214,8 +214,8 @@
                     {{ i.direction }}
                   </td>
                   <td>
-                    <i
-                            class="fa fa-cog"></i>
+<!--                    <i
+                            class="fa fa-cog"></i>-->
                   </td>
                 </tr>
                 </tbody>
@@ -226,22 +226,13 @@
       </div>
     </nsg-tab>
     <nsg-tab tabTitle="Edit">
-      <nsg-instance-edit-plain-form *ngIf="nsgInstance"
+      <nsg-instance-edit *ngIf="nsgInstance"
                                   (onChildSaved)="onChildSaved($event)"
                                   (onChildEdited)="onChildEdited($event)"
                                   [isEditForm]="true"
                                   [passedInstance]="nsgInstance"
-      ></nsg-instance-edit-plain-form>
+      ></nsg-instance-edit>
     </nsg-tab>
-<!--    <nsg-tab tabTitle="Edit as JSON">
-      <nsg-instance-edit-json-form *ngIf="nsgInstance"
-                                  (onChildSaved)="onChildSaved($event)"
-                                  (onChildEdited)="onChildEdited($event)"
-                                  [isEditForm]="true"
-                                  [passedInstance]="nsgInstance"
-      ></nsg-instance-edit-json-form>
-    </nsg-tab>
-      -->
     <nsg-tab tabTitle="Munin stats"></nsg-tab>
   </nsg-tabs>
 </div>

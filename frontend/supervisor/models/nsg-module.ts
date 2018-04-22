@@ -48,14 +48,33 @@ export class NsgModule {
         }
         obj['sr_model_prefix'] = obj['sr-model-prefix'];
         delete obj['sr-model-prefix'];
-        obj['sr_callbacks_ready'] = obj['sr-callbacks-ready'];
-        delete obj['sr-callbacks-ready'];
+        if ('sr-callbacks-ready' in obj) {
+            obj['sr_callbacks_ready'] = obj['sr-callbacks-ready'];
+            delete obj['sr-callbacks-ready'];
+        } else {
+            obj['sr_callbacks_ready'] = false;
+        }
+
         obj['is_sysrepo_ready'] = obj['is-sysrepo-ready'];
         delete obj['is-sysrepo-ready'];
         obj['use_trap_ifces'] = obj['use-trap-ifces'];
         delete obj['use-trap-ifces'];
         obj['trap_monitorable'] = obj['trap-monitorable'];
         delete obj['trap-monitorable'];
+
+        if ('in-ifces-cnt' in obj) {
+            obj['in_ifces_cnt'] = obj['in-ifces-cnt'];
+            delete obj['in-ifces-cnt'];
+        } else {
+            obj['in_ifces_cnt'] = 0;
+        }
+
+        if ('out-ifces-cnt' in obj) {
+            obj['out_ifces_cnt'] = obj['out-ifces-cnt'];
+            delete obj['out-ifces-cnt'];
+        } else {
+            obj['out_ifces_cnt'] = 0;
+        }
 
         return new NsgModule(obj);
     }

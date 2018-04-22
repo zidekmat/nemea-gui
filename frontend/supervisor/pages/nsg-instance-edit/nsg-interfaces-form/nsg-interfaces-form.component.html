@@ -75,14 +75,14 @@
         {{addingIfc ? 'Creating new interface' : 'Configuring interface '
         +selectedIfc.name}}:
       </h3>
-      <p *ngIf="nsgInstance.totalIfcesTodo == undefined">
+<!--      <p *ngIf="nsgInstance.totalIfcesTodo == undefined">
         Loading count of required interfaces...
       </p>
       <p *ngIf="nsgInstance.totalIfcesTodo && nsgInstance.totalIfcesTodo > 0">
         You have to configure <span>{{nsgInstance.inIfcesTodo}}</span> more IN interfaces
         and
         <span>{{nsgInstance.outIfcesTodo}}</span> more OUT interfaces.
-      </p>
+      </p>-->
       <ul *ngIf="backendErrors.length > 0">
         <li *ngFor="let err of backendErrors">
           {{err}}

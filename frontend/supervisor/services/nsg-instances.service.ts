@@ -12,9 +12,14 @@ export class NsgInstancesService {
 
     getAllInstances(): Observable<NsgInstance[]> {
         return this.http.get('/nemea/instances')
-            .map(response => response.json().map(
-                obj => NsgInstance.newFromApi(obj)
-            ));
+            .map(response => {
+                return response.json().map(
+                    obj => {
+                        console.log(obj)
+                        return NsgInstance.newFromApi(obj)
+                    }
+                )}
+            );
     }
 
     getAllInstancesNames(): Observable<string[]> {

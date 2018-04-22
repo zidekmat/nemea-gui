@@ -2,24 +2,24 @@ import {Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angula
 import {Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
-import {NsgInstancesService} from "../../../../../services/nsg-instances.service";
-import {NsgInstance} from "../../../../../models/nsg-instance";
-import {NsgYangModel} from "../../../../../models/nsg-yang-model";
-import {NsgYangService} from "../../../../../services/nsg-yang.service";
+import {NsgInstancesService} from "../../services/nsg-instances.service";
+import {NsgInstance} from "../../models/nsg-instance";
+import {NsgYangModel} from "../../models/nsg-yang-model";
+import {NsgYangService} from "../../services/nsg-yang.service";
 
-import {NsgModulesService} from "../../../../../services/nsg-modules.service";
-import {NsgInterface} from "../../../../../models/nsg-interface";
-import {NsgModule} from "../../../../../models/nsg-module";
-import {NsgModal} from "../../../../../services/nsg-modal.service";
+import {NsgModulesService} from "../../services/nsg-modules.service";
+import {NsgInterface} from "../../models/nsg-interface";
+import {NsgModule} from "../../models/nsg-module";
+import {NsgModal} from "../../services/nsg-modal.service";
 import {NsgInterfacesFormComponent} from "./nsg-interfaces-form/nsg-interfaces-form.component";
 
 @Component({
-  selector: 'nsg-instance-edit-plain-form',
-  templateUrl: './nsg-instance-edit-plain-form.component.html',
-  styleUrls: ['./nsg-instance-edit-plain-form.component.scss'],
+  selector: 'nsg-instance-edit',
+  templateUrl: './nsg-instance-edit.component.html',
+  styleUrls: ['./nsg-instance-edit.component.scss'],
   providers: [NsgInstancesService, NsgModulesService, NsgModal]
 })
-export class NsgInstanceEditPlainFormComponent implements OnInit {
+export class NsgInstanceEditComponent implements OnInit {
     /* Instance to be changed */
     @Input() passedInstance: NsgInstance;
 
@@ -27,8 +27,7 @@ export class NsgInstanceEditPlainFormComponent implements OnInit {
      * existing instance or creating new one */
     @Input() isEditForm: boolean;
 
-    /* Both are used to notify detail component
-     * to update data in JSON tab */
+    /* Both are used to notify detail component */
     @Output() onChildSaved = new EventEmitter<NsgInstance>();
     @Output() onChildEdited = new EventEmitter<NsgInstance>();
 
@@ -66,7 +65,6 @@ export class NsgInstanceEditPlainFormComponent implements OnInit {
             (error) => {
                 console.log('Error fetching modules list:');
                 console.log(error);
-                // TODO
             }
         );
         this.nsgInstancesService.getAllInstancesNames().subscribe(
@@ -76,7 +74,6 @@ export class NsgInstanceEditPlainFormComponent implements OnInit {
             (error) => {
                 console.log('Error fetching instances names list:');
                 console.log(error);
-                // TODO
             }
         );
     }
@@ -95,7 +92,6 @@ export class NsgInstanceEditPlainFormComponent implements OnInit {
             (error) => {
                 console.log('Error fetching instance module:');
                 console.log(error);
-                // TODO
             }
         );
     }
@@ -113,7 +109,6 @@ export class NsgInstanceEditPlainFormComponent implements OnInit {
             (error) => {
                 console.log('Error getting instance values copy:');
                 console.log(error);
-                // TODO onError
             }
         );
     }

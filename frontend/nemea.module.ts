@@ -67,15 +67,11 @@ import {NsgHowToComponent} from "./supervisor/pages/nsg-how-to/nsg-how-to.compon
 
 import {NsgTabsComponent} from "./supervisor/pages/shared/nsg-tabs/nsg-tabs.component";
 import {NsgTabComponent} from "./supervisor/pages/shared/nsg-tab/nsg-tab.component";
-import {NsgModuleEditPlainFormComponent} from "./supervisor/pages/shared/nsg-edit/plain/module/nsg-module-edit-plain-form.component";
-import {NsgModuleEditJsonFormComponent} from "./supervisor/pages/shared/nsg-edit/json/module/nsg-module-edit-json-form.component";
-import {NsgInstanceEditJsonFormComponent} from "./supervisor/pages/shared/nsg-edit/json/instance/nsg-instance-edit-json-form.component";
-import {NsgInstanceEditPlainFormComponent} from "./supervisor/pages/shared/nsg-edit/plain/instance/nsg-instance-edit-plain-form.component";
+import {NsgModuleEditComponent} from "./supervisor/pages/nsg-module-edit/nsg-module-edit.component";
+import {NsgInstanceEditComponent} from "./supervisor/pages/nsg-instance-edit/nsg-instance-edit.component";
 import {JsonValidatorDirective} from "./supervisor/pages/shared/json-validator.directive";
 import {YangLintValidatorDirective} from "./supervisor/pages/shared/yang-lint-validator.directive";
-import {JsonModuleValidatorDirective} from "./supervisor/pages/shared/nsg-edit/json/module/json-module-validator.directive";
-import {JsonInstanceValidatorDirective} from "./supervisor/pages/shared/nsg-edit/json/instance/json-instance-validator.directive";
-import {NsgInterfacesFormComponent} from "./supervisor/pages/shared/nsg-edit/plain/instance/nsg-interfaces-form/nsg-interfaces-form.component";
+import {NsgInterfacesFormComponent} from "./supervisor/pages/nsg-instance-edit/nsg-interfaces-form/nsg-interfaces-form.component";
 
 
 const nemeaRoutes: Routes = [
@@ -179,14 +175,10 @@ const nemeaRoutes: Routes = [
         NsgModuleDetailComponent,
         NsgHowToComponent,
         NsgStatusComponent,
-        NsgModuleEditPlainFormComponent,
-        NsgModuleEditJsonFormComponent,
-        NsgInstanceEditPlainFormComponent,
+        NsgModuleEditComponent,
+        NsgInstanceEditComponent,
         NsgInterfacesFormComponent,
-        NsgInstanceEditJsonFormComponent,
         JsonValidatorDirective,
-        JsonModuleValidatorDirective,
-        JsonInstanceValidatorDirective,
         YangLintValidatorDirective,
         NsgTabsComponent,
         NsgTabComponent,

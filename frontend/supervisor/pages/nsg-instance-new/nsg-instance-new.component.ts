@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {NsgInstanceEditPlainFormComponent} from "../shared/nsg-edit/plain/instance/nsg-instance-edit-plain-form.component";
-import {NsgInstanceEditJsonFormComponent} from "../shared/nsg-edit/json/instance/nsg-instance-edit-json-form.component";
+import {NsgInstanceEditComponent} from "../nsg-instance-edit/nsg-instance-edit.component"
 import {NsgInstance} from "../../models/nsg-instance";
 
 @Component({
@@ -9,10 +8,8 @@ import {NsgInstance} from "../../models/nsg-instance";
   styleUrls: ['./nsg-instance-new.component.scss']
 })
 export class NsgInstancesNewComponent implements OnInit {
-    @ViewChild(NsgInstanceEditPlainFormComponent)
-    private plainFormComponent: NsgInstanceEditPlainFormComponent;
-    @ViewChild(NsgInstanceEditJsonFormComponent)
-    private jsonFormComponent: NsgInstanceEditJsonFormComponent;
+    @ViewChild(NsgInstanceEditComponent)
+    private editForm: NsgInstanceEditComponent;
 
     nsgInstance: NsgInstance;
     instanceNotFound = false;
@@ -32,9 +29,7 @@ export class NsgInstancesNewComponent implements OnInit {
         this.nsgInstance = inst;
 
         // Edit working values of both forms
-        this.plainFormComponent.nsgInstance = inst;
-        this.plainFormComponent.fetchModule();
-        this.jsonFormComponent.nsgInstanceJson = inst.apiJson();
-        this.jsonFormComponent.beautifyJson();
+        this.editForm.nsgInstance = inst;
+        this.editForm.fetchModule();
     }
 }

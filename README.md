@@ -1,7 +1,8 @@
-This is fork of [https://github.com/CESNET/nemea-dashboard/tree/liberouter-gui](https://github.com/CESNET/nemea-dashboard/tree/liberouter-gui), a [Liberouter GUI](https://github.com/CESNET/liberouter-gui) module. It adds ability to configure new [NEMEA Supervisor V2](https://github.com/zidekmat/nemea-supervisor-sysrepo-edition) that uses sysrepo as it's configuration datastore.
+This is fork of [https://github.com/CESNET/nemea-dashboard/tree/liberouter-gui](https://github.com/CESNET/nemea-dashboard/tree/liberouter-gui), a [Liberouter GUI](https://github.com/CESNET/liberouter-gui) module. It adds ability to configure new [NEMEA Supervisor V2](https://github.com/zidekmat/nemea-supervisor-sysrepo-edition) that uses sysrepo as it's configuration datastore. 
 
 ### Requirements
  * NEMEA Supervisor V2 (and its dependencies)
+ * sysrepo bindings for Python 3
  * MongoDB (for backend/events.py)
  * nodejs, npm
  * git
@@ -50,3 +51,7 @@ Now you should have the web application available at //localhost:4200.
 
 ### Run (production mode)
 See [Liberouter GUI wiki](https://github.com/CESNET/liberouter-gui/wiki/Deploying-LiberouterGUI).
+
+
+### Docker
+See deploy folder for Dockerfile and instructions.

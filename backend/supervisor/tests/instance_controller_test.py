@@ -3,6 +3,17 @@ from helpers import ControllerTest, unittest, test, json, set_trace
 
 class InstanceControllerTest(ControllerTest):
 
+    def test_api_get_instance_by_name(self):
+        # invalid instance name
+        result = test.get('/nemea/instances/aiosudfioasudf')
+        self.assertEqual(result.status_code, 404)
+
+        # valid instance name
+        result = test.get('/nemea/instances/ipfixcol1')
+        self.assertEqual(result.status_code, 200)
+        inst = json.loads(result.data)
+        self.assertEqual(inst['name'], 'ipfixcol1')
+
     def test_api_api_control_instance(self):
         result = test.post('/nemea/instances/module1-1/start')
         self.assertEqual(result.status_code, 200)
@@ -23,17 +34,6 @@ class InstanceControllerTest(ControllerTest):
         self.assertEqual(result.status_code, 200)
         stats = json.loads(result.data)
         self.assertEqual(len(stats), 3)
-
-    def test_api_get_instance_by_name(self):
-        # invalid instance name
-        result = test.get('/nemea/instances/aiosudfioasudf')
-        self.assertEqual(result.status_code, 404)
-
-        # valid instance name
-        result = test.get('/nemea/instances/ipfixcol1')
-        self.assertEqual(result.status_code, 200)
-        inst = json.loads(result.data)
-        self.assertEqual(inst['name'], 'ipfixcol1')
 
     def test_api_create_new_instance(self):
         data = {'test': 'test'}
@@ -154,7 +154,6 @@ class InstanceControllerTest(ControllerTest):
         self.assertEqual(result.status_code, 200)
         inst = json.loads(result.data)
         self.assertEqual(inst['custom-attributes']['links']['link'][0]['name'], 'aXonet')
-
 
 if __name__ == '__main__':
     unittest.main()

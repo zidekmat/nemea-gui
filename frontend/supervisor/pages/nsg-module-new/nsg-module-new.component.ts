@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NsgModule} from "../../models/nsg-module";
-import {NsgModuleEditJsonFormComponent} from "../shared/nsg-edit/json/module/nsg-module-edit-json-form.component";
-import {NsgModuleEditPlainFormComponent} from "../shared/nsg-edit/plain/module/nsg-module-edit-plain-form.component";
+import {NsgModuleEditComponent} from "../nsg-module-edit/nsg-module-edit.component";
 import {NsgModulesService} from "../../services/nsg-modules.service";
 
 @Component({
@@ -12,10 +11,8 @@ import {NsgModulesService} from "../../services/nsg-modules.service";
 })
 export class NsgModulesNewComponent implements OnInit {
 
-    @ViewChild(NsgModuleEditPlainFormComponent)
-    private plainFormComponent: NsgModuleEditPlainFormComponent;
-    @ViewChild(NsgModuleEditJsonFormComponent)
-    private jsonFormComponent: NsgModuleEditJsonFormComponent;
+    @ViewChild(NsgModuleEditComponent)
+    private editForm: NsgModuleEditComponent;
 
     nsgModule: NsgModule;
 
@@ -34,9 +31,7 @@ export class NsgModulesNewComponent implements OnInit {
         this.nsgModule = module;
 
         // update default values in both children
-        this.plainFormComponent.passedModule = this.nsgModule;
-        this.plainFormComponent.resetForm();
-        this.jsonFormComponent.passedModule = this.nsgModule;
-        this.jsonFormComponent.resetForm();
+        this.editForm.passedModule = this.nsgModule;
+        this.editForm.resetForm();
     }
 }

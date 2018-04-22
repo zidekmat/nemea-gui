@@ -8,7 +8,16 @@ def get_all():
         return []
 
     base_key = '{}:supervisor'.format(NEMEA_SR_PREFIX)
-    return data[base_key]['instance']
+    insts = data[base_key]['instance']
+
+    sess = sr_get_session()
+    try:
+        for inst in insts:
+            inst['running'] = get_running_status(inst['name'], sess)
+    finally:
+        sess.session_stop()
+
+    return insts
 
 
 def get_custom_attrs(inst):
@@ -36,17 +45,44 @@ def get_by_name(instance_name):
     insts = data['{}:supervisor'.format(NEMEA_SR_PREFIX)]['instance']
     for stored_inst in insts:
         if stored_inst['name'] == instance_name:
+            stored_inst['running'] = get_running_status(instance_name)
             return stored_inst
 
     raise NotFoundException("Instance '%s' was not found." % instance_name)
 
 
+def get_running_status(instance_name, p_sess=None):
+    if p_sess is None:
+        sess = sr_get_session()
+    else:
+        sess = p_sess
+
+    xpath = "/nemea:supervisor/instance[name='%s']/stats/running" % instance_name
+    val = sess.get_item(xpath)
+
+    if p_sess is None:
+        sess.session_stop()
+
+    if val is None:
+        return False
+
+    if val.data() is None:
+        return False
+
+    return val.data().get_bool()
+
+
 def get_by_nemea_module_name(module_name):
-    stored_insts = get_all()
-    insts = []
-    for inst in stored_insts:
-        if inst['module-ref'] == module_name:
-            insts.append(inst)
+    sess = sr_get_session()
+    try:
+        stored_insts = get_all()
+        insts = []
+        for inst in stored_insts:
+            if inst['module-ref'] == module_name:
+                inst['running'] = get_running_status(inst['name'], sess)
+                insts.append(inst)
+    finally:
+        sess.session_stop()
 
     return insts
 
@@ -93,6 +129,7 @@ def update_without_name_change(sup_update_data, do_update_custom_attrs, sr_model
     """
     try:
         # create the new one
+        print(sup_update_data)
         sysrepocfg_merge(NEMEA_SR_PREFIX, sup_update_data, 'startup')
     except:
         # recover from failed transaction by copying unchanged running datastore
@@ -206,14 +243,15 @@ def update(inst, data, nmod):
     }
 
     # test if it gets new name after update
-    if inst['name'] == data['name']:
-        update_without_name_change(sup_update_data, do_update_custom_attrs, sr_model,
-                                   custom_update_data)
-    else:
+    #if inst['name'] == data['name']:
+    #    update_without_name_change(sup_update_data, do_update_custom_attrs, sr_model,
+    #                               custom_update_data)
+    #else:
+    if inst['name'] != data['name']:
         # verify that new name doesn't exist
         validate_instance_name_doesnt_exist(data['name'], nmod)
-        update_with_name_change(inst['name'], sup_update_data, do_update_custom_attrs,
-                                sr_model, custom_update_data)
+    update_with_name_change(inst['name'], sup_update_data, do_update_custom_attrs,
+                            sr_model, custom_update_data)
 
 
 def create(inst_data):
