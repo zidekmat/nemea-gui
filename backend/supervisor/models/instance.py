@@ -123,39 +123,6 @@ def delete(inst, nmod=None):
     sysrepocfg_sync_ds(NEMEA_SR_PREFIX, 'running', 'startup')
 
 
-def update_without_name_change(sup_update_data, do_update_custom_attrs, sr_model, custom_update_data):
-    """
-    Since name doesn't change we don't have to delete the instance first
-    """
-    try:
-        # create the new one
-        print(sup_update_data)
-        sysrepocfg_merge(NEMEA_SR_PREFIX, sup_update_data, 'startup')
-    except:
-        # recover from failed transaction by copying unchanged running datastore
-        # to startup
-        sysrepocfg_sync_ds(NEMEA_SR_PREFIX, 'running', 'startup')
-        raise
-    finally:
-        """
-        After an attempt to update supervisor's instance data, try to update instance's 
-        custom model using custom-attributes
-        """
-        if do_update_custom_attrs:
-            try:
-                sysrepocfg_merge(sr_model, custom_update_data, 'startup')
-            except:
-                # recover from failed transaction by copying unchanged running
-                # datastore to startup
-                sysrepocfg_sync_ds(sr_model, 'running', 'startup')
-                raise
-
-    # update was success, sync startup to running. this should not fail
-    sysrepocfg_sync_ds(NEMEA_SR_PREFIX, 'startup', 'running')
-    if do_update_custom_attrs:
-        sysrepocfg_sync_ds(sr_model, 'startup', 'running')
-
-
 def update_with_name_change(old_name, sup_update_data, do_update_custom_attrs, sr_model, custom_update_data):
     """
     First try to delete and update in startup datastore to see whether update fails.
@@ -216,6 +183,10 @@ def update(inst, data, nmod):
         raise InvalidRequest(
             "Instance cannot be named 'stats' it's reserved keyword.")
 
+    if 'interface' in data and isinstance(data['interface'], list):
+        if len(data['interface']) == 0:
+            del data['interface']
+
     # helper var to know we have every value needed to update custom-attributes
     do_update_custom_attrs = 'is-sysrepo-ready' in nmod and nmod['is-sysrepo-ready'] \
                              and 'custom-attributes' in data
@@ -242,11 +213,7 @@ def update(inst, data, nmod):
         }
     }
 
-    # test if it gets new name after update
-    #if inst['name'] == data['name']:
-    #    update_without_name_change(sup_update_data, do_update_custom_attrs, sr_model,
-    #                               custom_update_data)
-    #else:
+
     if inst['name'] != data['name']:
         # verify that new name doesn't exist
         validate_instance_name_doesnt_exist(data['name'], nmod)
@@ -262,6 +229,12 @@ def create(inst_data):
 
     if 'module-ref' not in inst_data:
         raise InvalidRequest("Key 'module-ref' is missing")
+
+    if 'interface' in inst_data and isinstance(inst_data['interface'], list):
+        if len(inst_data['interface']) == 0:
+            del inst_data['interface']
+
+    print(inst_data)
 
     nmod = nm_model.get_by_name(inst_data['module-ref'])
     validate_instance_name_doesnt_exist(inst_data, nmod)

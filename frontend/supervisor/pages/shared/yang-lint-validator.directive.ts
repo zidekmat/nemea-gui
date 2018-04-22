@@ -38,7 +38,6 @@ export class YangLintValidatorDirective implements Validator {
                 }
             },
             (error) => {
-                // TODO
                 console.log('Yang lint validation failed:');
                 console.log(error);
                 return {

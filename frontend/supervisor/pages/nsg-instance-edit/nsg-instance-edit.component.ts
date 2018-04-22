@@ -76,8 +76,6 @@ export class NsgInstanceEditComponent implements OnInit {
         );
     }
 
-    /* Loads details of instance module, serves for
-     * interface component to gather IfcesTodo counts */
     fetchModule() {
         if (this.nsgInstance.nsgModule.name === undefined) {
             return;
@@ -85,7 +83,6 @@ export class NsgInstanceEditComponent implements OnInit {
         this.nsgModulesService.getModule(this.nsgInstance.nsgModule.name).subscribe(
             (nsgModule) => {
                 this.nsgInstance.nsgModule = nsgModule;
-                this.nsgInstance.countIfcesTodo();
             },
             (error) => {
                 console.log('Error fetching instance module:');

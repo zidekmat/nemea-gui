@@ -39,7 +39,7 @@ export class NsgModulesListingComponent implements OnInit {
                 );
             },
             (error) => {
-                // TODO
+                console.log('Failed to remove module:');
                 console.log(error);
             }
         );
@@ -51,7 +51,7 @@ export class NsgModulesListingComponent implements OnInit {
                 this.nsgModules = nsgModules;
             },
             (error) => {
-                // TODO
+                console.log('Failed to load modules:');
                 console.log(error);
             }
         );

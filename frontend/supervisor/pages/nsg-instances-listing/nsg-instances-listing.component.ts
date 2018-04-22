@@ -10,6 +10,8 @@ import {NsgInstance} from "../../models/nsg-instance";
 })
 export class NsgInstancesListingComponent implements OnInit {
 
+    statusTimeout = 3000;
+
     nsgInstances: NsgInstance[];
 
     constructor(private nsgInstancesService: NsgInstancesService) {
@@ -42,7 +44,6 @@ export class NsgInstancesListingComponent implements OnInit {
             (error) => {
                 console.log('Error removing instance:');
                 console.log(error);
-                // TODO
             }
         );
     }
@@ -55,7 +56,6 @@ export class NsgInstancesListingComponent implements OnInit {
             (error) => {
                 console.log('Error getting instances list:');
                 console.log(error);
-                // TODO
             }
         );
     }
@@ -65,11 +65,11 @@ export class NsgInstancesListingComponent implements OnInit {
             () => {
                 instance.running = true;
                 instance.enabled = true;
+                setTimeout(() => instance.restarting = false, this.statusTimeout);
             },
             (error) => {
                 console.log('Error starting instance:');
                 console.log(error);
-                // TODO
             }
         );
     }
@@ -79,11 +79,11 @@ export class NsgInstancesListingComponent implements OnInit {
             () => {
                 instance.running = false;
                 instance.enabled = false;
+                setTimeout(() => instance.restarting = false, this.statusTimeout);
             },
             (error) => {
                 console.log('Error stopping instance:');
                 console.log(error);
-                // TODO
             }
         );
     }
@@ -93,14 +93,11 @@ export class NsgInstancesListingComponent implements OnInit {
         this.nsgInstancesService.restartInstance(instance.name).subscribe(
             () => {
                 instance.running = true;
-                setTimeout(function() {
-                    instance.restarting = false;
-                }, 3);
+                setTimeout(() => instance.restarting = false, this.statusTimeout);
             },
             (error) => {
                 console.log('Error restarting instance:');
                 console.log(error);
-                // TODO
             }
         );
     }

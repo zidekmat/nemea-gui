@@ -41,18 +41,16 @@ export class NsgModuleDetailComponent implements OnInit {
                 if (error.status == 404) {
                     this.moduleNotFound = true;
                 } else {
-                    console.log('HTTP error:');
+                    console.log('Failed to load module:');
                     console.log(error);
-                    //TODO
                 }
             }
         );
         this.nsgInstancesService.getAllInstancesByModuleName(moduleName).subscribe(
             (insts) => this.nsgInstances = insts,
             (error) => {
-                console.log('HTTP error:');
+                console.log('Failed to load instances of module:');
                 console.log(error);
-                //TODO
             }
         );
     }
@@ -84,7 +82,7 @@ export class NsgModuleDetailComponent implements OnInit {
                 this.router.navigate(['/nemea/supervisor/modules'])
             },
             (error) => {
-                // TODO
+                console.log('Failed to remove module:')
                 console.log(error);
             }
         );
@@ -93,7 +91,6 @@ export class NsgModuleDetailComponent implements OnInit {
     removeInstance(inst: NsgInstance) {
         this.nsgInstancesService.removeInstance(inst.name).subscribe(
             () => {
-                // TODO
                 this.nsgInstances = this.nsgInstances
                     .filter(
                         instIter => instIter != inst
@@ -101,7 +98,7 @@ export class NsgModuleDetailComponent implements OnInit {
                 console.log(`instance ${inst.name} deleted`);
             },
             (error) => {
-                // TODO
+                console.log('Failed to remove instance:');
                 console.log(error);
             }
         );

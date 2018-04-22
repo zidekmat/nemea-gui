@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Http, Headers, RequestOptions, Response} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import {NsgInstance} from "../models/nsg-instance";
-import {NsgModule} from "../models/nsg-module";
+import {NsgInstanceStats} from "../models/nsg-instance-stats";
 import {NsgInterface} from "../models/nsg-interface";
 
 @Injectable()
@@ -14,10 +14,7 @@ export class NsgInstancesService {
         return this.http.get('/nemea/instances')
             .map(response => {
                 return response.json().map(
-                    obj => {
-                        console.log(obj)
-                        return NsgInstance.newFromApi(obj)
-                    }
+                    obj => NsgInstance.newFromApi(obj)
                 )}
             );
     }
@@ -84,39 +81,11 @@ export class NsgInstancesService {
             );
     }
 
-    getAllInterfacesNames(instName: string): Observable<string[]> {
-        return this.http.get(`/nemea/sg/instances/${instName}`)
-            .map(response => {
-                let names = [];
-                let ifces = response.json()['interface'];
-                for (let i = 0; i < ifces.length; i++) {
-                    names.push(ifces[i]['name']);
-                }
-                return names as string[];
-            });
-    }
-
-/*
-    addInterface(instanceName: string, ifc: NsgInterface): Observable<{}> {
-        return this.http.post(
-            `/nemea/sg/instances/${instanceName}/ifces`,
-            ifc
+    getInstanceStats(instanceName: string): Observable<NsgInstanceStats> {
+        return this.http.get(`/nemea/instances/${instanceName}/stats`).map(
+            response => NsgInstanceStats.newFromApi(response.json()['stats'])
         );
     }
-
-    updateInterface(instanceName: string, origIfcName: string, ifc: NsgInterface): Observable<{}> {
-        return this.http.put(
-            `/nemea/sg/instances/${instanceName}/ifces/${origIfcName}`,
-            ifc
-        );
-    }
-
-    removeInterface(instName: string, ifcName: string): Observable<{}> {
-        return this.http.delete(
-            `/nemea/sg/instances/${instName}/ifces/${ifcName}`
-        );
-    }
-*/
 
     private handleError(err: Response | any) {
         return Promise.reject(err);

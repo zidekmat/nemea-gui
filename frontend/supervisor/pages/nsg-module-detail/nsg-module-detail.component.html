@@ -55,7 +55,14 @@
               <th width="30%">&nbsp;</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody *ngIf="nsgInstances.length == 0">
+              <tr>
+                <td colspan="3">
+                  There are no instances for this module.
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="nsgInstances.length > 0">
             <tr *ngFor="let i of nsgInstances">
               <td>
                 <a [routerLink]="['/nemea/supervisor-gui/instances/', i.name]">

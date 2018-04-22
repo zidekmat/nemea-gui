@@ -13,11 +13,7 @@ export class NsgInstance {
     in_ifces: NsgInterface[];
     out_ifces: NsgInterface[];
 
-    inIfcesTodo: number;
-    outIfcesTodo: number;
-    totalIfcesTodo: number;
-
-    restarting = false; // serves to tell that instance is being restarted
+    restarting = false; // serves to tell that instance's status is being changed
 
     constructor(fields: any) {
         console.log('instance constructor')
@@ -32,50 +28,11 @@ export class NsgInstance {
         //this.nsgModule = fields.module;
     }
 
-    countIfcesTodo() {
-        if (!this.nsgModule.in_ifces_cnt || !this.nsgModule.in_ifces_cnt) {
-            return;
-        }
-
-        let sum: number;
-        if (this.nsgModule.in_ifces_cnt == '*') {
-            this.inIfcesTodo = 0;
-        } else {
-            sum = parseInt(this.nsgModule.in_ifces_cnt) - this.in_ifces.length;
-            if (sum > 0) {
-                this.inIfcesTodo = sum;
-            } else {
-                this.inIfcesTodo = 0;
-            }
-        }
-
-        if (this.nsgModule.out_ifces_cnt == '*') {
-            this.outIfcesTodo = 0;
-        } else {
-            sum = parseInt(this.nsgModule.out_ifces_cnt) - this.out_ifces.length;
-            if (sum > 0) {
-                this.outIfcesTodo = sum;
-            } else {
-                this.outIfcesTodo = 0;
-            }
-        }
-        this.totalIfcesTodo = this.inIfcesTodo + this.outIfcesTodo;
-
-    }
-
     addIfc(ifc: NsgInterface) {
         if (ifc.direction == 'IN') {
             this.in_ifces.push(ifc);
-            if (this.inIfcesTodo > 0) {
-                this.inIfcesTodo--;
-                this.totalIfcesTodo--;
-            }
         } else {
             this.out_ifces.push(ifc);
-            if (this.outIfcesTodo > 0) {
-                this.outIfcesTodo--;
-                this.totalIfcesTodo--;
-            }
         }
     }
 
@@ -84,15 +41,6 @@ export class NsgInstance {
         for (let i = 0; i < ifces.length; i++) {
             if (ifc.name == ifces[i].name) {
                 ifces.splice(i, 1);
-
-                if (ifc.direction == 'IN' && this.nsgModule.in_ifces_cnt != '*') {
-                    this.inIfcesTodo++;
-                    this.totalIfcesTodo++;
-                } else if (ifc.direction == 'OUT' && this.nsgModule.out_ifces_cnt != '*') {
-                    this.outIfcesTodo++;
-                    this.totalIfcesTodo++;
-                }
-
                 return;
             }
         }

@@ -56,7 +56,6 @@ import { NemeaStatusComponent } from './status/nemea_status.component';
   * NEMEA Supervisor GUI
   */
 import {SupervisorGuiComponent} from "./supervisor/supervisor-gui.component";
-import {NsgStatusComponent} from "./supervisor/pages/nsg-status/nsg-status.component";
 import {NsgModulesListingComponent} from "./supervisor/pages/nsg-modules-listing/nsg-modules-listing.component";
 import {NsgModulesNewComponent} from "./supervisor/pages/nsg-module-new/nsg-module-new.component";
 import {NsgModuleDetailComponent} from "./supervisor/pages/nsg-module-detail/nsg-module-detail.component";
@@ -174,7 +173,6 @@ const nemeaRoutes: Routes = [
         NsgModulesNewComponent,
         NsgModuleDetailComponent,
         NsgHowToComponent,
-        NsgStatusComponent,
         NsgModuleEditComponent,
         NsgInstanceEditComponent,
         NsgInterfacesFormComponent,

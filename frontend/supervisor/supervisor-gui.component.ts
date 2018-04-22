@@ -3,7 +3,6 @@ import { AuthGuard } from 'app/utils/auth.guard';
 
 
 // NEMEA Supervisor GUI main components
-import {NsgStatusComponent} from "./pages/nsg-status/nsg-status.component";
 import {NsgHowToComponent} from "./pages/nsg-how-to/nsg-how-to.component";
 
 import {NsgModulesListingComponent} from "./pages/nsg-modules-listing/nsg-modules-listing.component";
@@ -24,7 +23,7 @@ export class SupervisorGuiComponent implements OnInit {
   static readonly childrenRoutes = [
       {
           path : '',
-          component: NsgStatusComponent,
+          component: NsgInstancesListingComponent,
           canActivate : [AuthGuard],
           data : {
               role : 10,

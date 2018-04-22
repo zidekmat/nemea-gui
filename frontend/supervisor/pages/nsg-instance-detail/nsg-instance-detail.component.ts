@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {NsgInstancesService} from "../../services/nsg-instances.service";
 import {NsgInterface} from "../../models/nsg-interface";
 import {NsgInstance} from "../../models/nsg-instance";
+import {NsgInstanceStats} from "../../models/nsg-instance-stats";
 import {NsgInstanceEditComponent} from "../nsg-instance-edit/nsg-instance-edit.component";
 
 @Component({
@@ -17,18 +18,27 @@ export class NsgInstanceDetailComponent implements OnInit {
     @ViewChild(NsgInstanceEditComponent)
     private editForm: NsgInstanceEditComponent;
 
+    statusTimeout = 3000;
+    instName: string;
     nsgInstance: NsgInstance;
+    nsgInstanceStats: NsgInstanceStats;
     selectedIfc: NsgInterface;
     instanceNotFound = false;
+    Math: any;
 
     constructor(private nsgInstancesService: NsgInstancesService,
                 private route: ActivatedRoute,
                 private router: Router) {
+        this.Math = Math;
     }
 
     ngOnInit() {
-        const instName = this.route.snapshot.paramMap.get('instance');
-        this.nsgInstancesService.getInstance(instName).subscribe(
+        this.instName = this.route.snapshot.paramMap.get('instance');
+        this.fetchInstance();
+    }
+
+    fetchInstance() {
+        this.nsgInstancesService.getInstance(this.instName).subscribe(
             (inst) => {
                 console.log('Received instance:');
                 console.log(JSON.stringify(inst));
@@ -40,18 +50,26 @@ export class NsgInstanceDetailComponent implements OnInit {
                 } else {
                     this.selectedIfc = undefined;
                 }
-
-                console.log(this.nsgInstance);
+                this.nsgInstance.restarting = false;
             },
             (error) => {
                 if (error.status == 404) {
                     console.log('Service: instance not found');
                     this.instanceNotFound = true;
                 } else {
-                    console.log('Service error: ');
+                    console.log('Failed to get instance: ');
                     console.log(error);
-                    //TODO
                 }
+            }
+        );
+
+        this.nsgInstancesService.getInstanceStats(this.instName).subscribe(
+            (stats) => {
+                this.nsgInstanceStats = stats;
+            },
+            (error) => {
+                console.log('Failed to get instance stats:');
+                console.log(error);
             }
         );
     }
@@ -76,25 +94,52 @@ export class NsgInstanceDetailComponent implements OnInit {
     }
 
     removeInstance() {
+        this.nsgInstance.restarting = true;
         this.nsgInstancesService.removeInstance(this.nsgInstance.name).subscribe(
             () => {
-                this.router.navigate(['/nemea/supervisor/instances'])
+                this.router.navigate(['/nemea/supervisor-gui/instances'])
             },
             (error) => {
-                // TODO
+                console.log('Failed to remove instance:');
                 console.log(error);
             }
         );
     }
 
-    removeInterface(ifc: NsgInterface) {
-        this.nsgInstance.removeIfc(ifc);
-        this.nsgInstancesService.updateInstance(this.nsgInstance.name, this.nsgInstance).subscribe(
+    startInstance() {
+        this.nsgInstance.restarting = true;
+        this.nsgInstancesService.startInstance(this.nsgInstance.name).subscribe(
             () => {
-                console.log(`interface ${ifc.name} deleted`);
+                setTimeout(() => {this.fetchInstance()}, this.statusTimeout);
             },
             (error) => {
-                console.log('Failed to remove interface:');
+                console.log('Error starting instance:');
+                console.log(error);
+            }
+        );
+    }
+
+    stopInstance() {
+        this.nsgInstance.restarting = true;
+        this.nsgInstancesService.stopInstance(this.nsgInstance.name).subscribe(
+            () => {
+                setTimeout(() => {this.fetchInstance()}, this.statusTimeout);
+            },
+            (error) => {
+                console.log('Error stopping instance:');
+                console.log(error);
+            }
+        );
+    }
+
+    restartInstance() {
+        this.nsgInstance.restarting = true;
+        this.nsgInstancesService.restartInstance(this.nsgInstance.name).subscribe(
+            () => {
+                setTimeout(() => {this.fetchInstance()}, this.statusTimeout);
+            },
+            (error) => {
+                console.log('Error restarting instance:');
                 console.log(error);
             }
         );

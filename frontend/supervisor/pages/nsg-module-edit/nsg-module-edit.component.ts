@@ -40,7 +40,7 @@ export class NsgModuleEditComponent implements OnInit {
     }
 
     resetForm() {
-        this.nsgModule = JSON.parse(JSON.stringify(this.passedModule));
+        this.nsgModule = new NsgModule(JSON.parse(JSON.stringify(this.passedModule)));
     }
 
     onSubmit() {
@@ -54,6 +54,7 @@ export class NsgModuleEditComponent implements OnInit {
                     this.router.navigate([`/nemea/supervisor-gui/modules/${this.nsgModule.name}`], {fragment: 'info'})
                 },
                 (error) => {
+                    console.log('Failed to update module:');
                     console.log(error);
                     this.backendErrors = error.json();
                 }
@@ -65,6 +66,7 @@ export class NsgModuleEditComponent implements OnInit {
                     this.router.navigate([`/nemea/supervisor-gui/modules/${this.nsgModule.name}`], {fragment: 'info'})
                 },
                 (error) => {
+                    console.log('Failed to create module:');
                     console.log(error);
                     this.backendErrors = error.json();
                 }

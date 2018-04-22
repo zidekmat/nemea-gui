@@ -38,23 +38,22 @@ export class NsgInterface {
 
     static newFromInstance(inst: NsgInstance) {
         const fields = {type: 'UNIXSOCKET'};
-        if (inst.inIfcesTodo > 0) {
-            fields['name'] = 'in' + inst.in_ifces.length.toString();
-            fields['direction'] = 'IN';
-        } else {
-            fields['name'] = 'out' + inst.out_ifces.length.toString();
-            fields['direction'] = 'OUT';
-        }
-        let sockNameRA = /[\w0-9 ]+/.exec(inst.name);
-        let sockName: string;
-        if (sockNameRA.length > 0) {
-            sockName = sockNameRA[0].replace(/ /g, '_');
-            sockName = sockName+'_'+fields['name'];
-        } else {
-            sockName = fields['name'];
+        fields['name'] = 'if' + (inst.in_ifces.length + inst.out_ifces.length + 1).toString();
+        fields['direction'] = 'IN';
+
+        // pregenerate socket name
+        if (inst.name.length > 0) {
+            let sockNameRA = /[\w0-9 ]+/.exec(inst.name);
+            let sockName: string;
+            if (sockNameRA.length > 0) {
+                sockName = sockNameRA[0].replace(/ /g, '_');
+                sockName = sockName + '_' + fields['name'];
+            } else {
+                sockName = fields['name'];
+            }
+            fields['unix_params'] = { socket_name: sockName };
         }
 
-        fields['unix_params'] = { socket_name: sockName };
 
         return new this(fields);
     }

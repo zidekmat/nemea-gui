@@ -15,6 +15,9 @@ import {NsgModulesService} from "../../../services/nsg-modules.service";
 export class NsgInterfacesFormComponent implements OnInit {
 
     @Input() nsgInstance: NsgInstance;
+    /* Whether this component is used for editing
+     * existing instance or creating new one */
+    @Input() isEditForm: boolean;
 
     /* Notifies parent component that some data were changed here */
     @Output() onChildEdited = new EventEmitter<NsgInstance>();
@@ -38,14 +41,8 @@ export class NsgInterfacesFormComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.updateIfcesNamesList();
         console.log('init');
         console.log(this.nsgInstance)
-    }
-
-
-    updateIfcesNamesList() {
-        let getName = (ifc) => ifc.name;
     }
 
     selectIfc(ifc: NsgInterface) {
@@ -57,65 +54,83 @@ export class NsgInterfacesFormComponent implements OnInit {
     }
 
     removeIfc(ifc: NsgInterface) {
-        this.nsgInstance.removeIfc(ifc);
+        if (this.isEditForm) {
+            this.nsgInstancesService.updateInstance(this.nsgInstance.name, this.nsgInstance).subscribe(
+                () => {
+                    this.onChildEdited.emit();
 
-        this.nsgInstancesService.updateInstance(this.nsgInstance.name, this.nsgInstance).subscribe(
-            () => {
-                this.onChildEdited.emit();
-            },
-            (error) => {
-                console.log('Failed to remove interface:');
-                console.log(error);
-                this.backendErrors = error.json().errors;
+                    if (this.selectedIfc != null && this.selectedIfc.name == ifc.name) {
+                        this.selectedIfc = null;
+                    }
+
+                    this.nsgInstance.removeIfc(ifc);
+                },
+                (error) => {
+                    console.log('Failed to remove interface:');
+                    console.log(error);
+                    this.backendErrors = error.json().errors;
+                }
+            );
+        } else {
+            if (this.selectedIfc != null && this.selectedIfc.name == ifc.name) {
+                this.selectedIfc = null;
             }
-        );
+
+            this.nsgInstance.removeIfc(ifc);
+        }
     }
 
     createNewIfc() {
+        console.log('creating ifc');
         this.addingIfc = true;
         this.selectedIfc = NsgInterface.newFromInstance(this.nsgInstance);
         this.resetIfcVals = JSON.stringify(this.selectedIfc);
     }
 
     resetIfc() {
+        console.log('resetting ifc');
         this.selectedIfc = new NsgInterface(JSON.parse(this.resetIfcVals));
     }
 
     saveIfc(ifcForm) {
-        if (this.addingIfc) {
-            this.nsgInstance.addIfc(this.selectedIfc);
-            this.nsgInstancesService.updateInstance(
-                this.nsgInstance.name,
-                this.nsgInstance).subscribe(
-                () => {
-                    this.updateIfcesNamesList();
-                    this.selectedIfc = null;
-                    this.onChildEdited.emit();
-                },
-                (resp) => {
-                    console.log('Error adding new ifc:');
-                    console.log(resp);
-                    console.log(resp.errors);
-                    this.backendErrors = resp.json().errors;
-                }
-            );
+        if (this.isEditForm) {
+            if (this.addingIfc) {
+                this.nsgInstance.addIfc(this.selectedIfc);
+                this.nsgInstancesService.updateInstance(
+                    this.nsgInstance.name,
+                    this.nsgInstance).subscribe(
+                    () => {
+                        this.selectedIfc = null;
+                        this.onChildEdited.emit();
+                    },
+                    (resp) => {
+                        console.log('Error adding new ifc:');
+                        console.log(resp);
+                        this.backendErrors = resp.json().errors;
+                    }
+                );
+            } else {
+                this.nsgInstancesService.updateInstance(
+                    this.nsgInstance.name,
+                    this.nsgInstance).subscribe(
+                    () => {
+                        this.selectedIfc = null;
+                        console.log('emitting edit');
+                        console.log(this.nsgInstance);
+                        this.onChildEdited.emit();
+                    },
+                    (error) => {
+                        console.log('Error updating ifc:');
+                        console.log(error);
+                        this.backendErrors = error.json().errors;
+                    }
+                );
+            }
         } else {
-            this.nsgInstancesService.updateInstance(
-                this.nsgInstance.name,
-                this.nsgInstance).subscribe(
-                () => {
-                    this.updateIfcesNamesList();
-                    this.selectedIfc = null;
-                    console.log('emitting edit');
-                    console.log(this.nsgInstance);
-                    this.onChildEdited.emit();
-                },
-                (error) => {
-                    console.log('Error updating ifc:');
-                    console.log(error);
-                    this.backendErrors = error.json().errors;
-                }
-            );
+            if (this.addingIfc) {
+                this.nsgInstance.addIfc(this.selectedIfc);
+            }
+            this.selectedIfc = null;
         }
     }
 }

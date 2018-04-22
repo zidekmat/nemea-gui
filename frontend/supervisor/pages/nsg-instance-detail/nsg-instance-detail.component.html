@@ -5,29 +5,32 @@
         <div class="col1">
           <div class="row1">
             <h2>Module instance: {{ nsgInstance.name }}</h2>
-            <table>
+            <p *ngIf="!nsgInstanceStats">
+              Loading instance statistics...
+            </p>
+            <table *ngIf="nsgInstanceStats && nsgInstanceStats.running">
               <tr>
-                <td width="35%">User CPU usage:</td>
+                <td width="35%">User CPU time:</td>
                 <td>
-                  35%
+                  {{ nsgInstanceStats.cpu_user }}%
                 </td>
               </tr>
               <tr>
-                <td width="35%">Kernel CPU usage:</td>
+                <td width="35%">Kernel CPU time:</td>
                 <td>
-                  35%
+                  {{ nsgInstanceStats.cpu_kern }}%
                 </td>
               </tr>
               <tr>
                 <td width="35%">Memory VMS usage:</td>
                 <td>
-                  35%
+                  {{ nsgInstanceStats.mem_vms == 0 ? 0 : Math.round(nsgInstanceStats.mem_vms / 1000000) }} MB
                 </td>
               </tr>
               <tr>
                 <td width="35%">Memory RSS usage:</td>
                 <td>
-                  35%
+                  {{ nsgInstanceStats.mem_rss  == 0 ? 0 : Math.round(nsgInstanceStats.mem_rss / 1000) }} MB
                 </td>
               </tr>
             </table>
@@ -77,18 +80,25 @@
         <div class="col2">
           <div class="row1">
             <button *ngIf="nsgInstance.running"
+                    (click)="stopInstance()"
+                    [disabled]="nsgInstance.restarting"
                     type="button" class="nsg-btn">
               Stop instance
             </button>
             <button *ngIf="nsgInstance.running"
+                    (click)="restartInstance()"
+                    [disabled]="nsgInstance.restarting"
                     type="button" class="nsg-btn">
               Restart instance
             </button>
             <button *ngIf="!nsgInstance.running"
+                    (click)="startInstance()"
+                    [disabled]="nsgInstance.restarting"
                     type="button" class="nsg-btn">
               Start instance
             </button>
             <button (click)="removeInstance()"
+                    [disabled]="nsgInstance.restarting"
                     type="button" class="nsg-btn">
               Remove instance
             </button>

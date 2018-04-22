@@ -204,6 +204,9 @@ def sysrepocfg_get_stats():
     try:
         return json.loads(res.stdout)
     except ValueError:
+        print(res.stdout)
+        print(res.stderr)
+        print(res.returncode)
         raise SysrepocfgException(
             'Unable to parse JSON during state data export: {}/{}'.format(res.stdout,
                                                                           res.stderr))
