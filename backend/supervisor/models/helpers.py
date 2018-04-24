@@ -42,7 +42,7 @@ def sysrepocfg_set_by_xpath(sysrepo_module, xpath, value, datastore=USED_SR_DATA
         return
 
     raise InvalidRequest(
-        "Failed to remove data due to:\n" +
+        "Failed to remove data\n" +
         res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
     )
 
@@ -73,7 +73,7 @@ def sysrepocfg_fetch(sysrepo_module, datastore=USED_SR_DATASTORE):
 
     if res.stdout != b"The configuration was successfully exported.\n":
         raise SysrepocfgException(
-            "Failed to load configuration:\n." + res.stdout.decode('utf-8') +
+            "Failed to load configuration\n" + res.stdout.decode('utf-8') +
                                                  res.stderr.decode('utf-8')
         )
 
@@ -117,7 +117,7 @@ def sysrepocfg_merge(sysrepo_module, data, datastore=USED_SR_DATASTORE):
         return
 
     raise InvalidRequest(
-        "Supplied data were invalid. Failed to import due to:\n" +
+        "Supplied data were invalid. Failed to import due to\n" +
             res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
         )
 
@@ -135,7 +135,7 @@ def sysrepocfg_update_at(sysrepo_module, xpath, value, datastore=USED_SR_DATASTO
         return
 
     raise InvalidRequest(
-        "Supplied data were invalid. Failed to import due to:\n" +
+        "Supplied data were invalid. Failed to import\n" +
             res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
         )
 
@@ -153,7 +153,7 @@ def sysrepocfg_delete(sysrepo_module, xpath, datastore=USED_SR_DATASTORE):
         return
 
     raise InvalidRequest(
-        "Failed to remove data due to:\n" +
+        "Failed to remove data\n" +
               res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
     )
 
@@ -174,7 +174,7 @@ def sysrepocfg_sync_ds(sysrepo_module, from_ds, to_ds):
     if res.stdout != b"The configuration was successfully exported.\n":
         remove(fname)
         raise SysrepocfgException(
-            "Failed to export configuration from datastore {}:\n".format(from_ds) +
+            "Failed to export configuration from datastore {}\n".format(from_ds) +
             res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
         )
 
@@ -194,7 +194,7 @@ def sysrepocfg_sync_ds(sysrepo_module, from_ds, to_ds):
         return
 
     raise InvalidRequest('Unable to import configuration ' +
-                         "from datastore {} to {}:\n".format(from_ds,to_ds) +
+                         "from datastore {} to {}\n".format(from_ds,to_ds) +
                           res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
     )
 
@@ -214,7 +214,7 @@ def sysrepocfg_get_stats():
         return json.loads(res.stdout)
     except ValueError:
         raise SysrepocfgException(
-            "Unable to parse JSON during state data export:\n" +
+            "Unable to parse JSON during state data export\n" +
             res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
         )
 
@@ -245,7 +245,7 @@ def yanglint_get_sr_module(module_name):
 
         if len(res.stderr) > 0:
             raise YanglintException(
-                "Unknown error during formating {} to {}:\n".format(mod_file, format) +
+                "Unknown error during formating {} to {}\n".format(mod_file, format) +
                 res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
             )
 

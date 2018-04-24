@@ -9,6 +9,10 @@ def error_handler(error, status):
     return response
 
 
+@app.errorhandler(Exception)
+def handle_generic_exception(error):
+    return error_handler(error, 500)
+
 @app.errorhandler(SysrepoError)
 def handle_sysrepo_error(error):
     return error_handler(error, 500)

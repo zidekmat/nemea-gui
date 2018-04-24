@@ -68,8 +68,6 @@ import {NsgTabsComponent} from "./supervisor/pages/shared/nsg-tabs/nsg-tabs.comp
 import {NsgTabComponent} from "./supervisor/pages/shared/nsg-tab/nsg-tab.component";
 import {NsgModuleEditComponent} from "./supervisor/pages/nsg-module-edit/nsg-module-edit.component";
 import {NsgInstanceEditComponent} from "./supervisor/pages/nsg-instance-edit/nsg-instance-edit.component";
-import {JsonValidatorDirective} from "./supervisor/pages/shared/json-validator.directive";
-import {YangLintValidatorDirective} from "./supervisor/pages/shared/yang-lint-validator.directive";
 import {NsgInterfacesFormComponent} from "./supervisor/pages/nsg-instance-edit/nsg-interfaces-form/nsg-interfaces-form.component";
 
 
@@ -176,8 +174,6 @@ const nemeaRoutes: Routes = [
         NsgModuleEditComponent,
         NsgInstanceEditComponent,
         NsgInterfacesFormComponent,
-        JsonValidatorDirective,
-        YangLintValidatorDirective,
         NsgTabsComponent,
         NsgTabComponent,
 

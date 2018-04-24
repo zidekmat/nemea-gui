@@ -16,7 +16,7 @@
     <th width="20%">&nbsp;</th>
   </tr>
   </thead>
-  <tbody *ngIf="nsgInstances">
+  <tbody *ngIf="nsgInstances && nsgInstances.length > 0">
     <tr *ngFor="let instance of nsgInstances" [ngClass]="{'inst-restarting': instance.restarting}">
       <td>
         <a [routerLink]="['/nemea/supervisor-gui/instances/', instance.name]">
@@ -57,10 +57,6 @@
              class="fa fa-repeat"></i>
         </div>
         <div>
-          <i (click)="exportAsSrJsonData(instance)"
-             data-toggle="tooltip"
-             title="Export instance configuration as JSON"
-             class="fa fa-arrow-circle-o-down"></i>
           <a [routerLink]="['/nemea/supervisor-gui/instances/', instance.name]"
              data-toggle="tooltip"
              title="Edit instance configuration"
@@ -77,7 +73,12 @@
   </tbody>
   <tbody *ngIf="!nsgInstances">
     <tr>
-      <td colspan="5">No instances found. Verify that Supervisor is running.</td>
+        <td colspan="5" class="loading"><p>Loading instances list...</p></td>
     </tr>
   </tbody>
+    <tbody *ngIf="nsgInstances && nsgInstances.length == 0">
+    <tr>
+        <td colspan="5">No instances found. Verify that Supervisor is running.</td>
+    </tr>
+    </tbody>
 </table>

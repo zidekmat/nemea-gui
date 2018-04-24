@@ -3,7 +3,7 @@
        class="nsg-err-msg">
     <ul>
       <li *ngFor="let err of backendErrors">
-        {{err.message}}
+        {{err}}
       </li>
     </ul>
   </div>
@@ -108,7 +108,8 @@
       </form>
     </div>
     <div class="col2">
-      <nsg-interfaces-form [nsgInstance]="nsgInstance"
+      <nsg-interfaces-form *ngIf="nsgInstance.nsgModule && nsgInstance.nsgModule.trap_monitorable"
+                           [nsgInstance]="nsgInstance"
                            (onChildEdited)="ifcesEdited($event)"
                            [isEditForm]="isEditForm"></nsg-interfaces-form>
     </div>

@@ -6,12 +6,13 @@ import {NsgModulesService} from "../../services/nsg-modules.service";
 import {NsgModuleEditComponent} from "../nsg-module-edit/nsg-module-edit.component";
 import {NsgInstance} from "../../models/nsg-instance";
 import {NsgInstancesService} from "../../services/nsg-instances.service";
+import {ErrParserService} from "../../services/err-parser.service";
 
 @Component({
     selector: 'nsg-module-detail',
     templateUrl: './nsg-module-detail.component.html',
     styleUrls: ['./nsg-module-detail.component.scss'],
-    providers: [NsgModulesService, NsgInstancesService]
+    providers: [NsgModulesService, NsgInstancesService, ErrParserService]
 })
 export class NsgModuleDetailComponent implements OnInit {
 
@@ -26,7 +27,8 @@ export class NsgModuleDetailComponent implements OnInit {
     constructor(private nsgModulesService: NsgModulesService,
                 private nsgInstancesService: NsgInstancesService,
                 private route: ActivatedRoute,
-                private router: Router) {
+                private router: Router,
+                private errParser: ErrParserService) {
         this.backendErrors = []
     }
 
@@ -45,7 +47,7 @@ export class NsgModuleDetailComponent implements OnInit {
                 } else {
                     console.log('Failed to load module:');
                     console.log(error);
-                    this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                    this.backendErrors = this.errParser.toArr(error);
                 }
             }
         );
@@ -54,7 +56,7 @@ export class NsgModuleDetailComponent implements OnInit {
             (error) => {
                 console.log('Failed to load instances of module:');
                 console.log(error);
-                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                this.backendErrors = this.errParser.toArr(error);
             }
         );
     }
@@ -88,7 +90,7 @@ export class NsgModuleDetailComponent implements OnInit {
             (error) => {
                 console.log('Failed to remove module:')
                 console.log(error);
-                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                this.backendErrors = this.errParser.toArr(error);
             }
         );
     }
@@ -106,7 +108,7 @@ export class NsgModuleDetailComponent implements OnInit {
             (error) => {
                 console.log('Failed to remove instance:');
                 console.log(error);
-                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                this.backendErrors = this.errParser.toArr(error);
             }
         );
     }

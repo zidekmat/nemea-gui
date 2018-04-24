@@ -28,6 +28,11 @@ table {
       }
     }
     tr {
+      td.loading {
+        text-align: left !important;
+        font-size: 12px
+      }
+
       td:first-of-type {
         text-align: left;
       }

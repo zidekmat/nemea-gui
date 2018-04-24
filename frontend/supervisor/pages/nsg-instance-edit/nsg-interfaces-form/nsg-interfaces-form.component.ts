@@ -5,12 +5,13 @@ import {NsgInstance} from "../../../models/nsg-instance";
 import {NsgModal} from "../../../services/nsg-modal.service";
 import {NsgInstancesService} from "../../../services/nsg-instances.service";
 import {NsgModulesService} from "../../../services/nsg-modules.service";
+import {ErrParserService} from "../../../services/err-parser.service";
 
 @Component({
     selector: 'nsg-interfaces-form',
     templateUrl: './nsg-interfaces-form.component.html',
     styleUrls: ['./nsg-interfaces-form.component.scss'],
-    providers: [NsgModal, NsgInstancesService, NsgModulesService]
+    providers: [NsgModal, NsgInstancesService, NsgModulesService, ErrParserService]
 })
 export class NsgInterfacesFormComponent implements OnInit {
 
@@ -36,7 +37,8 @@ export class NsgInterfacesFormComponent implements OnInit {
 
     constructor(private nsgModalService: NsgModal,
                 private nsgModulesService: NsgModulesService,
-                private nsgInstancesService: NsgInstancesService) {
+                private nsgInstancesService: NsgInstancesService,
+                private errParser: ErrParserService) {
         this.backendErrors = [];
     }
 
@@ -69,7 +71,7 @@ export class NsgInterfacesFormComponent implements OnInit {
                 (error) => {
                     console.log('Failed to remove interface:');
                     console.log(error);
-                    this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                    this.backendErrors = this.errParser.toArr(error);
                 }
             );
         } else {
@@ -108,7 +110,7 @@ export class NsgInterfacesFormComponent implements OnInit {
                     (error) => {
                         console.log('Error adding new ifc:');
                         console.log(error);
-                        this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                        this.backendErrors = this.errParser.toArr(error);
                     }
                 );
             } else {
@@ -124,7 +126,7 @@ export class NsgInterfacesFormComponent implements OnInit {
                     (error) => {
                         console.log('Error updating ifc:');
                         console.log(error);
-                        this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                        this.backendErrors = this.errParser.toArr(error);
                     }
                 );
             }

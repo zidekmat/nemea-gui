@@ -6,12 +6,13 @@ import {NsgInterface} from "../../models/nsg-interface";
 import {NsgInstance} from "../../models/nsg-instance";
 import {NsgInstanceStats} from "../../models/nsg-instance-stats";
 import {NsgInstanceEditComponent} from "../nsg-instance-edit/nsg-instance-edit.component";
+import {ErrParserService} from "../../services/err-parser.service";
 
 @Component({
     selector: 'nsg-instance-detail',
     templateUrl: './nsg-instance-detail.component.html',
     styleUrls: ['./nsg-instance-detail.component.scss'],
-    providers: [NsgInstancesService]
+    providers: [NsgInstancesService, ErrParserService]
 })
 export class NsgInstanceDetailComponent implements OnInit {
 
@@ -29,13 +30,15 @@ export class NsgInstanceDetailComponent implements OnInit {
 
     constructor(private nsgInstancesService: NsgInstancesService,
                 private route: ActivatedRoute,
-                private router: Router) {
+                private router: Router,
+                private errParser: ErrParserService) {
         this.Math = Math;
         this.backendErrors = [];
     }
 
     ngOnInit() {
         this.instName = this.route.snapshot.paramMap.get('instance');
+        this.nsgInstanceStats = null;
         this.fetchInstance();
     }
 
@@ -61,19 +64,21 @@ export class NsgInstanceDetailComponent implements OnInit {
                 } else {
                     console.log('Failed to get instance: ');
                     console.log(error);
-                    this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                    this.backendErrors = this.errParser.toArr(error);
                 }
             }
         );
 
         this.nsgInstancesService.getInstanceStats(this.instName).subscribe(
             (stats) => {
+                console.log('received stats');
+                console.log(stats);
                 this.nsgInstanceStats = stats;
             },
             (error) => {
                 console.log('Failed to get instance stats:');
                 console.log(error);
-                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                this.backendErrors = this.errParser.toArr(error);
             }
         );
     }
@@ -106,7 +111,7 @@ export class NsgInstanceDetailComponent implements OnInit {
             (error) => {
                 console.log('Failed to remove instance:');
                 console.log(error);
-                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                this.backendErrors = this.errParser.toArr(error);
             }
         );
     }
@@ -120,7 +125,7 @@ export class NsgInstanceDetailComponent implements OnInit {
             (error) => {
                 console.log('Error starting instance:');
                 console.log(error);
-                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                this.backendErrors = this.errParser.toArr(error);
             }
         );
     }
@@ -134,7 +139,7 @@ export class NsgInstanceDetailComponent implements OnInit {
             (error) => {
                 console.log('Error stopping instance:');
                 console.log(error);
-                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                this.backendErrors = this.errParser.toArr(error);
             }
         );
     }
@@ -148,7 +153,7 @@ export class NsgInstanceDetailComponent implements OnInit {
             (error) => {
                 console.log('Error restarting instance:');
                 console.log(error);
-                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                this.backendErrors = this.errParser.toArr(error);
             }
         );
     }

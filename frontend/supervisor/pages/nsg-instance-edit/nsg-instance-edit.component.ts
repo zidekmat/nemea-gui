@@ -1,23 +1,19 @@
 import {Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-
 import {NsgInstancesService} from "../../services/nsg-instances.service";
 import {NsgInstance} from "../../models/nsg-instance";
-import {NsgYangModel} from "../../models/nsg-yang-model";
-import {NsgYangService} from "../../services/nsg-yang.service";
-
 import {NsgModulesService} from "../../services/nsg-modules.service";
-import {NsgInterface} from "../../models/nsg-interface";
 import {NsgModule} from "../../models/nsg-module";
 import {NsgModal} from "../../services/nsg-modal.service";
 import {NsgInterfacesFormComponent} from "./nsg-interfaces-form/nsg-interfaces-form.component";
+import {ErrParserService} from "../../services/err-parser.service";
 
 @Component({
   selector: 'nsg-instance-edit',
   templateUrl: './nsg-instance-edit.component.html',
   styleUrls: ['./nsg-instance-edit.component.scss'],
-  providers: [NsgInstancesService, NsgModulesService, NsgModal]
+  providers: [NsgInstancesService, NsgModulesService, NsgModal, ErrParserService]
 })
 export class NsgInstanceEditComponent implements OnInit {
     /* Instance to be changed */
@@ -49,8 +45,10 @@ export class NsgInstanceEditComponent implements OnInit {
     constructor(private nsgModalService: NsgModal,
                 private nsgInstancesService: NsgInstancesService,
                 private nsgModulesService: NsgModulesService,
-                private router: Router) {
+                private router: Router,
+                private errParser: ErrParserService) {
         this.backendErrors = [];
+        this.nsgInstsNamesList = [];
     }
 
     ngOnInit() {
@@ -63,7 +61,7 @@ export class NsgInstanceEditComponent implements OnInit {
             (error) => {
                 console.log('Error fetching modules list:');
                 console.log(error);
-                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                this.backendErrors = this.errParser.toArr(error);
             }
         );
         this.nsgInstancesService.getAllInstancesNames().subscribe(
@@ -73,7 +71,7 @@ export class NsgInstanceEditComponent implements OnInit {
             (error) => {
                 console.log('Error fetching instances names list:');
                 console.log(error);
-                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                this.backendErrors = this.errParser.toArr(error);
             }
         );
     }
@@ -90,7 +88,7 @@ export class NsgInstanceEditComponent implements OnInit {
             (error) => {
                 console.log('Error fetching instance module:');
                 console.log(error);
-                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                this.backendErrors = this.errParser.toArr(error);
             }
         );
     }
@@ -108,7 +106,7 @@ export class NsgInstanceEditComponent implements OnInit {
         };
         let onError = (error) => {
             console.log(error);
-            this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+            this.backendErrors = this.errParser.toArr(error);
         };
 
         if (this.isEditForm) {

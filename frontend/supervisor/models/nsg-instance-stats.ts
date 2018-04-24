@@ -15,10 +15,13 @@ export class NsgInstanceStats {
             obj = JSON.parse(obj);
         }
 
-        const keys = Object.keys(obj);
+        const keys = ['restart-counter', 'cpu-user', 'cpu-kern', 'mem-vms', 'mem-rss'];
         for (let i = 0; i < keys.length; i++) {
-            obj[keys[i].replace(/-/g, '_')] = obj[keys[i]];
-            delete obj[keys[i]];
+            if (keys[i] in obj) {
+                console.log(keys[i])
+                obj[keys[i].replace(/-/g, '_')] = obj[keys[i]];
+                delete obj[keys[i]];
+            }
         }
 
         return new NsgInstanceStats(obj);

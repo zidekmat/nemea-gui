@@ -2,35 +2,25 @@ import { Component, OnInit, OnChanges } from '@angular/core';
 
 import {NsgModulesService} from "../../services/nsg-modules.service";
 import {NsgModule} from "../../models/nsg-module";
+import {ErrParserService} from "../../services/err-parser.service";
 
 @Component({
   selector: 'nsg-modules-listing',
   templateUrl: './nsg-modules-listing.component.html',
   styleUrls: ['./nsg-modules-listing.component.scss'],
-  providers: [NsgModulesService]
+  providers: [NsgModulesService,ErrParserService]
 })
 export class NsgModulesListingComponent implements OnInit {
 
     nsgModules : NsgModule[];
     backendErrors: any[];
 
-    constructor(private nsgModulesService: NsgModulesService) { }
+    constructor(private nsgModulesService: NsgModulesService,
+                private errParser: ErrParserService) { }
 
     ngOnInit() {
         this.getModules();
         this.backendErrors = [];
-    }
-
-    ngOnChanges() {
-        this.getModules();
-    }
-
-    exportAsSrJsonData(module: NsgModule) {
-        let a = document.createElement("a");
-        const blob = new Blob([module.apiJson()], { type: 'application/json' });
-        a.href = window.URL.createObjectURL(blob);
-        a.download = `${module.name}.conf-backup.json`;
-        a.click();
     }
 
     removeModule(module: NsgModule) {
@@ -44,7 +34,7 @@ export class NsgModulesListingComponent implements OnInit {
             (error) => {
                 console.log('Failed to remove module:');
                 console.log(error);
-                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                this.backendErrors = this.errParser.toArr(error);
             }
         );
     }
@@ -58,7 +48,7 @@ export class NsgModulesListingComponent implements OnInit {
             (error) => {
                 console.log('Failed to load modules:');
                 console.log(error);
-                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                this.backendErrors = this.errParser.toArr(error);
             }
         );
     }

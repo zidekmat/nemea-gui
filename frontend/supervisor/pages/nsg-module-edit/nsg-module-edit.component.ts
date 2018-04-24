@@ -5,12 +5,13 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NsgModule} from "../../models/nsg-module";
 import {NsgModulesService} from "../../services/nsg-modules.service";
 import {NsgModal} from "../../services/nsg-modal.service";
+import {ErrParserService} from "../../services/err-parser.service";
 
 @Component({
     selector: 'nsg-module-edit',
     templateUrl: './nsg-module-edit.component.html',
     styleUrls: ['./nsg-module-edit.component.scss'],
-    providers: [NsgModulesService, NsgModal]
+    providers: [NsgModulesService, NsgModal, ErrParserService]
 })
 export class NsgModuleEditComponent implements OnInit {
 
@@ -31,7 +32,8 @@ export class NsgModuleEditComponent implements OnInit {
 
     constructor(private nsgModalService: NsgModal,
                 private nsgModulesService: NsgModulesService,
-                private router: Router) {
+                private router: Router,
+                private errParser: ErrParserService) {
         this.backendErrors = [];
     }
 
@@ -56,7 +58,7 @@ export class NsgModuleEditComponent implements OnInit {
                 (error) => {
                     console.log('Failed to update module:');
                     console.log(error);
-                    this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                    this.backendErrors = this.errParser.toArr(error);
                 }
             );
         } else {
@@ -68,7 +70,7 @@ export class NsgModuleEditComponent implements OnInit {
                 (error) => {
                     console.log('Failed to create module:');
                     console.log(error);
-                    this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
+                    this.backendErrors = this.errParser.toArr(error);
                 }
             );
         }

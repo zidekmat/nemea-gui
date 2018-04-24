@@ -1,13 +1,10 @@
 ### To build use:
 ```
-docker build -t staas-demo:latest .
+docker build -t nemea-gui-sysrepo-edition:latest .
 ```
 
 ### To run use:
 ```
-# get shell inside docker container
-docker run -ti staas-demo /bin/bash
-
-# start supervisor
-./nemea-supervisor  --logs-path=. --verbosity 3
+docker run -p 8080:80 --rm zmat/nemea-gui-sysrepo-edition
 ```
+That would start Liberouter GUI with NEMEA GUI on localhost:8080

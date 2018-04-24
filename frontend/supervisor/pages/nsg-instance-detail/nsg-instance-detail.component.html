@@ -5,7 +5,7 @@
            class="nsg-err-msg">
         <ul>
           <li *ngFor="let err of backendErrors">
-            {{err.message}}
+            {{err}}
           </li>
         </ul>
       </div>
@@ -13,18 +13,18 @@
         <div class="col1">
           <div class="row1">
             <h2>Module instance: {{ nsgInstance.name }}</h2>
-            <p *ngIf="!nsgInstanceStats">
+            <p *ngIf="!nsgInstanceStats" class="loading-msg">
               Loading instance statistics...
             </p>
             <table *ngIf="nsgInstanceStats && nsgInstanceStats.running">
               <tr>
-                <td width="35%">User CPU time:</td>
+                <td width="35%">User CPU usage:</td>
                 <td>
                   {{ nsgInstanceStats.cpu_user }}%
                 </td>
               </tr>
               <tr>
-                <td width="35%">Kernel CPU time:</td>
+                <td width="35%">Kernel CPU usage:</td>
                 <td>
                   {{ nsgInstanceStats.cpu_kern }}%
                 </td>

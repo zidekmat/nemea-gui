@@ -30,8 +30,6 @@
     <td>{{ module.sr_callbacks_ready }}</td>
     <td>
       <div>
-        <i (click)="exportAsSrJsonData(module)"
-           class="fa fa-arrow-circle-o-down"></i>
         <a [routerLink]="['/nemea/supervisor-gui/modules/', module.name]"
            fragment="edit">
           <i class="fa fa-cog"></i>
