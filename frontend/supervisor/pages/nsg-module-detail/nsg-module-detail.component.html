@@ -1,6 +1,14 @@
 <div *ngIf="nsgModule">
   <nsg-tabs>
     <nsg-tab tabTitle="Info">
+      <div *ngIf="backendErrors.length > 0"
+           class="nsg-err-msg">
+        <ul>
+          <li *ngFor="let err of backendErrors">
+            {{err}}
+          </li>
+        </ul>
+      </div>
       <div class="nsg-tab-info">
       <div>
         <table>

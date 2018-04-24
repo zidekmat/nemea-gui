@@ -107,3 +107,8 @@ input[type=text].nsg-form-control, select.nsg-form-control {
   padding: 5px 5px 5px 5px;
   border: 1px solid;
 }
+
+div.nsg-err-msg {
+  font-size: 1rem !important;
+  color: $errColor;
+}

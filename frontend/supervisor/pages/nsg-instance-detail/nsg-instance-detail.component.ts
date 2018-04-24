@@ -25,11 +25,13 @@ export class NsgInstanceDetailComponent implements OnInit {
     selectedIfc: NsgInterface;
     instanceNotFound = false;
     Math: any;
+    backendErrors: any[];
 
     constructor(private nsgInstancesService: NsgInstancesService,
                 private route: ActivatedRoute,
                 private router: Router) {
         this.Math = Math;
+        this.backendErrors = [];
     }
 
     ngOnInit() {
@@ -59,6 +61,7 @@ export class NsgInstanceDetailComponent implements OnInit {
                 } else {
                     console.log('Failed to get instance: ');
                     console.log(error);
+                    this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
                 }
             }
         );
@@ -70,6 +73,7 @@ export class NsgInstanceDetailComponent implements OnInit {
             (error) => {
                 console.log('Failed to get instance stats:');
                 console.log(error);
+                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
             }
         );
     }
@@ -102,6 +106,7 @@ export class NsgInstanceDetailComponent implements OnInit {
             (error) => {
                 console.log('Failed to remove instance:');
                 console.log(error);
+                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
             }
         );
     }
@@ -115,6 +120,7 @@ export class NsgInstanceDetailComponent implements OnInit {
             (error) => {
                 console.log('Error starting instance:');
                 console.log(error);
+                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
             }
         );
     }
@@ -128,6 +134,7 @@ export class NsgInstanceDetailComponent implements OnInit {
             (error) => {
                 console.log('Error stopping instance:');
                 console.log(error);
+                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
             }
         );
     }
@@ -141,6 +148,7 @@ export class NsgInstanceDetailComponent implements OnInit {
             (error) => {
                 console.log('Error restarting instance:');
                 console.log(error);
+                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
             }
         );
     }

@@ -63,6 +63,7 @@ export class NsgInstanceEditComponent implements OnInit {
             (error) => {
                 console.log('Error fetching modules list:');
                 console.log(error);
+                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
             }
         );
         this.nsgInstancesService.getAllInstancesNames().subscribe(
@@ -72,6 +73,7 @@ export class NsgInstanceEditComponent implements OnInit {
             (error) => {
                 console.log('Error fetching instances names list:');
                 console.log(error);
+                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
             }
         );
     }
@@ -80,6 +82,7 @@ export class NsgInstanceEditComponent implements OnInit {
         if (this.nsgInstance.nsgModule.name === undefined) {
             return;
         }
+        this.backendErrors = [];
         this.nsgModulesService.getModule(this.nsgInstance.nsgModule.name).subscribe(
             (nsgModule) => {
                 this.nsgInstance.nsgModule = nsgModule;
@@ -87,6 +90,7 @@ export class NsgInstanceEditComponent implements OnInit {
             (error) => {
                 console.log('Error fetching instance module:');
                 console.log(error);
+                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
             }
         );
     }
@@ -97,13 +101,14 @@ export class NsgInstanceEditComponent implements OnInit {
 
     onSubmit() {
         console.log('submitting instance');
+        this.backendErrors = [];
         let onSuccess = () => {
             this.onChildSaved.emit(this.nsgInstance);
             this.router.navigate([`/nemea/supervisor-gui/instances/${this.nsgInstance.name}`], {fragment: 'info'})
         };
         let onError = (error) => {
             console.log(error);
-            this.backendErrors = error.json();
+            this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
         };
 
         if (this.isEditForm) {

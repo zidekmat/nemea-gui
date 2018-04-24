@@ -45,7 +45,7 @@ export class NsgModuleEditComponent implements OnInit {
 
     onSubmit() {
         console.log('submitting module');
-
+        this.backendErrors = [];
         if (this.isEditForm) {
             console.log('updating module');
             this.nsgModulesService.updateModule(this.passedModule.name, this.nsgModule).subscribe(
@@ -56,7 +56,7 @@ export class NsgModuleEditComponent implements OnInit {
                 (error) => {
                     console.log('Failed to update module:');
                     console.log(error);
-                    this.backendErrors = error.json();
+                    this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
                 }
             );
         } else {
@@ -68,7 +68,7 @@ export class NsgModuleEditComponent implements OnInit {
                 (error) => {
                     console.log('Failed to create module:');
                     console.log(error);
-                    this.backendErrors = error.json();
+                    this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
                 }
             );
         }

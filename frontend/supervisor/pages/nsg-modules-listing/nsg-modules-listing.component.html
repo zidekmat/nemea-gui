@@ -1,3 +1,11 @@
+<div *ngIf="backendErrors.length > 0"
+     class="nsg-err-msg">
+  <ul>
+    <li *ngFor="let err of backendErrors">
+      {{err}}
+    </li>
+  </ul>
+</div>
 <table>
   <thead>
   <tr>

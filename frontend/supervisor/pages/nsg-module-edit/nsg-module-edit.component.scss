@@ -16,10 +16,6 @@ div {
   display: flex;
   flex-flow: column;
 }
-div.nsg-err-msg {
-  font-size: 1rem !important;
-  color: $errColor;
-}
 
 .nsg-tab-edit {
   width: 100%;

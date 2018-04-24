@@ -1,4 +1,12 @@
 <div class="row1">
+  <div *ngIf="backendErrors.length > 0"
+       class="nsg-err-msg">
+    <ul>
+      <li *ngFor="let err of backendErrors">
+        {{err.message}}
+      </li>
+    </ul>
+  </div>
   <div class="row1">
     <h3>Instance interfaces:</h3>
   </div>

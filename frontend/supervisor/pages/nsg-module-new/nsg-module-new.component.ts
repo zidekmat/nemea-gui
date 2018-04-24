@@ -25,7 +25,7 @@ export class NsgModulesNewComponent implements OnInit {
 
     /* This is information from one of children forms that module
      * was edited with values passed in `module`. */
-    onEdited(module: NsgModule) {
+    onChildEdited(module: NsgModule) {
         console.log('onEdited in new');
         console.log(module);
         this.nsgModule = module;

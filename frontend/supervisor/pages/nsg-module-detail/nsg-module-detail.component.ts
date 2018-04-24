@@ -20,12 +20,14 @@ export class NsgModuleDetailComponent implements OnInit {
 
     nsgModule: NsgModule;
     nsgInstances: NsgInstance[];
+    backendErrors: string[];
     moduleNotFound = false;
 
     constructor(private nsgModulesService: NsgModulesService,
                 private nsgInstancesService: NsgInstancesService,
                 private route: ActivatedRoute,
                 private router: Router) {
+        this.backendErrors = []
     }
 
     ngOnInit() {
@@ -43,6 +45,7 @@ export class NsgModuleDetailComponent implements OnInit {
                 } else {
                     console.log('Failed to load module:');
                     console.log(error);
+                    this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
                 }
             }
         );
@@ -51,6 +54,7 @@ export class NsgModuleDetailComponent implements OnInit {
             (error) => {
                 console.log('Failed to load instances of module:');
                 console.log(error);
+                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
             }
         );
     }
@@ -79,16 +83,18 @@ export class NsgModuleDetailComponent implements OnInit {
         this.nsgModulesService.removeModule(this.nsgModule.name)
             .subscribe(
             () => {
-                this.router.navigate(['/nemea/supervisor/modules'])
+                this.router.navigate(['/nemea/supervisor-gui/modules'])
             },
             (error) => {
                 console.log('Failed to remove module:')
                 console.log(error);
+                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
             }
         );
     }
 
     removeInstance(inst: NsgInstance) {
+        this.backendErrors = [];
         this.nsgInstancesService.removeInstance(inst.name).subscribe(
             () => {
                 this.nsgInstances = this.nsgInstances
@@ -100,6 +106,7 @@ export class NsgModuleDetailComponent implements OnInit {
             (error) => {
                 console.log('Failed to remove instance:');
                 console.log(error);
+                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
             }
         );
     }

@@ -54,6 +54,7 @@ export class NsgInterfacesFormComponent implements OnInit {
     }
 
     removeIfc(ifc: NsgInterface) {
+        this.backendErrors = [];
         if (this.isEditForm) {
             this.nsgInstancesService.updateInstance(this.nsgInstance.name, this.nsgInstance).subscribe(
                 () => {
@@ -68,7 +69,7 @@ export class NsgInterfacesFormComponent implements OnInit {
                 (error) => {
                     console.log('Failed to remove interface:');
                     console.log(error);
-                    this.backendErrors = error.json().errors;
+                    this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
                 }
             );
         } else {
@@ -93,6 +94,7 @@ export class NsgInterfacesFormComponent implements OnInit {
     }
 
     saveIfc(ifcForm) {
+        this.backendErrors = [];
         if (this.isEditForm) {
             if (this.addingIfc) {
                 this.nsgInstance.addIfc(this.selectedIfc);
@@ -103,10 +105,10 @@ export class NsgInterfacesFormComponent implements OnInit {
                         this.selectedIfc = null;
                         this.onChildEdited.emit();
                     },
-                    (resp) => {
+                    (error) => {
                         console.log('Error adding new ifc:');
-                        console.log(resp);
-                        this.backendErrors = resp.json().errors;
+                        console.log(error);
+                        this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
                     }
                 );
             } else {
@@ -122,7 +124,7 @@ export class NsgInterfacesFormComponent implements OnInit {
                     (error) => {
                         console.log('Error updating ifc:');
                         console.log(error);
-                        this.backendErrors = error.json().errors;
+                        this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
                     }
                 );
             }

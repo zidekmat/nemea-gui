@@ -12,11 +12,13 @@ import {NsgModule} from "../../models/nsg-module";
 export class NsgModulesListingComponent implements OnInit {
 
     nsgModules : NsgModule[];
+    backendErrors: any[];
 
     constructor(private nsgModulesService: NsgModulesService) { }
 
     ngOnInit() {
         this.getModules();
+        this.backendErrors = [];
     }
 
     ngOnChanges() {
@@ -32,6 +34,7 @@ export class NsgModulesListingComponent implements OnInit {
     }
 
     removeModule(module: NsgModule) {
+        this.backendErrors = [];
         this.nsgModulesService.removeModule(module.name).subscribe(
             () => {
                 this.nsgModules = this.nsgModules.filter(
@@ -41,11 +44,13 @@ export class NsgModulesListingComponent implements OnInit {
             (error) => {
                 console.log('Failed to remove module:');
                 console.log(error);
+                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
             }
         );
     }
 
     getModules() {
+        this.backendErrors = [];
         this.nsgModulesService.getAllModules().subscribe(
             (nsgModules) => {
                 this.nsgModules = nsgModules;
@@ -53,6 +58,7 @@ export class NsgModulesListingComponent implements OnInit {
             (error) => {
                 console.log('Failed to load modules:');
                 console.log(error);
+                this.backendErrors = error.json()['message'].slice(0,-1).split("\n");
             }
         );
     }
