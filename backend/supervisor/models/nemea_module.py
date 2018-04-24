@@ -39,7 +39,8 @@ def create(data):
 def delete(nmod):
     insts = i_model.get_all()
     for inst in insts:
-        i_model.delete(inst, nmod)
+        if inst['module-ref'] == nmod['name']:
+            i_model.delete(inst, nmod)
 
     xpath = "/{}:supervisor/available-module[name='{}']".format(NEMEA_SR_PREFIX, nmod['name'])
     sysrepocfg_delete(NEMEA_SR_PREFIX, xpath, 'running')

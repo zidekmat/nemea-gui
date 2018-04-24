@@ -42,7 +42,9 @@ def sysrepocfg_set_by_xpath(sysrepo_module, xpath, value, datastore=USED_SR_DATA
         return
 
     raise InvalidRequest(
-        'Failed to remove data due to: {}/{}'.format(str(res.stdout), str(res.stderr)))
+        "Failed to remove data due to:\n" +
+        res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
+    )
 
 
 def sysrepocfg_fetch_by_xpath(sysrepo_module, xpath, datastore=USED_SR_DATASTORE):
@@ -71,8 +73,9 @@ def sysrepocfg_fetch(sysrepo_module, datastore=USED_SR_DATASTORE):
 
     if res.stdout != b"The configuration was successfully exported.\n":
         raise SysrepocfgException(
-            'Failed to load configuration: {}/{}'.format(str(res.stdout),
-                                                         str(res.stderr)))
+            "Failed to load configuration:\n." + res.stdout.decode('utf-8') +
+                                                 res.stderr.decode('utf-8')
+        )
 
     try:
         with open(fname) as fd:
@@ -114,8 +117,9 @@ def sysrepocfg_merge(sysrepo_module, data, datastore=USED_SR_DATASTORE):
         return
 
     raise InvalidRequest(
-        'Supplied data were invalid. Failed to import due to: {}/{}'.format(
-            str(res.stdout), str(res.stderr)))
+        "Supplied data were invalid. Failed to import due to:\n" +
+            res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
+        )
 
 
 def sysrepocfg_update_at(sysrepo_module, xpath, value, datastore=USED_SR_DATASTORE):
@@ -130,8 +134,10 @@ def sysrepocfg_update_at(sysrepo_module, xpath, value, datastore=USED_SR_DATASTO
     if res.stdout == b"The new configuration was successfully applied.\n":
         return
 
-    raise InvalidRequest('Supplied data were invalid. Failed to import due to: ' +
-                         str(res.stderr))
+    raise InvalidRequest(
+        "Supplied data were invalid. Failed to import due to:\n" +
+            res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
+        )
 
 
 def sysrepocfg_delete(sysrepo_module, xpath, datastore=USED_SR_DATASTORE):
@@ -147,7 +153,9 @@ def sysrepocfg_delete(sysrepo_module, xpath, datastore=USED_SR_DATASTORE):
         return
 
     raise InvalidRequest(
-        'Failed to remove data due to: {}/{}'.format(str(res.stdout), str(res.stderr)))
+        "Failed to remove data due to:\n" +
+              res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
+    )
 
 
 def sysrepocfg_sync_ds(sysrepo_module, from_ds, to_ds):
@@ -166,8 +174,9 @@ def sysrepocfg_sync_ds(sysrepo_module, from_ds, to_ds):
     if res.stdout != b"The configuration was successfully exported.\n":
         remove(fname)
         raise SysrepocfgException(
-            'Failed to export configuration from datastore {}: {}/{}'.format(from_ds,
-            str(res.stdout), str(res.stderr)))
+            "Failed to export configuration from datastore {}:\n".format(from_ds) +
+            res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
+        )
 
     try:
         res = subprocess.run(['sysrepocfg', '--import=%s' % fname,
@@ -185,8 +194,9 @@ def sysrepocfg_sync_ds(sysrepo_module, from_ds, to_ds):
         return
 
     raise InvalidRequest('Unable to import configuration ' +
-                         'from datastore {} to {}: {}/{}'.format(
-                             from_ds,to_ds, str(res.stdout), str(res.stderr)))
+                         "from datastore {} to {}:\n".format(from_ds,to_ds) +
+                          res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
+    )
 
 
 def sysrepocfg_get_stats():
@@ -204,8 +214,9 @@ def sysrepocfg_get_stats():
         return json.loads(res.stdout)
     except ValueError:
         raise SysrepocfgException(
-            'Unable to parse JSON during state data export: {}/{}'.format(res.stdout,
-                                                                          res.stderr))
+            "Unable to parse JSON during state data export:\n" +
+            res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
+        )
 
 
 def sysrepo_get_modules_list():
@@ -234,10 +245,10 @@ def yanglint_get_sr_module(module_name):
 
         if len(res.stderr) > 0:
             raise YanglintException(
-                "Unknown error during formating {} to {}: {}/{}".format(mod_file, format,
-                                                                        str(res.stdout),
-                str(res.stderr)))
+                "Unknown error during formating {} to {}:\n".format(mod_file, format) +
+                res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
+            )
 
-        model[format] = str(res.stdout)
+        model[format] = res.stdout.decode('utf-8')
 
     return model

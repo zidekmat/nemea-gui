@@ -8,6 +8,8 @@ def get_all():
         return []
 
     base_key = '{}:supervisor'.format(NEMEA_SR_PREFIX)
+    if 'instance' not in data[base_key]:
+        return []
     insts = data[base_key]['instance']
 
     sess = sr_get_session()
