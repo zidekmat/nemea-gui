@@ -38,6 +38,6 @@ RUN ng build --preserve-symlinks --prod --bh="/" --aot=false
 RUN cp -R dist/* /var/www/html/
 RUN chown -R apache:apache /var/www/
 
-ARG CACHE_DATE=2018-04-24.4
+ARG CACHE_DATE=2018-04-25.1
 COPY run_services.sh /root
 CMD ["/bin/bash", "/root/run_services.sh"]

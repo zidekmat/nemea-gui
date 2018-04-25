@@ -571,7 +571,6 @@ definitions:
       - trap-monitorable
       - uses-trap-ifces
       - is-sysrepo-ready
-      - sysrepo-callbacks-ready
     properties:
       name:
         type: string
@@ -586,8 +585,6 @@ definitions:
       use-trap-ifces:
         type: boolean
       is-sysrepo-ready:
-        type: boolean
-      sysrepo-callbacks-ready:
         type: boolean
       in-ifces-cnt:
         type: string

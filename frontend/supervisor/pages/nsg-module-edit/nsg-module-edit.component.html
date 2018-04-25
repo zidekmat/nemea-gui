@@ -109,18 +109,6 @@
               </label>
             </td>
           </tr>
-          <tr *ngIf="nsgModule.is_sysrepo_ready">
-            <td>Sysrepo callbacks ready?</td>
-            <td>
-              <label class="toggle-check">
-                <input [(ngModel)]="nsgModule.sr_callbacks_ready"
-                       name="sr_callbacks_ready"
-                       class="toggle-check-input"
-                       type="checkbox">
-                <span class="toggle-check-text"></span>
-              </label>
-            </td>
-          </tr>
           <tr>
             <td>Description:</td>
             <td>

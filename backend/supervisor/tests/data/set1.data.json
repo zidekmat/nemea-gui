@@ -17,7 +17,6 @@
         "trap-monitorable": true,
         "is-sysrepo-ready": true,
         "sr-model-prefix": "module1",
-        "sr-callbacks-ready": false,
         "in-ifces-cnt":"1",
         "out-ifces-cnt":"*"
       },
@@ -29,7 +28,6 @@
         "trap-monitorable": true,
         "is-sysrepo-ready": true,
         "sr-model-prefix": "link-traffic-test-1",
-        "sr-callbacks-ready": false,
         "in-ifces-cnt":"1",
         "out-ifces-cnt":"*"
       }

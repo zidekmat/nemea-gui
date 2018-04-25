@@ -3,7 +3,6 @@ export class NsgModule {
     trap_monitorable: boolean;
     use_trap_ifces: boolean;
     is_sysrepo_ready: boolean;
-    sr_callbacks_ready?: boolean;
     sr_model_prefix?: string;
     path: string;
     description: string;
@@ -20,7 +19,6 @@ export class NsgModule {
             trap_monitorable: false,
             use_trap_ifces: false,
             is_sysrepo_ready: false,
-            sr_callbacks_ready: false,
             in_ifces_cnt: '0',
             out_ifces_cnt: '0',
             nsgInstances: []
@@ -35,7 +33,6 @@ export class NsgModule {
             'in-ifces-cnt': this.in_ifces_cnt,
             'out-ifces-cnt': this.out_ifces_cnt,
             'sr-model-prefix': this.sr_model_prefix,
-            'sr-callbacks-ready': this.sr_callbacks_ready,
             'is-sysrepo-ready': this.is_sysrepo_ready,
             'use-trap-ifces': this.use_trap_ifces, 
             'trap-monitorable': this.trap_monitorable
@@ -46,13 +43,12 @@ export class NsgModule {
         if (obj.constructor.name === 'String') {
             obj = JSON.parse(obj);
         }
-        obj['sr_model_prefix'] = obj['sr-model-prefix'];
-        delete obj['sr-model-prefix'];
-        if ('sr-callbacks-ready' in obj) {
-            obj['sr_callbacks_ready'] = obj['sr-callbacks-ready'];
-            delete obj['sr-callbacks-ready'];
+
+        if ('sr-model-prefix' in obj) {
+            obj['sr_model_prefix'] = obj['sr-model-prefix'];
+            delete obj['sr-model-prefix'];
         } else {
-            obj['sr_callbacks_ready'] = false;
+            obj['sr_model_prefix'] = '';
         }
 
         obj['is_sysrepo_ready'] = obj['is-sysrepo-ready'];
