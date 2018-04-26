@@ -5,7 +5,7 @@
         "name": "ipfixcol",
         "path": "gsdsf",
         "description": "TODO",
-        "use-trap-ifces": false,
+        "trap-ifces-cli": false,
         "trap-monitorable": true,
         "use-sysrepo": false
       },
@@ -13,7 +13,7 @@
         "name": "module1",
         "path": "/a/b/c",
         "description": "desc",
-        "use-trap-ifces": true,
+        "trap-ifces-cli": true,
         "trap-monitorable": true,
         "use-sysrepo": true,
         "sr-model-prefix": "module1",

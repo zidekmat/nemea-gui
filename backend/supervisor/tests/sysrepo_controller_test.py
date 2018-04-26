@@ -10,7 +10,7 @@ class SysrepoControllerTest(ControllerTest):
                         "name": "vportscan_detector",
                         "path": "/a/b/c",
                         "description": "cccccc",
-                        "use-trap-ifces": False,
+                        "trap-ifces-cli": False,
                         "trap-monitorable": True,
                         "is-sysrepo-ready": False
                     }

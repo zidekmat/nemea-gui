@@ -1,7 +1,7 @@
 export class NsgModule {
     name: string;
     trap_monitorable: boolean;
-    use_trap_ifces: boolean;
+    trap_ifces_cli: boolean;
     is_sysrepo_ready: boolean;
     sr_model_prefix?: string;
     path: string;
@@ -17,7 +17,7 @@ export class NsgModule {
         return new NsgModule({
             name: '',
             trap_monitorable: false,
-            use_trap_ifces: false,
+            trap_ifces_cli: false,
             is_sysrepo_ready: false,
             in_ifces_cnt: '0',
             out_ifces_cnt: '0',
@@ -34,7 +34,7 @@ export class NsgModule {
             'out-ifces-cnt': this.out_ifces_cnt,
             'sr-model-prefix': this.sr_model_prefix,
             'is-sysrepo-ready': this.is_sysrepo_ready,
-            'use-trap-ifces': this.use_trap_ifces, 
+            'trap-ifces-cli': this.trap_ifces_cli,
             'trap-monitorable': this.trap_monitorable
         });
     }
@@ -53,8 +53,8 @@ export class NsgModule {
 
         obj['is_sysrepo_ready'] = obj['is-sysrepo-ready'];
         delete obj['is-sysrepo-ready'];
-        obj['use_trap_ifces'] = obj['use-trap-ifces'];
-        delete obj['use-trap-ifces'];
+        obj['trap_ifces_cli'] = obj['trap-ifces-cli'];
+        delete obj['trap-ifces-cli'];
         obj['trap_monitorable'] = obj['trap-monitorable'];
         delete obj['trap-monitorable'];
 

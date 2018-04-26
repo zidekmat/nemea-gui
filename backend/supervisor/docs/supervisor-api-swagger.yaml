@@ -582,7 +582,7 @@ definitions:
         type: string
       trap-monitorable:
         type: boolean
-      use-trap-ifces:
+      trap-ifces-cli:
         type: boolean
       is-sysrepo-ready:
         type: boolean
