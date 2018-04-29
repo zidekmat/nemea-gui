@@ -3,9 +3,9 @@ import subprocess
 import libsysrepoPython3 as sr
 from pdb import set_trace
 from time import time
-from liberouterapi.modules.nemea.supervisor.errors import *
 from os import environ, remove
 from glob import glob
+from liberouterapi.modules.nemea.supervisor.errors import *
 
 
 USED_SR_DATASTORE = 'running'

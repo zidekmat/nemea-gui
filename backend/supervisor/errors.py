@@ -1,28 +1,35 @@
 """
 Exception classes used in Supervisor API and handled in controllers/__init__.py
 """
+from liberouterapi.error import ApiException
 
 
 class SysrepoError(Exception):
-    pass
+    def __init__(self, message):
+        ApiException.__init__(self, message, status_code=500)
 
 
-class InternalError(Exception):
-    pass
+class InternalError(ApiException):
+    def __init__(self, message):
+        ApiException.__init__(self, message, status_code=500)
 
 
-class SysrepocfgException(Exception):
-    pass
+class SysrepocfgException(ApiException):
+    def __init__(self, message):
+        ApiException.__init__(self, message, status_code=500)
 
 
 class YanglintException(Exception):
-    pass
+    def __init__(self, message):
+        ApiException.__init__(self, message, status_code=500)
 
 
-class NotFoundException(Exception):
-    pass
+class NotFoundException(ApiException):
+    def __init__(self, message):
+        ApiException.__init__(self, message, status_code=404)
 
 
 class InvalidRequest(Exception):
-    pass
+    def __init__(self, message):
+        ApiException.__init__(self, message, status_code=400)
 

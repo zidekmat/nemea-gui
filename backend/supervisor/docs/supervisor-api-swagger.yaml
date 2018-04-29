@@ -569,7 +569,7 @@ definitions:
       - path
       - description
       - trap-monitorable
-      - uses-trap-ifces
+      - trap-ifces-cli
       - is-sysrepo-ready
     properties:
       name:
@@ -705,6 +705,10 @@ definitions:
     properties:
       message:
         type: string
+      status_code:
+        type: integer
+      error:
+        type: boolean
         
 responses:
   NotFound:
@@ -714,6 +718,11 @@ responses:
       properties:
         message:
           type: string
+        status_code:
+          type: integer
+          example: 404
+        error:
+          type: boolean
   Unauthorized:
     description: "Request is unauthorized. Responses come from liberouter-gui authorization functionality."
     schema:
@@ -734,6 +743,11 @@ responses:
       properties:
         message:
           type: string
+        status_code:
+          type: integer
+          example: 500
+        error:
+          type: boolean
   InvalidRequest:
     description: "Invalid parameters supplied or validation error(s)"
     schema:
@@ -741,6 +755,11 @@ responses:
       properties:
         message:
           type: string
+        status_code:
+          type: integer
+          example: 400
+        error:
+          type: boolean
 # Added by API Auto Mocking Plugin
 schemes:
  - https
