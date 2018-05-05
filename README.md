@@ -1,13 +1,22 @@
-This is fork of [https://github.com/CESNET/nemea-dashboard/tree/liberouter-gui](https://github.com/CESNET/nemea-dashboard/tree/liberouter-gui), a [Liberouter GUI](https://github.com/CESNET/liberouter-gui) module. It adds ability to configure new [NEMEA Supervisor V2](https://github.com/zidekmat/nemea-supervisor-sysrepo-edition) that uses sysrepo as it's configuration datastore. 
+# NEMEA GUI
+
+This is fork of [https://github.com/CESNET/nemea-dashboard/tree/liberouter-gui](https://github.com/CESNET/nemea-dashboard/tree/liberouter-gui), a [Liberouter GUI](https://github.com/CESNET/liberouter-gui) module. It adds ability to configure new [NEMEA Supervisor sysrepo edition](https://github.com/zidekmat/nemea-supervisor-sysrepo-edition) that uses sysrepo as it's configuration datastore. 
+
+### What is included
+
+ * NEMEA Supervisor GUI
+ * NEMEA Events & Dashboard
+ * NEMEA Reporter configuration
+ * ~~NEMEA Status~~ (currently not working with included Supervisor)
 
 ### Requirements
- * NEMEA Supervisor V2 (and its dependencies)
+ * NEMEA Supervisor sysrepo edition (and its dependencies)
  * sysrepo bindings for Python 3
  * MongoDB (for backend/events.py)
  * nodejs, npm
  * git
  * Python 3, Pip 3
- * **> 1GB RAM** (because of Angular)
+ * **> 1GB RAM** (because of Angular...)
 
 
 ### Install
@@ -19,8 +28,8 @@ sudo npm install --unsafe-perm -g @angular/cli && \
 sudo dnf install -y python3-pip python3-devel libffi-devel redhead-rpm-config git mongodb-server
 ```
 
-2) For installation instructions on how to install NEMEA Supervisor V2 see its git repository.
-3) Install and configureLiberouter GUI + Staas GUI + Nemea GUI:
+2) For installation instructions on how to install NEMEA Supervisor see its git repository.
+3) Install and configure Liberouter GUI + Staas GUI + Nemea GUI:
 ```
 sudo mkdir /var/www 2>/dev/null && sudo chown -R $(whoami):$(whoami) /var/www && \
 cd /var/www && \
@@ -50,8 +59,8 @@ python3 /var/www/liberouter-gui/backend
 Now you should have the web application available at //localhost:4200.
 
 ### Run (production mode)
-See [Liberouter GUI wiki](https://github.com/CESNET/liberouter-gui/wiki/Deploying-LiberouterGUI).
+Besided from starting NEMEA Supervisor, sysrepo daemon and mongodb see [Liberouter GUI wiki](https://github.com/CESNET/liberouter-gui/wiki/Deploying-LiberouterGUI) for production deployment. Just be careful how many threads you set for WSGI to have, set only one to ensure there would be no problems with parallelism in Supervisor API.
 
 
 ### Docker
-See deploy folder for Dockerfile and instructions.
+See `deploy/` folder for Dockerfile and instructions.
