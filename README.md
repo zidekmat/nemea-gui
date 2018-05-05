@@ -63,4 +63,4 @@ Besided from starting NEMEA Supervisor, sysrepo daemon and mongodb see [Liberout
 
 
 ### Docker
-See `deploy/` folder for Dockerfile and instructions.
+See `deploy/` folder for Dockerfile and instructions or `docker pull zmat/nemea-gui-sysrepo-edition`.
