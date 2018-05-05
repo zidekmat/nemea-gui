@@ -70,14 +70,14 @@ class ControllerTest(unittest.TestCase):
             subprocess.run(['sysrepocfg', '--del=/nemea-test-1:supervisor',
                               '--datastore=%s' % ds, 'nemea-test-1'],
                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            subprocess.run(['sysrepocfg', '--import=./data/set1.data.json',
+            subprocess.run(['sysrepocfg', '--import=./yang/set1.data.json',
                               '--datastore=%s' % ds,
                               '--format=json', 'nemea-test-1'],
                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             subprocess.run(['sysrepocfg', '--del=/link-traffic-test-1:instance',
                               '--datastore=%s' % ds, 'link-traffic-test-1'],
                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            subprocess.run(['sysrepocfg', '--import=./data/link-traffic-test-1.data.json',
+            subprocess.run(['sysrepocfg', '--import=./yang/link-traffic-test-1.data.json',
                               '--datastore=%s' % ds,
                               '--format=json', 'link-traffic-test-1'],
                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

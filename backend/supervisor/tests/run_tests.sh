@@ -24,9 +24,9 @@ kill $LIBEROUTER_GUI_API_PID
 
 
 # Install testing YANG schemas and data
-sysrepoctl --install --yang data/nemea-test-1.yang
-sysrepoctl --install --yang data/link-traffic-test-1.yang
-sysrepocfg --import=data/set1.data.json --datastore=startup --format=json nemea-test-1
+sysrepoctl --install --yang yang/nemea-test-1.yang
+sysrepoctl --install --yang yang/link-traffic-test-1.yang
+sysrepocfg --import=yang/set1.data.json --datastore=startup --format=json nemea-test-1
 
 # Compile stats_provider for mock data
 gcc -Wall -lsysrepo stats_provider.c -o stats_provider

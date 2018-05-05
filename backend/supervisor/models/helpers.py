@@ -1,6 +1,5 @@
 import json
 import subprocess
-import libsysrepoPython3 as sr
 from pdb import set_trace
 from time import time
 from os import environ, remove
@@ -13,18 +12,6 @@ if 'NEMEA_SUPERVISOR_API_TEST' in environ:
     NEMEA_SR_PREFIX = 'nemea-test-1'
 else:
     NEMEA_SR_PREFIX = 'nemea'
-
-
-def sr_get_session():
-    conn = sr.Connection("helpers.py")
-    if conn is None:
-        raise SysrepoError('Failed to connect to sysrepo')
-
-    sess = sr.Session(conn, sr.SR_DS_RUNNING)
-    if sess is None:
-        raise SysrepoError('Failed to create sysrepo session to running datastore')
-
-    return sess
 
 
 def sysrepocfg_set_by_xpath(sysrepo_module, xpath, value, datastore=USED_SR_DATASTORE):
@@ -45,18 +32,6 @@ def sysrepocfg_set_by_xpath(sysrepo_module, xpath, value, datastore=USED_SR_DATA
         "Failed to remove data\n" +
         res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
     )
-
-
-def sysrepocfg_fetch_by_xpath(sysrepo_module, xpath, datastore=USED_SR_DATASTORE):
-    try:
-        res = subprocess.run(['sysrepocfg', '--get={}'.format(xpath),
-                              '--datastore={}'.format(datastore),
-                              '--format=json', sysrepo_module],
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    except Exception as e:
-        raise SysrepocfgException('Unknown error during configuration data export'
-                                  + str(e))
-    set_trace()
 
 
 def sysrepocfg_fetch(sysrepo_module, datastore=USED_SR_DATASTORE):
@@ -217,6 +192,33 @@ def sysrepocfg_get_stats():
             "Unable to parse JSON during state data export\n" +
             res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
         )
+
+
+def sysrepocfg_get_running_status(inst_name):
+    xpath = "/{}:supervisor/instance[name='{}']/stats/running".format(NEMEA_SR_PREFIX,
+                                                                      inst_name)
+    try:
+        res = subprocess.run(['sysrepocfg', '--state-data',
+                              '--get={}'.format(xpath),
+                              '--format=json', NEMEA_SR_PREFIX],
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except Exception as e:
+        raise SysrepocfgException('Unknown error during configuration data export'
+                                  + str(e))
+
+    try:
+        if res.stdout == b'':
+            return False
+        root = '{}:supervisor'.format(NEMEA_SR_PREFIX)
+        return json.loads(res.stdout)[root]['instance'][0]['stats']['running']
+    except ValueError:
+        raise SysrepocfgException(
+            "Unable to parse JSON during state data export\n" +
+            res.stdout.decode('utf-8') + res.stderr.decode('utf-8')
+        )
+    except KeyError:
+        return False
+
 
 
 def sysrepo_get_modules_list():

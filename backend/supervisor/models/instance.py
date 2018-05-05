@@ -12,12 +12,8 @@ def get_all():
         return []
     insts = data[base_key]['instance']
 
-    sess = sr_get_session()
-    try:
-        for inst in insts:
-            inst['running'] = get_running_status(inst['name'], sess)
-    finally:
-        sess.session_stop()
+    for inst in insts:
+        inst['running'] = sysrepocfg_get_running_status(inst['name'])
 
     return insts
 
@@ -47,44 +43,20 @@ def get_by_name(instance_name):
     insts = data['{}:supervisor'.format(NEMEA_SR_PREFIX)]['instance']
     for stored_inst in insts:
         if stored_inst['name'] == instance_name:
-            stored_inst['running'] = get_running_status(instance_name)
+            stored_inst['running'] = sysrepocfg_get_running_status(instance_name)
             return stored_inst
 
     raise NotFoundException("Instance '%s' was not found." % instance_name)
 
 
-def get_running_status(instance_name, p_sess=None):
-    if p_sess is None:
-        sess = sr_get_session()
-    else:
-        sess = p_sess
-
-    xpath = "/nemea:supervisor/instance[name='%s']/stats/running" % instance_name
-    val = sess.get_item(xpath)
-
-    if p_sess is None:
-        sess.session_stop()
-
-    if val is None:
-        return False
-
-    if val.data() is None:
-        return False
-
-    return val.data().get_bool()
-
-
 def get_by_nemea_module_name(module_name):
-    sess = sr_get_session()
-    try:
-        stored_insts = get_all()
-        insts = []
-        for inst in stored_insts:
-            if inst['module-ref'] == module_name:
-                inst['running'] = get_running_status(inst['name'], sess)
-                insts.append(inst)
-    finally:
-        sess.session_stop()
+    stored_insts = get_all()
+    insts = []
+    for inst in stored_insts:
+        if inst['module-ref'] == module_name:
+            inst['running'] = sysrepocfg_get_running_status(inst['name'])
+            insts.append(inst)
+
 
     return insts
 
