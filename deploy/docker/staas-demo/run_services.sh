@@ -9,6 +9,7 @@ sysrepocfg --import=/var/nemea_source/nemea-supervisor-sysrepo-edition/yang/data
   --format=xml --datastore=startup nemea
 /var/nemea_source/nemea-supervisor-sysrepo-edition/build/src/nemea-supervisor -d -v 2 -L /var/log/nemea-supervisor
 
+sysrepod
 httpd
 
 while [ 1 ]; do
