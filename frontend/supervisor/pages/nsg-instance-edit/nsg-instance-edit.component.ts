@@ -39,7 +39,7 @@ export class NsgInstanceEditComponent implements OnInit {
     /* Values for HTML <select> with id=moduleName */
     nsgModulesList: NsgModule[];
 
-    /* List of instance names to copy values from*/
+    /* List of instance `s to copy values from*/
     nsgInstsNamesList: string[];
 
     constructor(private nsgModalService: NsgModal,
@@ -98,7 +98,6 @@ export class NsgInstanceEditComponent implements OnInit {
     }
 
     onSubmit() {
-        console.log('submitting instance');
         this.backendErrors = [];
         let onSuccess = () => {
             this.onChildSaved.emit(this.nsgInstance);
@@ -110,13 +109,11 @@ export class NsgInstanceEditComponent implements OnInit {
         };
 
         if (this.isEditForm) {
-            console.log('updating instance');
             this.nsgInstancesService.updateInstance(
                 this.passedInstance.name,
                 this.nsgInstance
             ).subscribe(onSuccess, onError);
         } else {
-            console.log('creating instance');
             this.nsgInstancesService.createInstance(
                 this.nsgInstance
             ).subscribe(onSuccess, onError);
@@ -127,7 +124,6 @@ export class NsgInstanceEditComponent implements OnInit {
      * through detail component (parent) */
     onFormEdit(form) {
         if (form.valid && !form.submitted) {
-            console.log('sending form edit from plain');
             this.onChildEdited.emit(this.nsgInstance);
         }
     }
@@ -146,10 +142,9 @@ export class NsgInstanceEditComponent implements OnInit {
                     let others = this.nsgInstsNamesList.filter(
                         x => x.match(new RegExp('^' + moduleName + '[0-9]*'))
                     );
-                    let lastOther = others[others.length - 1];
-                    let lastNum = others.sort()[lastOther].match(/[0-9]*$/);
+                    let lastNum = others[others.length - 1].match(/[0-9]*$/);
                     if (lastNum.length > 0) {
-                        this.nsgInstance.name = lastOther.substring(lastNum[1]) + (parseInt(lastNum[0]) + 1).toString();
+                        this.nsgInstance.name = moduleName + (parseInt(lastNum[0]) + 1).toString();
                     }
                 } catch (e) {
                     this.nsgInstance.name = moduleName + '1';
