@@ -15,7 +15,7 @@ This is fork of [https://github.com/CESNET/nemea-dashboard/tree/liberouter-gui](
  * MongoDB (for backend/events.py)
  * nodejs, npm
  * git
- * Python 3, Pip 3
+ * Python 3.6+ (older versions might not work!), Pip 3
  * **> 1GB RAM** (because of Angular...)
 
 
