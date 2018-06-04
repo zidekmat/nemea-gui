@@ -40,11 +40,13 @@ def get_by_name(instance_name):
     if data is None:
         raise NotFoundException("No configuration data found.")
 
-    insts = data['{}:supervisor'.format(NEMEA_SR_PREFIX)]['instance']
-    for stored_inst in insts:
-        if stored_inst['name'] == instance_name:
-            stored_inst['running'] = sysrepocfg_get_running_status(instance_name)
-            return stored_inst
+    _insts = data.get('{}:supervisor'.format(NEMEA_SR_PREFIX), None)
+    if _insts is not None:
+        insts = _insts.get('instance', []) #empty array for empty iterable object
+        for stored_inst in insts:
+            if stored_inst['name'] == instance_name:
+                stored_inst['running'] = sysrepocfg_get_running_status(instance_name)
+                return stored_inst
 
     raise NotFoundException("Instance '%s' was not found." % instance_name)
 
@@ -119,7 +121,7 @@ def update_with_name_change(old_name, sup_update_data, do_update_custom_attrs, s
         raise
     finally:
         """
-        After an attempt to update supervisor's instance data, try to update instance's 
+        After an attempt to update supervisor's instance data, try to update instance's
         custom model using custom-attributes
         """
         if do_update_custom_attrs:
