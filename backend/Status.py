@@ -147,7 +147,7 @@ def get_stats():
                 res[module][get_indxed_key(res, 'INIFC')] = inpt['messages']
         return res
     except Exception:
-        raise
+        #raise
         return {
             'error': 'format',
             'cmd': ' '.join(cmd_and_args),
@@ -165,4 +165,3 @@ def nemea_main():
 def nemea_events():
     stats = get_stats()
     return(json_util.dumps(stats))
-
