@@ -147,7 +147,6 @@ def get_stats():
                 res[module][get_indxed_key(res, 'INIFC')] = inpt['messages']
         return res
     except Exception:
-        #raise
         return {
             'error': 'format',
             'cmd': ' '.join(cmd_and_args),
